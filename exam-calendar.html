@@ -1,0 +1,618 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>2026下半年编制考试备考日历 · 晓敏专属</title>
+<style>
+:root{
+  --bg-blue:#dcefff;
+  --card-bg:#ffffff;
+  --title-red:#ff6b6b;
+  --accent-blue:#7ec5e8;
+  --accent-blue-deep:#5bb0d8;
+  --text-main:#4a5568;
+  --text-soft:#8a9bb0;
+  --shadow:0 6px 18px rgba(126,197,232,0.18);
+  --radius:16px;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{
+  font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Helvetica Neue",sans-serif;
+  color:var(--text-main);
+  background-color:var(--bg-blue);
+  background-image:
+    radial-gradient(circle, rgba(255,255,255,0.95) 1.5px, transparent 1.6px),
+    radial-gradient(circle, rgba(255,255,255,0.6) 1px, transparent 1.2px);
+  background-size:24px 24px, 16px 16px;
+  background-position:0 0, 12px 12px;
+  line-height:1.7;
+  padding:20px 16px 60px;
+  max-width:520px;
+  margin:0 auto;
+}
+.header{
+  text-align:center;
+  padding:24px 16px 16px;
+  background:#fff;
+  border-radius:var(--radius);
+  box-shadow:var(--shadow);
+  margin-bottom:16px;
+}
+.header h1{
+  color:var(--title-red);
+  font-size:22px;
+  margin-bottom:6px;
+}
+.header p{
+  font-size:13px;
+  color:var(--text-soft);
+}
+.header .emoji{font-size:30px;margin-bottom:6px;display:block;}
+.tip{
+  background:#fff;
+  border-radius:var(--radius);
+  padding:14px;
+  box-shadow:var(--shadow);
+  margin-bottom:16px;
+  font-size:13px;
+}
+.tip-title{
+  color:var(--title-red);
+  font-weight:700;
+  font-size:15px;
+  margin-bottom:8px;
+}
+.tip ul{padding-left:18px;}
+.tip li{margin-bottom:4px;}
+
+.month-section{margin-bottom:20px;}
+.month-title{
+  background:linear-gradient(135deg,#a8e0ff,#7ec5e8);
+  color:#fff;
+  padding:10px 16px;
+  border-radius:12px;
+  font-size:16px;
+  font-weight:700;
+  margin-bottom:12px;
+  position:sticky;
+  top:0;
+  z-index:5;
+  box-shadow:0 3px 10px rgba(126,197,232,0.3);
+}
+.exam-card{
+  background:#fff;
+  border-radius:var(--radius);
+  padding:16px;
+  box-shadow:var(--shadow);
+  margin-bottom:12px;
+  border-left:4px solid var(--accent-blue);
+}
+.exam-card.urgent{border-left-color:var(--title-red);}
+.exam-head{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  margin-bottom:10px;
+  flex-wrap:wrap;
+  gap:6px;
+}
+.exam-name{
+  font-size:16px;
+  font-weight:700;
+  color:var(--title-red);
+}
+.exam-type{
+  font-size:11px;
+  padding:2px 10px;
+  border-radius:10px;
+  background:#e3f1fd;
+  color:var(--accent-blue-deep);
+  font-weight:600;
+  white-space:nowrap;
+}
+.exam-type.hot{background:#ffe8e8;color:var(--title-red);}
+.timeline{
+  display:grid;
+  grid-template-columns:auto 1fr;
+  gap:6px 10px;
+  font-size:13px;
+  margin-bottom:10px;
+}
+.timeline-label{
+  color:var(--text-soft);
+  white-space:nowrap;
+  font-weight:600;
+}
+.timeline-val{color:var(--text-main);}
+.timeline-val.important{color:var(--title-red);font-weight:600;}
+.exam-desc{
+  font-size:12px;
+  color:var(--text-soft);
+  background:#f8fcff;
+  padding:8px 10px;
+  border-radius:8px;
+  line-height:1.6;
+}
+.exam-desc strong{color:var(--accent-blue-deep);}
+.summary-table{
+  width:100%;
+  border-collapse:collapse;
+  font-size:12px;
+  background:#fff;
+  border-radius:var(--radius);
+  overflow:hidden;
+  box-shadow:var(--shadow);
+  margin-bottom:16px;
+}
+.summary-table th{
+  background:linear-gradient(135deg,#a8e0ff,#7ec5e8);
+  color:#fff;
+  padding:10px 8px;
+  text-align:left;
+  font-size:12px;
+}
+.summary-table td{
+  padding:8px;
+  border-bottom:1px solid #eef7fd;
+  vertical-align:top;
+}
+.summary-table tr:last-child td{border-bottom:none;}
+.summary-table tr:hover{background:#f8fcff;}
+.footer{
+  text-align:center;
+  font-size:12px;
+  color:var(--text-soft);
+  padding:20px 16px;
+  background:#fff;
+  border-radius:var(--radius);
+  box-shadow:var(--shadow);
+}
+.footer strong{color:var(--title-red);}
+.legend{
+  display:flex;
+  gap:12px;
+  flex-wrap:wrap;
+  font-size:11px;
+  color:var(--text-soft);
+  margin-bottom:12px;
+  justify-content:center;
+}
+.legend span{display:flex;align-items:center;gap:4px;}
+.legend-dot{width:10px;height:10px;border-radius:3px;display:inline-block;}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <span class="emoji">📚</span>
+  <h1>2026下半年编制考试备考日历</h1>
+  <p>🗓️ 8月1日起 · 公务员 / 事业单位 / 教师编 / 军队文职 / 银行 / 国企</p>
+  <p style="margin-top:4px;font-size:12px;">💙 晓敏专属备考清单 · 对应2027年度招考批次</p>
+</div>
+
+<div class="tip">
+  <div class="tip-title">💡 备考小贴士</div>
+  <ul>
+    <li><strong>时间冲突预警</strong>：事业单位联考(10月)与银行秋招笔试(10月)高度重叠，需提前抉择</li>
+    <li><strong>黄金备考期</strong>：8-9月是打基础的关键期，建议每天学习3-4小时</li>
+    <li><strong>多线并行</strong>：行测/职测/公基有重叠，可同时备考多个考试提高上岸率</li>
+    <li><strong>报名提醒</strong>：各考试报名窗口短(5-10天)，建议设闹钟提醒，错过等一年</li>
+    <li><strong>届别注意</strong>：国企/银行秋招大多限应届生，国考应届岗占比高</li>
+  </ul>
+</div>
+
+<div class="legend">
+  <span><span class="legend-dot" style="background:#ff6b6b;"></span>核心重头戏</span>
+  <span><span class="legend-dot" style="background:#7ec5e8;"></span>常规编制</span>
+  <span><span class="legend-dot" style="background:#3aa855;"></span>国企/银行</span>
+</div>
+
+<!-- ===== 8月 ===== -->
+<div class="month-section">
+  <div class="month-title">📅 8月 · 备考启动 + 银行网申</div>
+
+  <div class="exam-card">
+    <div class="exam-head">
+      <span class="exam-name">📋 各省事业单位统考（陆续发布）</span>
+      <span class="exam-type">事业编</span>
+    </div>
+    <div class="timeline">
+      <span class="timeline-label">📌 公告发布：</span><span class="timeline-val">8-9月陆续发布</span>
+      <span class="timeline-label">📝 报名时间：</span><span class="timeline-val">8月末 - 9月中旬</span>
+      <span class="timeline-label">⏰ 笔试时间：</span><span class="timeline-val important">浙江9月19日 / 其他省份10月</span>
+    </div>
+    <div class="exam-desc"><strong>参与地区</strong>：四川、浙江、北京、福建、陕西等。<strong>考试内容</strong>：职测、公基、综应。预计招录1W+人。</div>
+  </div>
+
+  <div class="exam-card">
+    <div class="exam-head">
+      <span class="exam-name">🌱 三支一扶（剩余省份）</span>
+      <span class="exam-type">基层项目</span>
+    </div>
+    <div class="timeline">
+      <span class="timeline-label">📌 公告发布：</span><span class="timeline-val">6-8月陆续</span>
+      <span class="timeline-label">📝 报名时间：</span><span class="timeline-val">按各省节奏</span>
+      <span class="timeline-label">⏰ 状态：</span><span class="timeline-val important">新疆、广东、江西、浙江等剩余省份</span>
+    </div>
+    <div class="exam-desc"><strong>招录规模</strong>：剩余省份预计1.4W+人。<strong>考试内容</strong>：公基、职测、三农知识。<strong>优势</strong>：期满可转编、考研加10分、考公定向优先。</div>
+  </div>
+
+  <div class="exam-card">
+    <div class="exam-head">
+      <span class="exam-name">🏦 银行秋招提前批</span>
+      <span class="exam-type">国企</span>
+    </div>
+    <div class="timeline">
+      <span class="timeline-label">📝 网申开启：</span><span class="timeline-val important">7-8月提前批陆续启动</span>
+      <span class="timeline-label">⏰ 集中网申：</span><span class="timeline-val">8月底 - 10月（六大行+股份制）</span>
+    </div>
+    <div class="exam-desc"><strong>说明</strong>：部分银行7-8月开启提前批网申，8月底起六大行（工/农/中/建/交/邮储）集中网申。建议提前准备简历，关注各银行官网。</div>
+  </div>
+</div>
+
+<!-- ===== 9月 ===== -->
+<div class="month-section">
+  <div class="month-title">📅 9月 · 事业编报名 + 银行网申高峰</div>
+
+  <div class="exam-card urgent">
+    <div class="exam-head">
+      <span class="exam-name">🏫 全国事业单位联考（下半年）</span>
+      <span class="exam-type hot">⭐ 核心</span>
+    </div>
+    <div class="timeline">
+      <span class="timeline-label">📌 公告发布：</span><span class="timeline-val">8月下旬 - 9月</span>
+      <span class="timeline-label">📝 报名时间：</span><span class="timeline-val important">8月末 - 9月中旬</span>
+      <span class="timeline-label">⏰ 笔试时间：</span><span class="timeline-val important">10月中下旬</span>
+    </div>
+    <div class="exam-desc"><strong>参与省份</strong>：海南、黑龙江、甘肃、广西、云南、重庆、新疆、辽宁、安徽、湖北等。预计招录3W+人。<br><strong>考试内容</strong>：职业能力倾向测验 + 综合应用能力（A/B/C/D/E类）。<br><strong>报名网站</strong>：各省人事考试网</div>
+  </div>
+
+  <div class="exam-card">
+    <div class="exam-head">
+      <span class="exam-name">⚡ 国家电网提前批</span>
+      <span class="exam-type">国企</span>
+    </div>
+    <div class="timeline">
+      <span class="timeline-label">📝 提前批：</span><span class="timeline-val important">9月下旬启动</span>
+      <span class="timeline-label">📋 对象：</span><span class="timeline-val">电工类等紧缺专业应届生</span>
+    </div>
+    <div class="exam-desc"><strong>说明</strong>：国家电网分批次招聘，9月提前批主要面向电工类等紧缺专业。第一批11月中旬启动（规模最大）。<strong>报名网站</strong>：zhaopin.sgcc.com.cn</div>
+  </div>
+
+  <div class="exam-card">
+    <div class="exam-head">
+      <span class="exam-name">⛽ 三桶油秋招（中石油/中石化/中海油）</span>
+      <span class="exam-type">国企</span>
+    </div>
+    <div class="timeline">
+      <span class="timeline-label">📝 公告发布：</span><span class="timeline-val">9月</span>
+      <span class="timeline-label">⏰ 笔试时间：</span><span class="timeline-val important">10月</span>
+    </div>
+    <div class="exam-desc"><strong>招录规模</strong>：约3W人。<strong>专业</strong>：石油、化工、机械、土木、地质、电气等。<strong>学历</strong>：专科及以上。</div>
+  </div>
+
+  <div class="exam-card">
+    <div class="exam-head">
+      <span class="exam-name">📞 三大运营商秋招</span>
+      <span class="exam-type">国企</span>
+    </div>
+    <div class="timeline">
+      <span class="timeline-label">📝 网申时间：</span><span class="timeline-val important">9月起持续招聘</span>
+      <span class="timeline-label">⏰ 笔试时间：</span><span class="timeline-val">10-11月</span>
+    </div>
+    <div class="exam-desc"><strong>单位</strong>：移动/联通/电信。<strong>专业</strong>：通信、计算机、电子、经管、市场类。<strong>考试内容</strong>：行测+专业知识+公基+企业文化。</div>
+  </div>
+
+  <div class="exam-card">
+    <div class="exam-head">
+      <span class="exam-name">🎯 定向选调生（2027）</span>
+      <span class="exam-type">公务员</span>
+    </div>
+    <div class="timeline">
+      <span class="timeline-label">📝 公告发布：</span><span class="timeline-val important">9-12月密集发布</span>
+      <span class="timeline-label">⏰ 笔试时间：</span><span class="timeline-val">次年1月左右</span>
+    </div>
+    <div class="exam-desc"><strong>招录规模</strong>：约2.5W人。<strong>对象</strong>：重点高校应届毕业生。<strong>优势</strong>：竞争比远低于普通省考，岗位层级高，是公务员"绿色通道"。</div>
+  </div>
+</div>
+
+<!-- ===== 10月 ===== -->
+<div class="month-section">
+  <div class="month-title">📅 10月 · 国考公告 + 联考笔试</div>
+
+  <div class="exam-card urgent">
+    <div class="exam-head">
+      <span class="exam-name">🏛️ 国家公务员考试（2027国考）</span>
+      <span class="exam-type hot">⭐ 重头戏</span>
+    </div>
+    <div class="timeline">
+      <span class="timeline-label">📌 公告发布：</span><span class="timeline-val">10月中旬（预计10/14左右）</span>
+      <span class="timeline-label">📝 报名时间：</span><span class="timeline-val important">10月15日 - 10月24日</span>
+      <span class="timeline-label">💳 缴费确认：</span><span class="timeline-val">11月初</span>
+      <span class="timeline-label">⏰ 笔试时间：</span><span class="timeline-val important">11月底（预计11/28-29）</span>
+      <span class="timeline-label">📊 成绩公布：</span><span class="timeline-val">2027年1月中旬</span>
+      <span class="timeline-label">🎯 面试时间：</span><span class="timeline-val">2027年1月 - 3月</span>
+    </div>
+    <div class="exam-desc"><strong>招录规模</strong>：预计3W+人，应届生岗位占比高。<br><strong>报名网站</strong>：国家公务员局 <a href="http://bm.scs.gov.cn" style="color:var(--accent-blue-deep);">bm.scs.gov.cn</a><br><strong>考试内容</strong>：行测 + 申论。<strong>备考重点</strong>：行测（资料分析/判断推理/言语理解）+ 申论（归纳概括+对策写作，关注基层治理、乡村振兴）。</div>
+  </div>
+
+  <div class="exam-card urgent">
+    <div class="exam-head">
+      <span class="exam-name">📋 事业单位联考笔试</span>
+      <span class="exam-type hot">⭐ 核心</span>
+    </div>
+    <div class="timeline">
+      <span class="timeline-label">⏰ 笔试时间：</span><span class="timeline-val important">10月中下旬</span>
+      <span class="timeline-label">📊 成绩公布：</span><span class="timeline-val">11月下旬</span>
+      <span class="timeline-label">🎯 面试时间：</span><span class="timeline-val">12月 - 2027年1月</span>
+    </div>
+    <div class="exam-desc"><strong>⚠️ 冲突提醒</strong>：与银行秋招笔试时间高度重叠，若同时备考需提前规划复习重心。</div>
+  </div>
+
+  <div class="exam-card">
+    <div class="exam-head">
+      <span class="exam-name">🏦 银行秋招笔试</span>
+      <span class="exam-type">国企</span>
+    </div>
+    <div class="timeline">
+      <span class="timeline-label">⏰ 笔试时间：</span><span class="timeline-val important">9月底 - 11月分批</span>
+      <span class="timeline-label">🎯 面试时间：</span><span class="timeline-val">11-12月</span>
+      <span class="timeline-label">📋 补录：</span><span class="timeline-val">12月秋招补录</span>
+    </div>
+    <div class="exam-desc"><strong>招录规模</strong>：10W+人。<strong>考试内容</strong>：EPI（行测）+ 综合知识（经济金融/会计法律）+ 英语 + 企业文化。<strong>优势</strong>：柜员年薪8-12万，校招"包就业"。</div>
+  </div>
+
+  <div class="exam-card">
+    <div class="exam-head">
+      <span class="exam-name">🗺️ 非联考省份省考公告</span>
+      <span class="exam-type">公务员</span>
+    </div>
+    <div class="timeline">
+      <span class="timeline-label">📌 公告发布：</span><span class="timeline-val important">10-11月</span>
+      <span class="timeline-label">📝 报名时间：</span><span class="timeline-val">11月</span>
+      <span class="timeline-label">⏰ 笔试时间：</span><span class="timeline-val important">12月</span>
+    </div>
+    <div class="exam-desc"><strong>参与省份</strong>：广东、上海、天津、浙江、江苏、四川、北京、山东、西藏。预计招录5.3W+人。<strong>优势</strong>：待遇优厚，与国考时间错开，适合"多地巡考"。</div>
+  </div>
+
+  <div class="exam-card">
+    <div class="exam-head">
+      <span class="exam-name">🚄 中国铁路秋招</span>
+      <span class="exam-type">国企</span>
+    </div>
+    <div class="timeline">
+      <span class="timeline-label">📝 招聘时间：</span><span class="timeline-val important">10-12月</span>
+      <span class="timeline-label">📋 招录：</span><span class="timeline-val">5W+人</span>
+    </div>
+    <div class="exam-desc"><strong>专业</strong>：电气、土木、机械、交通、控制、环境、动力工程等。</div>
+  </div>
+</div>
+
+<!-- ===== 11月 ===== -->
+<div class="month-section">
+  <div class="month-title">📅 11月 · 国考笔试 + 文职公告</div>
+
+  <div class="exam-card urgent">
+    <div class="exam-head">
+      <span class="exam-name">⚡ 国家电网一批招聘</span>
+      <span class="exam-type hot">⭐ 国企核心</span>
+    </div>
+    <div class="timeline">
+      <span class="timeline-label">📝 报名时间：</span><span class="timeline-val important">11月中旬启动</span>
+      <span class="timeline-label">⏰ 笔试时间：</span><span class="timeline-val important">11月统一笔试</span>
+    </div>
+    <div class="exam-desc"><strong>招录规模</strong>：2W+人（一批规模最大）。<strong>专业</strong>：电气、土木、计算机、财会、管理、工程类。<strong>优势</strong>：六险二金、年终奖高，本科入职年薪10-15万。<strong>仅限应届生</strong>。</div>
+  </div>
+
+  <div class="exam-card">
+    <div class="exam-head">
+      <span class="exam-name">📮 中国邮政秋招</span>
+      <span class="exam-type">国企</span>
+    </div>
+    <div class="timeline">
+      <span class="timeline-label">📝 招聘时间：</span><span class="timeline-val important">10月起</span>
+      <span class="timeline-label">📋 招录：</span><span class="timeline-val">约2000人</span>
+    </div>
+    <div class="exam-desc"><strong>专业</strong>：物流、金融、计算机、电商、管理。</div>
+  </div>
+
+  <div class="exam-card">
+    <div class="exam-head">
+      <span class="exam-name">🚬 中国烟草招录</span>
+      <span class="exam-type">国企</span>
+    </div>
+    <div class="timeline">
+      <span class="timeline-label">📝 公告发布：</span><span class="timeline-val important">11月起</span>
+      <span class="timeline-label">📋 招录：</span><span class="timeline-val">约4000人</span>
+    </div>
+    <div class="exam-desc"><strong>专业</strong>：烟草、机械、电气、计算机、财会、管理。<strong>学历</strong>：本科及以上。<strong>优势</strong>：待遇十分可观。</div>
+  </div>
+
+  <div class="exam-card">
+    <div class="exam-head">
+      <span class="exam-name">👮 公安联考</span>
+      <span class="exam-type">公务员</span>
+    </div>
+    <div class="timeline">
+      <span class="timeline-label">📝 公告发布：</span><span class="timeline-val important">11-12月</span>
+      <span class="timeline-label">📋 对象：</span><span class="timeline-val">全国公安院校应届生</span>
+    </div>
+    <div class="exam-desc"><strong>说明</strong>：面向公安类专业应届生，是公安院校学生的专属入编通道。</div>
+  </div>
+</div>
+
+<!-- ===== 12月 ===== -->
+<div class="month-section">
+  <div class="month-title">📅 12月 · 省考笔试 + 文职笔试</div>
+
+  <div class="exam-card urgent">
+    <div class="exam-head">
+      <span class="exam-name">🎖️ 军队文职人员招考（2027年度）</span>
+      <span class="exam-type hot">⭐ 福利好</span>
+    </div>
+    <div class="timeline">
+      <span class="timeline-label">📌 公告发布：</span><span class="timeline-val">10月底 - 11月初</span>
+      <span class="timeline-label">📝 报名时间：</span><span class="timeline-val important">11月初（约7天窗口）</span>
+      <span class="timeline-label">⏰ 笔试时间：</span><span class="timeline-val important">12月中旬（12/14左右）</span>
+      <span class="timeline-label">📊 成绩查询：</span><span class="timeline-val">2027年1月下旬</span>
+      <span class="timeline-label">🎯 面试时间：</span><span class="timeline-val">2027年2-4月</span>
+    </div>
+    <div class="exam-desc"><strong>招录规模</strong>：预计3W+人。<br><strong>报名网站</strong>：军队人才网 <a href="http://81rc.81.cn" style="color:var(--accent-blue-deep);">81rc.81.cn</a><br><strong>考试内容</strong>：公共科目（政治理论20%+言语15%+判断15%+资料10%+数量10%+常识30%含国防知识）+ 专业科目（26大类）。<br><strong>优势</strong>：六险二金、住房补贴，福利完善。<strong>注意</strong>：政治考核严格，报名窗口仅7天。</div>
+  </div>
+
+  <div class="exam-card">
+    <div class="exam-head">
+      <span class="exam-name">🗺️ 非联考省份省考笔试</span>
+      <span class="exam-type">公务员</span>
+    </div>
+    <div class="timeline">
+      <span class="timeline-label">⏰ 笔试时间：</span><span class="timeline-val important">12月</span>
+      <span class="timeline-label">📊 成绩公布：</span><span class="timeline-val">2027年1月</span>
+      <span class="timeline-label">🎯 面试时间：</span><span class="timeline-val">2027年2-3月</span>
+    </div>
+    <div class="exam-desc"><strong>说明</strong>：广东、浙江、江苏、山东、四川、北京、上海、天津等省份笔试集中在12月，与国考（11月底）相近，备考体系相通，可同时报考。</div>
+  </div>
+
+  <div class="exam-card">
+    <div class="exam-head">
+      <span class="exam-name">🔥 消防救援干部招录</span>
+      <span class="exam-type">公务员</span>
+    </div>
+    <div class="timeline">
+      <span class="timeline-label">📝 公告发布：</span><span class="timeline-val">下半年集中公告</span>
+      <span class="timeline-label">⏰ 编制：</span><span class="timeline-val">行政编制（参照公务员管理）</span>
+    </div>
+    <div class="exam-desc"><strong>专业</strong>：消防工程、安全工程、土木、应急管理、不限专业岗位。<strong>考试内容</strong>：行测+申论+消防专业知识。</div>
+  </div>
+</div>
+
+<!-- ===== 总览表 ===== -->
+<h2 style="color:var(--title-red);font-size:18px;margin:20px 0 10px;text-align:center;">📊 全年考试总览表</h2>
+<table class="summary-table">
+  <thead>
+    <tr>
+      <th>考试名称</th>
+      <th>报名时间</th>
+      <th>笔试时间</th>
+      <th>类型</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>🌱 三支一扶</td>
+      <td>6-8月</td>
+      <td>各省不同</td>
+      <td>基层项目</td>
+    </tr>
+    <tr>
+      <td>📋 事业编统考（各省）</td>
+      <td>8月末-9月</td>
+      <td><strong style="color:var(--title-red);">9-10月</strong></td>
+      <td>事业编</td>
+    </tr>
+    <tr>
+      <td>🏫 事业编联考</td>
+      <td>8月末-9月中旬</td>
+      <td><strong style="color:var(--title-red);">10月中下旬</strong></td>
+      <td>事业编</td>
+    </tr>
+    <tr>
+      <td>🏦 银行秋招</td>
+      <td>8-10月网申</td>
+      <td><strong style="color:var(--title-red);">9月底-11月</strong></td>
+      <td>国企</td>
+    </tr>
+    <tr>
+      <td>⛽ 三桶油秋招</td>
+      <td>9月</td>
+      <td>10月</td>
+      <td>国企</td>
+    </tr>
+    <tr>
+      <td>📞 三大运营商</td>
+      <td>9月起</td>
+      <td>10-11月</td>
+      <td>国企</td>
+    </tr>
+    <tr>
+      <td>🎯 定向选调生</td>
+      <td>9-12月</td>
+      <td>次年1月</td>
+      <td>公务员</td>
+    </tr>
+    <tr>
+      <td>⚡ 国家电网提前批</td>
+      <td>9月下旬</td>
+      <td>—</td>
+      <td>国企</td>
+    </tr>
+    <tr>
+      <td>🚄 中国铁路</td>
+      <td>10-12月</td>
+      <td>各省不同</td>
+      <td>国企</td>
+    </tr>
+    <tr>
+      <td>📮 中国邮政</td>
+      <td>10月起</td>
+      <td>各省不同</td>
+      <td>国企</td>
+    </tr>
+    <tr>
+      <td>🏛️ <strong>国考(2027)</strong></td>
+      <td>10/15-10/24</td>
+      <td><strong style="color:var(--title-red);">11月底</strong></td>
+      <td>公务员</td>
+    </tr>
+    <tr>
+      <td>🗺️ 省考(非联考)</td>
+      <td>11月</td>
+      <td><strong style="color:var(--title-red);">12月</strong></td>
+      <td>公务员</td>
+    </tr>
+    <tr>
+      <td>⚡ 国家电网一批</td>
+      <td>11月中旬</td>
+      <td><strong style="color:var(--title-red);">11月</strong></td>
+      <td>国企</td>
+    </tr>
+    <tr>
+      <td>🚬 中国烟草</td>
+      <td>11月起</td>
+      <td>各省不同</td>
+      <td>国企</td>
+    </tr>
+    <tr>
+      <td>👮 公安联考</td>
+      <td>11-12月</td>
+      <td>12月</td>
+      <td>公务员</td>
+    </tr>
+    <tr>
+      <td>🎖️ 军队文职</td>
+      <td>11月初</td>
+      <td><strong style="color:var(--title-red);">12月中旬</strong></td>
+      <td>军队编</td>
+    </tr>
+  </tbody>
+</table>
+
+<div class="tip">
+  <div class="tip-title">⚡ 时间冲突预警</div>
+  <ul>
+    <li><strong>10月 事业编联考 ↔ 银行秋招笔试</strong>：时间高度重叠，二选一或合理分配精力</li>
+    <li><strong>11月底 国考 ↔ 11月 国家电网一批</strong>：仅差数天，但应届生可同时报考</li>
+    <li><strong>12月 省考 ↔ 12月中旬 军队文职</strong>：时间相近，注意错峰备考</li>
+    <li><strong>9-10月 多个国企秋招集中</strong>：网申+笔试密集，建议优先锁定2-3个目标</li>
+  </ul>
+</div>
+
+<div class="footer">
+  <p>💙 <strong>晓敏加油！</strong> 每一次努力都算数 💪</p>
+  <p style="margin-top:8px;font-size:11px;">📌 数据来源：国家公务员局、军队人才网、各省人事考试网、国家电网招聘平台等官方渠道<br>具体时间以2026年下半年官方公告为准</p>
+  <p style="margin-top:8px;font-size:11px;">🗓️ 整理日期：2026年7月31日 · 对应2027年度招考批次</p>
+</div>
+
+</body>
+</html>

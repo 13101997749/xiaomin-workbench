@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>事业编A类 + 军队文职 备考计划 · 晓敏专属</title>
+<style>
+:root{
+  --bg-blue:#dcefff;
+  --card-bg:#ffffff;
+  --title-red:#ff6b6b;
+  --accent-blue:#7ec5e8;
+  --accent-blue-deep:#5bb0d8;
+  --text-main:#4a5568;
+  --text-soft:#8a9bb0;
+  --shadow:0 6px 18px rgba(126,197,232,0.18);
+  --radius:16px;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{
+  font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Helvetica Neue",sans-serif;
+  color:var(--text-main);
+  background-color:var(--bg-blue);
+  background-image:
+    radial-gradient(circle, rgba(255,255,255,0.95) 1.5px, transparent 1.6px),
+    radial-gradient(circle, rgba(255,255,255,0.6) 1px, transparent 1.2px);
+  background-size:24px 24px, 16px 16px;
+  background-position:0 0, 12px 12px;
+  line-height:1.7;
+  padding:20px 16px 60px;
+  max-width:520px;
+  margin:0 auto;
+}
+.header{
+  text-align:center;
+  padding:24px 16px;
+  background:#fff;
+  border-radius:var(--radius);
+  box-shadow:var(--shadow);
+  margin-bottom:16px;
+}
+.header h1{color:var(--title-red);font-size:20px;margin-bottom:6px;}
+.header p{font-size:13px;color:var(--text-soft);}
+.header .emoji{font-size:28px;display:block;margin-bottom:6px;}
+
+.section-title{
+  background:linear-gradient(135deg,#a8e0ff,#7ec5e8);
+  color:#fff;
+  padding:10px 16px;
+  border-radius:12px;
+  font-size:16px;
+  font-weight:700;
+  margin:20px 0 12px;
+  box-shadow:0 3px 10px rgba(126,197,232,0.3);
+}
+.section-title.red{background:linear-gradient(135deg,#ffb3b3,#ff8a8a);}
+
+.card{
+  background:#fff;
+  border-radius:var(--radius);
+  padding:16px;
+  box-shadow:var(--shadow);
+  margin-bottom:12px;
+  border-left:4px solid var(--accent-blue);
+}
+.card.red-border{border-left-color:var(--title-red);}
+.card-title{
+  font-size:15px;
+  font-weight:700;
+  color:var(--title-red);
+  margin-bottom:10px;
+  display:flex;
+  align-items:center;
+  gap:6px;
+}
+
+.info-table{
+  width:100%;
+  border-collapse:collapse;
+  font-size:12px;
+  margin-bottom:8px;
+}
+.info-table th{
+  background:#e3f1fd;
+  color:var(--accent-blue-deep);
+  padding:8px 6px;
+  text-align:left;
+  font-size:12px;
+}
+.info-table td{
+  padding:7px 6px;
+  border-bottom:1px solid #eef7fd;
+  vertical-align:top;
+}
+.info-table tr:last-child td{border-bottom:none;}
+
+.exam-info{
+  font-size:13px;
+  line-height:1.8;
+}
+.exam-info strong{color:var(--accent-blue-deep);}
+.exam-info .highlight{color:var(--title-red);font-weight:700;}
+
+.phase-card{
+  background:#fff;
+  border-radius:var(--radius);
+  padding:16px;
+  box-shadow:var(--shadow);
+  margin-bottom:12px;
+  border-left:4px solid var(--accent-blue);
+}
+.phase-card.phase1{border-left-color:#7ec5e8;}
+.phase-card.phase2{border-left-color:#ffd699;}
+.phase-card.phase3{border-left-color:#ff9b9b;}
+.phase-card.phase4{border-left-color:#c9a8e8;}
+
+.phase-head{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  margin-bottom:10px;
+}
+.phase-name{
+  font-size:15px;
+  font-weight:700;
+  color:var(--title-red);
+}
+.phase-time{
+  font-size:11px;
+  padding:3px 10px;
+  border-radius:10px;
+  background:#e3f1fd;
+  color:var(--accent-blue-deep);
+  font-weight:600;
+}
+
+.task-list{
+  list-style:none;
+  padding:0;
+}
+.task-list li{
+  font-size:13px;
+  padding:7px 10px;
+  margin-bottom:4px;
+  background:#f8fcff;
+  border-radius:8px;
+  border-left:3px solid var(--accent-blue);
+  line-height:1.6;
+}
+.task-list li strong{color:var(--title-red);}
+.task-list li .tag{
+  display:inline-block;
+  font-size:10px;
+  padding:1px 6px;
+  border-radius:6px;
+  background:#ffe8e8;
+  color:var(--title-red);
+  margin-right:4px;
+  font-weight:600;
+}
+.task-list li .tag.blue{background:#e3f1fd;color:var(--accent-blue-deep);}
+.task-list li .tag.green{background:#e3fce8;color:#3aa855;}
+
+.schedule-table{
+  width:100%;
+  border-collapse:collapse;
+  font-size:12px;
+  margin-bottom:8px;
+}
+.schedule-table th{
+  background:linear-gradient(135deg,#a8e0ff,#7ec5e8);
+  color:#fff;
+  padding:8px 6px;
+  text-align:center;
+  font-size:11px;
+}
+.schedule-table td{
+  padding:7px 6px;
+  border-bottom:1px solid #eef7fd;
+  text-align:center;
+  vertical-align:top;
+  font-size:11px;
+}
+.schedule-table td:first-child{
+  text-align:left;
+  font-weight:600;
+  color:var(--accent-blue-deep);
+  background:#f8fcff;
+}
+.schedule-table tr:last-child td{border-bottom:none;}
+
+.tip-box{
+  background:linear-gradient(135deg,#fff5f5,#ffe8e8);
+  border-radius:var(--radius);
+  padding:14px;
+  margin-bottom:12px;
+  font-size:13px;
+  line-height:1.7;
+}
+.tip-box-title{
+  color:var(--title-red);
+  font-weight:700;
+  font-size:15px;
+  margin-bottom:8px;
+}
+.tip-box ul{padding-left:18px;}
+.tip-box li{margin-bottom:4px;}
+
+.compare-card{
+  background:#fff;
+  border-radius:var(--radius);
+  padding:16px;
+  box-shadow:var(--shadow);
+  margin-bottom:12px;
+}
+.compare-row{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:8px;
+  margin-bottom:8px;
+}
+.compare-col{
+  padding:8px;
+  border-radius:8px;
+  font-size:12px;
+}
+.compare-col.left{background:#e3f1fd;color:var(--accent-blue-deep);}
+.compare-col.right{background:#ffe8e8;color:var(--title-red);}
+.compare-col strong{display:block;font-size:13px;margin-bottom:4px;}
+
+.footer{
+  text-align:center;
+  font-size:12px;
+  color:var(--text-soft);
+  padding:20px 16px;
+  background:#fff;
+  border-radius:var(--radius);
+  box-shadow:var(--shadow);
+}
+.footer strong{color:var(--title-red);}
+
+.progress-bar-wrap{
+  background:#eef7fd;
+  border-radius:8px;
+  height:24px;
+  overflow:hidden;
+  margin-bottom:4px;
+  position:relative;
+}
+.progress-bar-fill{
+  height:100%;
+  background:linear-gradient(90deg,#a8e0ff,#7ec5e8);
+  border-radius:8px;
+  display:flex;
+  align-items:center;
+  justify-content:flex-end;
+  padding-right:8px;
+  font-size:11px;
+  color:#fff;
+  font-weight:600;
+}
+.progress-label{
+  font-size:11px;
+  color:var(--text-soft);
+  margin-bottom:6px;
+}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <span class="emoji">📚</span>
+  <h1>事业编A类 + 军队文职<br>双线备考计划</h1>
+  <p>🗓️ 2026年8月 - 12月 · 晓敏专属</p>
+  <p style="font-size:12px;margin-top:4px;">事业编联考(10月) → 军队文职(12月) · 两考衔接不冲突</p>
+</div>
+
+<!-- ===== 为什么双线备考 ===== -->
+<div class="tip-box">
+  <div class="tip-box-title">💡 为什么这两个考试适合一起备考？</div>
+  <ul>
+    <li><strong>时间不冲突</strong>：事业编10月笔试，军队文职12月笔试，间隔2个月</li>
+    <li><strong>内容高度重叠</strong>：职测≈岗位能力（言语/判断/数量/资料），知识模块相通</li>
+    <li><strong>一次备考双重机会</strong>：行测/职测底子打好，两个考试都能用</li>
+    <li><strong>上岸率翻倍</strong>：多一个考试多一次机会，降低单考风险</li>
+  </ul>
+</div>
+
+<!-- ===== 考试一：事业编A类 ===== -->
+<div class="section-title">📋 考试一：事业单位A类（综合管理类）</div>
+
+<div class="card">
+  <div class="card-title">📌 基本信息卡</div>
+  <table class="info-table">
+    <tr><th>项目</th><th>详情</th></tr>
+    <tr><td>笔试时间</td><td><strong style="color:var(--title-red);">2026年10月中下旬</strong></td></tr>
+    <tr><td>报名时间</td><td>8月末 - 9月中旬</td></tr>
+    <tr><td>适合岗位</td><td>行政性、事务性、业务管理岗</td></tr>
+    <tr><td>考试科目</td><td>职测A类 + 综应A类（合订本连续考）</td></tr>
+    <tr><td>报名网站</td><td>各省人事考试网</td></tr>
+  </table>
+</div>
+
+<div class="card">
+  <div class="card-title">📝 科目一：职业能力倾向测验（A类）</div>
+  <div class="exam-info">
+    <strong>考试形式</strong>：客观题 · <span class="highlight">90分钟 · 150分</span><br>
+    <strong>题量</strong>：共100题
+  </div>
+  <table class="info-table" style="margin-top:10px;">
+    <tr><th>模块</th><th>题量</th><th>分值/题</th><th>总分</th></tr>
+    <tr><td>常识判断</td><td>20题</td><td>1分</td><td>20分</td></tr>
+    <tr><td>言语理解</td><td>20题</td><td>1.5分</td><td>30分</td></tr>
+    <tr><td>判断推理（图形5+定义10+类比10+逻辑10）</td><td>35题</td><td>1.2-1.8分</td><td>50分</td></tr>
+    <tr><td>数量关系</td><td>10题</td><td>2分</td><td>20分</td></tr>
+    <tr><td>资料分析</td><td>15题</td><td>2分</td><td>30分</td></tr>
+  </table>
+  <div class="exam-info" style="margin-top:8px;">
+    <strong>得分重点</strong>：资料分析(30分) + 言语(30分) + 判断推理(50分) = <span class="highlight">110分占73%</span>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-title">📝 科目二：综合应用能力（A类）</div>
+  <div class="exam-info">
+    <strong>考试形式</strong>：主观题 · <span class="highlight">120分钟 · 150分</span><br>
+    <strong>考查能力</strong>：管理角色意识、分析判断、计划控制、沟通协调、文字表达
+  </div>
+  <table class="info-table" style="margin-top:10px;">
+    <tr><th>题型</th><th>分值</th><th>考查内容</th></tr>
+    <tr><td>要素概括</td><td>30分</td><td>归纳材料关键信息</td></tr>
+    <tr><td>事务处理</td><td>35分</td><td>应急处理、会务安排</td></tr>
+    <tr><td>公文写作1</td><td>45分</td><td>草拟信函、联络通知</td></tr>
+    <tr><td>公文写作2</td><td>40分</td><td>通知/报告/倡议书等</td></tr>
+  </table>
+  <div class="exam-info" style="margin-top:8px;">
+    <strong>备考重点</strong>：公文写作占<span class="highlight">85分(57%)</span>，是拉开分差的关键。需掌握通知、报告、请示、函、倡议书等常见公文格式。
+  </div>
+</div>
+
+<!-- ===== 考试二：军队文职 ===== -->
+<div class="section-title red">🎖️ 考试二：军队文职（2027年度）</div>
+
+<div class="card red-border">
+  <div class="card-title">📌 基本信息卡</div>
+  <table class="info-table">
+    <tr><th>项目</th><th>详情</th></tr>
+    <tr><td>笔试时间</td><td><strong style="color:var(--title-red);">2026年12月中旬（约12/14）</strong></td></tr>
+    <tr><td>报名时间</td><td>11月初（仅7天窗口）</td></tr>
+    <tr><td>报名网站</td><td>军队人才网 81rc.81.cn</td></tr>
+    <tr><td>考试科目</td><td>公共科目 + 专业科目</td></tr>
+    <tr><td>福利</td><td>六险二金、住房补贴</td></tr>
+  </table>
+</div>
+
+<div class="card red-border">
+  <div class="card-title">📝 科目一：公共科目</div>
+  <div class="exam-info">
+    <strong>考试形式</strong>：客观题 · <span class="highlight">120分钟 · 100分</span><br>
+    <strong>结构</strong>：基本知识(40分) + 岗位能力(60分)
+  </div>
+  
+  <div style="margin-top:12px;font-size:13px;font-weight:700;color:var(--accent-blue-deep);">🔹 基本知识（40分）</div>
+  <table class="info-table" style="margin-top:6px;">
+    <tr><th>题型</th><th>题量</th><th>分值/题</th><th>总分</th></tr>
+    <tr><td>单选题</td><td>50题</td><td>0.5分</td><td>25分</td></tr>
+    <tr><td>多选题</td><td>10题</td><td>1.5分</td><td>15分</td></tr>
+  </table>
+  <div class="exam-info" style="font-size:12px;">
+    <strong>内容</strong>：马克思主义理论、毛泽东思想、中特理论、习思想、中国历史、传统文化、<span class="highlight">国防和军队基础知识（特色）</span>、法律、科技、时事政治
+  </div>
+
+  <div style="margin-top:12px;font-size:13px;font-weight:700;color:var(--accent-blue-deep);">🔹 岗位能力（60分）— 与职测高度重叠</div>
+  <table class="info-table" style="margin-top:6px;">
+    <tr><th>模块</th><th>题量</th><th>分值/题</th><th>总分</th></tr>
+    <tr><td>言语理解</td><td>15题</td><td>1分</td><td>15分</td></tr>
+    <tr><td>数量关系</td><td>10题</td><td>1.5分</td><td>15分</td></tr>
+    <tr><td>判断推理</td><td>10题</td><td>1.5分</td><td>15分</td></tr>
+    <tr><td>资料分析</td><td>15题</td><td>1分</td><td>15分</td></tr>
+  </table>
+  <div class="exam-info" style="margin-top:8px;">
+    <strong>得分策略</strong>：岗位能力60分与事业编职测完全相通，事业编备考基础可直接复用！多选题需谨慎，<span class="highlight">少选且正确每个选项得0.3分</span>，不确定的选项宁少选不乱选。
+  </div>
+</div>
+
+<div class="card red-border">
+  <div class="card-title">📝 科目二：专业科目</div>
+  <div class="exam-info">
+    <strong>考试形式</strong>：客观题 · <span class="highlight">120分钟 · 100分</span><br>
+    <strong>分类</strong>：共26类专业科目，根据报考岗位选择<br>
+    <strong>常见类别</strong>：管理学、会计学、计算机、汉语言文学、数学、英语、临床医学、护理等<br>
+    <strong>备考建议</strong>：专业科目选自己所学专业或擅长领域，复习难度较低。<span class="highlight">建议报名时优先选专业对口的岗位</span>。
+  </div>
+</div>
+
+<!-- ===== 两考对比 ===== -->
+<div class="section-title">⚖️ 两考内容对比 & 重叠分析</div>
+
+<div class="compare-card">
+  <div class="compare-row">
+    <div class="compare-col left"><strong>📋 事业编A类</strong>职测(90min/150分)+综应(120min/150分)</div>
+    <div class="compare-col right"><strong>🎖️ 军队文职</strong>公共科目(120min/100分)+专业科目(120min/100分)</div>
+  </div>
+  <table class="info-table">
+    <tr><th>知识模块</th><th>事业编A类</th><th>军队文职</th><th>重叠度</th></tr>
+    <tr><td>言语理解</td><td>✅ 30分</td><td>✅ 15分</td><td>⭐⭐⭐⭐⭐ 高</td></tr>
+    <tr><td>判断推理</td><td>✅ 50分</td><td>✅ 15分</td><td>⭐⭐⭐⭐⭐ 高</td></tr>
+    <tr><td>数量关系</td><td>✅ 20分</td><td>✅ 15分</td><td>⭐⭐⭐⭐⭐ 高</td></tr>
+    <tr><td>资料分析</td><td>✅ 30分</td><td>✅ 15分</td><td>⭐⭐⭐⭐⭐ 高</td></tr>
+    <tr><td>常识/基本知识</td><td>✅ 20分</td><td>✅ 40分</td><td>⭐⭐⭐ 中（文职含国防军队知识）</td></tr>
+    <tr><td>公文写作/主观题</td><td>✅ 综应150分</td><td>❌ 无</td><td>— 仅事业编需准备</td></tr>
+    <tr><td>专业科目</td><td>❌ 无</td><td>✅ 100分</td><td>— 仅文职需准备</td></tr>
+  </table>
+  <div class="exam-info" style="margin-top:8px;">
+    <strong>结论</strong>：岗位能力4个模块（言语/判断/数量/资料）与职测完全相通，<span class="highlight">重叠分值约60分</span>。事业编多备考公文写作，文职多备考国防知识+专业科目。
+  </div>
+</div>
+
+<!-- ===== 备考计划 ===== -->
+<div class="section-title">📅 四阶段备考计划（8月-12月）</div>
+
+<div class="tip-box">
+  <div class="tip-box-title">🎯 备考节奏总览</div>
+  <div class="progress-label">阶段一：基础打底（8月）</div>
+  <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:25%;">8月</div></div>
+  <div class="progress-label">阶段二：事业编冲刺（9-10月）</div>
+  <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:50%;background:linear-gradient(90deg,#ffd699,#ff9b9b);">9-10月</div></div>
+  <div class="progress-label">阶段三：文职专项（11月）</div>
+  <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:25%;background:linear-gradient(90deg,#c9a8e8,#a8d8e8);">11月</div></div>
+  <div class="progress-label">阶段四：文职冲刺（12月）</div>
+  <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:15%;background:linear-gradient(90deg,#ffb3b3,#ff8a8a);">12月</div></div>
+</div>
+
+<!-- 阶段一 -->
+<div class="phase-card phase1">
+  <div class="phase-head">
+    <span class="phase-name">🔹 阶段一：基础打底</span>
+    <span class="phase-time">8月（4周）</span>
+  </div>
+  <div style="font-size:12px;color:var(--text-soft);margin-bottom:10px;">🎯 目标：搭建两考共用知识框架，重点攻克职测/岗位能力四大模块</div>
+  <ul class="task-list">
+    <li><span class="tag">共用</span><strong>言语理解</strong>：学习选词填空、片段阅读技巧，每天20题，积累高频成语</li>
+    <li><span class="tag">共用</span><strong>判断推理</strong>：图形推理规律总结 + 定义判断精准定位 + 类比推理词义关系 + 逻辑判断公式法</li>
+    <li><span class="tag">共用</span><strong>资料分析</strong>：速算技巧（首数法/有效数字法/特征数字法），每天2篇资料分析</li>
+    <li><span class="tag">共用</span><strong>数量关系</strong>：工程问题、行程问题、利润问题、排列组合等常考题型，掌握套路</li>
+    <li><span class="tag blue">事业编</span><strong>综应A类入门</strong>：了解公文写作基础格式（通知/报告/请示/函），每周练1篇</li>
+    <li><span class="tag blue">事业编</span><strong>常识积累</strong>：每天花20分钟看时政、法律、科技常识</li>
+  </ul>
+  <div style="margin-top:10px;font-size:12px;font-weight:600;color:var(--accent-blue-deep);">📅 每日时间分配建议</div>
+  <table class="schedule-table" style="margin-top:6px;">
+    <tr><th>时段</th><th>内容</th><th>时长</th></tr>
+    <tr><td>上午</td><td>言语理解 + 判断推理</td><td>1.5h</td></tr>
+    <tr><td>下午</td><td>资料分析 + 数量关系</td><td>1.5h</td></tr>
+    <tr><td>晚上</td><td>综应公文学习 / 常识积累</td><td>1h</td></tr>
+  </table>
+</div>
+
+<!-- 阶段二 -->
+<div class="phase-card phase2">
+  <div class="phase-head">
+    <span class="phase-name">🔸 阶段二：事业编冲刺</span>
+    <span class="phase-time">9-10月（7周）</span>
+  </div>
+  <div style="font-size:12px;color:var(--text-soft);margin-bottom:10px;">🎯 目标：全力冲刺事业编联考（10月笔试），综应提分为主</div>
+  <ul class="task-list">
+    <li><span class="tag">重点</span><strong>综应A类强化</strong>：要素概括题技巧 + 事务处理题套路 + 公文写作模板背诵，每周练3-4篇完整作文</li>
+    <li><span class="tag">重点</span><strong>职测套题</strong>：每周2套真题，严格计时90分钟，重点训练时间分配</li>
+    <li><span class="tag">重点</span><strong>错题复盘</strong>：建立错题本（可记录在工作台错题本里），每3天回顾一次</li>
+    <li><span class="tag green">保底</span><strong>岗位能力同步练</strong>：职测题目同时适用于文职岗位能力，一题两用</li>
+    <li><span class="tag green">保底</span><strong>常识/时政</strong>：持续积累，文职基本知识也能用到</li>
+  </ul>
+  <div style="margin-top:10px;font-size:12px;font-weight:600;color:var(--title-red);">⚠️ 10月笔试前两周</div>
+  <ul class="task-list" style="margin-top:6px;">
+    <li>每天1套职测真题 + 1篇综应写作，保持手感</li>
+    <li>复盘所有错题，查漏补缺</li>
+    <li>调整作息，保证考试时段精力充沛</li>
+  </ul>
+</div>
+
+<!-- 阶段三 -->
+<div class="phase-card phase3">
+  <div class="phase-head">
+    <span class="phase-name">🔸 阶段三：文职专项补强</span>
+    <span class="phase-time">11月（4周）</span>
+  </div>
+  <div style="font-size:12px;color:var(--text-soft);margin-bottom:10px;">🎯 目标：事业编考完后，转向文职独有内容（国防知识+专业科目）</div>
+  <ul class="task-list">
+    <li><span class="tag">文职</span><strong>国防和军队知识</strong>：这是文职特色！学习国防常识、军队条令条例、军事文化，约占总分10-15%</li>
+    <li><span class="tag">文职</span><strong>基本知识强化</strong>：马理论、中特理论、习思想、中国历史、传统文化，多选题技巧训练</li>
+    <li><span class="tag">文职</span><strong>专业科目启动</strong>：根据报考岗位，系统复习专业知识，每天2小时</li>
+    <li><span class="tag blue">复用</span><strong>岗位能力刷题</strong>：继续刷言语/判断/数量/资料，保持职测手感</li>
+    <li><span class="tag">提醒</span><strong>11月初盯公告</strong>：军队文职公告发布后立即报名（仅7天窗口！）</li>
+  </ul>
+  <div style="margin-top:10px;font-size:12px;font-weight:600;color:var(--accent-blue-deep);">📅 每日时间分配建议</div>
+  <table class="schedule-table" style="margin-top:6px;">
+    <tr><th>时段</th><th>内容</th><th>时长</th></tr>
+    <tr><td>上午</td><td>专业科目系统复习</td><td>2h</td></tr>
+    <tr><td>下午</td><td>国防知识 + 基本知识</td><td>1.5h</td></tr>
+    <tr><td>晚上</td><td>岗位能力刷题（复用职测基础）</td><td>1h</td></tr>
+  </table>
+</div>
+
+<!-- 阶段四 -->
+<div class="phase-card phase4">
+  <div class="phase-head">
+    <span class="phase-name">🔸 阶段四：文职冲刺</span>
+    <span class="phase-time">12月（2周）</span>
+  </div>
+  <div style="font-size:12px;color:var(--text-soft);margin-bottom:10px;">🎯 目标：12月中旬笔试前最后冲刺，全真模拟</div>
+  <ul class="task-list">
+    <li><span class="tag">重点</span><strong>公共科目套题</strong>：每天1套真题，120分钟计时，训练多选题策略</li>
+    <li><span class="tag">重点</span><strong>专业科目套题</strong>：每2天1套专业真题，查漏补缺</li>
+    <li><span class="tag">重点</span><strong>国防知识突击</strong>：集中背诵高频考点，军队文职特色题型专项练</li>
+    <li><span class="tag">策略</span><strong>多选题技巧</strong>：不确定的选项宁少选不乱选，少选且正确每个选项得0.3分</li>
+    <li><span class="tag">策略</span><strong>时间管理</strong>：基本知识部分先做有把握的，岗位能力部分资料分析优先</li>
+  </ul>
+</div>
+
+<!-- ===== 备考资料推荐 ===== -->
+<div class="section-title">📖 备考资料推荐</div>
+
+<div class="card">
+  <div class="card-title">📋 事业编A类资料</div>
+  <ul class="task-list">
+    <li><strong>教材</strong>：粉笔/华图《职业能力倾向测验A类》+《综合应用能力A类》</li>
+    <li><strong>真题</strong>：近5年事业单位联考A类真题（粉笔APP可刷）</li>
+    <li><strong>公文写作</strong>：《公文写作规范与技巧》，重点背通知/报告/请示/函格式</li>
+    <li><strong>刷题APP</strong>：粉笔/华图在线，职测分模块刷题</li>
+    <li><strong>时政</strong>：学习强国APP"要闻"栏目，每天15分钟</li>
+  </ul>
+</div>
+
+<div class="card red-border">
+  <div class="card-title">🎖️ 军队文职资料</div>
+  <ul class="task-list">
+    <li><strong>教材</strong>：中公/华图《军队文职公共科目》+ 对应专业科目教材</li>
+    <li><strong>真题</strong>：近3年军队文职公共科目真题（81rc.81.cn官网有大纲）</li>
+    <li><strong>国防知识</strong>：《国防法》《兵役法》重点条款，军队条令条例</li>
+    <li><strong>专业科目</strong>：根据报考岗位选对应专业教材（如管理学/会计学/计算机等）</li>
+    <li><strong>刷题APP</strong>：中公/华图军队文职题库</li>
+    <li><strong>官网</strong>：军队人才网 81rc.81.cn（大纲+公告+职位表）</li>
+  </ul>
+</div>
+
+<!-- ===== 注意事项 ===== -->
+<div class="tip-box">
+  <div class="tip-box-title">⚠️ 重要提醒</div>
+  <ul>
+    <li><strong>报名时间节点</strong>：事业编8-9月报名、文职11月初报名（仅7天！），设闹钟提醒</li>
+    <li><strong>政治考核</strong>：军队文职需政审，提前确认本人及家庭成员无不良记录</li>
+    <li><strong>专业科目选择</strong>：文职报名时选专业对口的岗位，专业科目复习更轻松</li>
+    <li><strong>不要偏科</strong>：事业编综应(主观题)与职测(客观题)各占50%，都要重视</li>
+    <li><strong>心态管理</strong>：两考间隔2个月，事业编考完不管结果如何，立即投入文职备考</li>
+    <li><strong>利用工作台</strong>：用"每日计划"记录学习任务，"错题本"整理错题，"小树洞"记录备考心情</li>
+  </ul>
+</div>
+
+<div class="footer">
+  <p>💙 <strong>晓敏加油！</strong> 双线备考，双重上岸机会 💪</p>
+  <p style="margin-top:8px;font-size:11px;">📌 备考周期：2026年8月 - 12月 · 共约5个月</p>
+  <p style="margin-top:4px;font-size:11px;">🗓️ 整理日期：2026年7月31日</p>
+</div>
+
+</body>
+</html>
