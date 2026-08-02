@@ -1,0 +1,1218 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>晓敏的工作台 · 教师暑期成长</title>
+<style>
+/* ========== 全局变量（温柔粉色治愈风） ========== */
+:root{
+  --bg-pink:#ffe9f2;
+  --bg-pink-soft:#fff3f8;
+  --card-bg:#ffffff;
+  --title-pink:#e85a8a;
+  --title-deep:#d64a7c;
+  --accent:#f4a7c3;
+  --accent-deep:#ec7ba5;
+  --lavender:#c5b3e6;
+  --peach:#ffc9a8;
+  --text-main:#5a4a56;
+  --text-soft:#b09aaa;
+  --shadow:0 6px 18px rgba(232,90,138,0.15);
+  --shadow-soft:0 3px 10px rgba(232,90,138,0.10);
+  --radius:16px;
+  --radius-sm:10px;
+  --sidebar-w:210px;
+  --sidebar-w-collapsed:64px;
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+html,body{height:100%;}
+body{
+  font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Helvetica Neue","Microsoft YaHei",sans-serif;
+  color:var(--text-main);
+  background-color:var(--bg-pink);
+  background-image:
+    radial-gradient(circle, rgba(255,255,255,0.95) 1.5px, transparent 1.6px),
+    radial-gradient(circle, rgba(255,255,255,0.6) 1px, transparent 1.2px);
+  background-size:24px 24px, 16px 16px;
+  background-position:0 0, 12px 12px;
+  overflow:hidden;
+}
+button{font-family:inherit;cursor:pointer;border:none;outline:none;}
+input,textarea,select{font-family:inherit;outline:none;}
+ul{list-style:none;}
+
+/* ========== 应用容器 ========== */
+.app{display:flex;height:100vh;height:100dvh;width:100%;max-width:480px;margin:0 auto;position:relative;overflow:hidden;box-shadow:0 0 40px rgba(232,90,138,0.2);}
+
+/* ========== 侧边导航栏 ========== */
+.sidebar{
+  width:var(--sidebar-w);flex-shrink:0;
+  background:linear-gradient(180deg,#ffd6e6 0%,#ffe9f2 100%);
+  border-right:2px solid rgba(255,255,255,0.6);
+  display:flex;flex-direction:column;
+  transition:width .32s cubic-bezier(.4,0,.2,1);
+  overflow:hidden;z-index:30;
+}
+.sidebar.collapsed{width:var(--sidebar-w-collapsed);}
+.sidebar-header{padding:16px 10px 12px;display:flex;flex-direction:column;align-items:center;border-bottom:1px dashed rgba(232,90,138,0.3);}
+.avatar{
+  width:58px;height:58px;border-radius:50%;
+  background:linear-gradient(135deg,#ffc2d9,#f4a7c3);
+  display:flex;align-items:center;justify-content:center;font-size:28px;
+  border:3px solid #fff;box-shadow:0 4px 12px rgba(232,90,138,0.35);flex-shrink:0;
+}
+.nickname{margin-top:8px;font-size:13px;color:var(--title-pink);font-weight:600;white-space:nowrap;text-align:center;}
+.sidebar.collapsed .nickname{display:none;}
+.collapse-btn{
+  position:absolute;top:14px;right:-14px;width:28px;height:28px;border-radius:50%;
+  background:#fff;color:var(--title-deep);display:flex;align-items:center;justify-content:center;
+  font-size:14px;box-shadow:0 2px 8px rgba(232,90,138,0.35);z-index:31;transition:transform .32s;
+}
+.sidebar.collapsed .collapse-btn{transform:rotate(180deg);}
+.nav-list{flex:1;overflow-y:auto;padding:10px 0;}
+.nav-list::-webkit-scrollbar{width:0;}
+.nav-item{
+  display:flex;align-items:center;padding:11px 14px;margin:2px 8px;border-radius:var(--radius-sm);
+  cursor:pointer;color:var(--text-main);font-size:14px;transition:all .2s;white-space:nowrap;position:relative;
+}
+.nav-item:hover{background:rgba(255,255,255,0.55);}
+.nav-item.active{background:#fff;color:var(--title-pink);font-weight:600;box-shadow:var(--shadow-soft);}
+.nav-item.active::before{
+  content:"";position:absolute;left:0;top:50%;transform:translateY(-50%);
+  width:4px;height:60%;background:var(--title-pink);border-radius:0 4px 4px 0;
+}
+.nav-icon{font-size:18px;margin-right:10px;flex-shrink:0;}
+.sidebar.collapsed .nav-icon{margin-right:0;}
+.nav-text{transition:opacity .2s;}
+.sidebar.collapsed .nav-text{display:none;}
+.sidebar-footer{padding:10px;text-align:center;font-size:11px;color:var(--text-soft);border-top:1px dashed rgba(232,90,138,0.3);}
+.sidebar.collapsed .sidebar-footer{display:none;}
+
+/* ========== 主面板 ========== */
+.main{flex:1;display:flex;flex-direction:column;overflow:hidden;position:relative;}
+.main-header{padding:14px 16px 6px;flex-shrink:0;}
+.page-title{font-size:20px;color:var(--title-pink);font-weight:700;display:flex;align-items:center;gap:8px;}
+.page-subtitle{font-size:12px;color:var(--text-soft);margin-top:2px;}
+
+/* ===== 桌面核心组件条 ===== */
+.home-strip{padding:4px 14px 8px;flex-shrink:0;}
+.hs-row{display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
+.hs-clock{
+  background:#fff;border-radius:20px;padding:6px 12px;font-size:13px;font-weight:700;color:var(--title-pink);
+  box-shadow:var(--shadow-soft);display:flex;align-items:center;gap:6px;
+}
+.hs-date{font-size:11px;color:var(--text-soft);font-weight:400;}
+.hs-checkin{
+  border-radius:20px;padding:7px 14px;font-size:12px;font-weight:600;color:#fff;
+  background:linear-gradient(135deg,#f4a7c3,#ec7ba5);box-shadow:var(--shadow-soft);transition:transform .15s;
+}
+.hs-checkin:active{transform:scale(.95);}
+.hs-checkin.done{background:linear-gradient(135deg,#9adcc3,#5cbfa0);}
+.hs-mode{display:flex;background:#fff;border-radius:20px;padding:3px;box-shadow:var(--shadow-soft);margin-left:auto;}
+.hs-mode button{border-radius:16px;padding:5px 10px;font-size:11px;color:var(--text-soft);background:transparent;font-weight:600;}
+.hs-mode button.active{background:var(--title-pink);color:#fff;}
+.hs-quote{
+  margin-top:8px;background:linear-gradient(135deg,#fff 0%,#fff3f8 100%);
+  border-radius:var(--radius-sm);padding:9px 12px;font-size:12px;line-height:1.6;color:var(--text-main);
+  box-shadow:var(--shadow-soft);border-left:3px solid var(--accent);
+}
+.hs-quote .en{display:block;font-size:11px;color:var(--text-soft);font-style:italic;margin-top:2px;}
+
+/* 标签栏 */
+.tabs-wrap{padding:0 12px 8px;flex-shrink:0;overflow-x:auto;scrollbar-width:none;}
+.tabs-wrap::-webkit-scrollbar{display:none;}
+.tabs{display:flex;gap:8px;}
+.tab{
+  flex-shrink:0;padding:7px 14px;border-radius:20px;background:rgba(255,255,255,0.7);
+  font-size:13px;color:var(--text-main);white-space:nowrap;transition:all .2s;border:1.5px solid transparent;
+}
+.tab:hover{background:#fff;}
+.tab.active{background:#fff;color:var(--title-pink);border-color:var(--accent);font-weight:600;box-shadow:var(--shadow-soft);}
+
+/* 内容区 */
+.content{flex:1;overflow-y:auto;padding:4px 14px 40px;scrollbar-width:thin;}
+.content::-webkit-scrollbar{width:4px;}
+.content::-webkit-scrollbar-thumb{background:var(--accent);border-radius:4px;}
+
+/* 卡片 */
+.card{background:var(--card-bg);border-radius:var(--radius);padding:14px;margin-bottom:12px;box-shadow:var(--shadow-soft);}
+.card-title{font-size:15px;font-weight:700;color:var(--title-pink);margin-bottom:10px;display:flex;align-items:center;gap:6px;}
+.card-title .right{margin-left:auto;font-size:11px;color:var(--text-soft);font-weight:400;}
+
+/* 输入与按钮 */
+.input,.textarea,select.input{
+  width:100%;padding:9px 12px;border:1.5px solid #f6d5e2;border-radius:var(--radius-sm);
+  font-size:13px;color:var(--text-main);background:#fffdfa;margin-bottom:8px;
+}
+.textarea{min-height:70px;resize:vertical;}
+.input:focus,.textarea:focus{border-color:var(--accent);}
+.btn{border-radius:20px;padding:9px 18px;font-size:13px;font-weight:600;transition:transform .15s;}
+.btn:active{transform:scale(.96);}
+.btn-primary{background:linear-gradient(135deg,#f4a7c3,#ec7ba5);color:#fff;box-shadow:var(--shadow-soft);}
+.btn-add{background:linear-gradient(135deg,#f4a7c3,#ec7ba5);color:#fff;padding:8px 16px;border-radius:20px;font-size:13px;font-weight:600;box-shadow:var(--shadow-soft);}
+.btn-mini{padding:4px 10px;border-radius:12px;font-size:12px;background:#ffeef5;color:var(--title-pink);border:1px solid #f6d5e2;}
+.btn-del{padding:4px 10px;border-radius:12px;font-size:12px;background:#fff0f0;color:#e06b6b;border:1px solid #f6d5d5;}
+
+/* 勾选清单 */
+.chk-wrap{display:flex;align-items:flex-start;gap:10px;padding:9px 10px;border-radius:var(--radius-sm);margin-bottom:6px;background:#fffdfa;border:1px solid #fdeef4;}
+.chk-wrap.done{background:#fdf2f7;}
+.chk{
+  width:20px;height:20px;border-radius:50%;border:2px solid var(--accent);flex-shrink:0;margin-top:1px;
+  cursor:pointer;transition:all .2s;position:relative;
+}
+.chk.checked{background:var(--title-pink);border-color:var(--title-pink);}
+.chk.checked::after{content:"✓";position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:#fff;font-size:12px;font-weight:700;}
+.chk-wrap.done .chk-text{text-decoration:line-through;color:var(--text-soft);}
+.chk-text{flex:1;font-size:13px;word-break:break-all;line-height:1.5;}
+.chk-mins{font-size:11px;color:var(--accent-deep);flex-shrink:0;background:#ffeef5;padding:2px 8px;border-radius:10px;}
+
+/* 日记/记录条目 */
+.entry{background:#fffdfa;border:1px solid #fdeef4;border-radius:var(--radius-sm);padding:10px 12px;margin-bottom:8px;}
+.entry-head{display:flex;align-items:center;gap:8px;margin-bottom:4px;}
+.entry-date{font-size:11px;color:var(--text-soft);background:#ffeef5;padding:2px 8px;border-radius:10px;}
+.entry-title{font-size:13px;font-weight:600;color:var(--title-deep);flex:1;word-break:break-all;}
+.entry-body{font-size:12px;line-height:1.7;color:var(--text-main);word-break:break-all;white-space:pre-wrap;}
+.entry-del{margin-left:auto;}
+.field-label{font-size:11px;color:var(--accent-deep);font-weight:600;margin-right:4px;}
+
+/* 干货卡片 */
+.tip-card{
+  background:linear-gradient(135deg,#fff 0%,#fff5fa 100%);
+  border-radius:var(--radius-sm);padding:12px;margin-bottom:8px;border-left:3px solid var(--accent);
+}
+.tip-card h4{font-size:13px;color:var(--title-deep);margin-bottom:5px;}
+.tip-card p{font-size:12px;line-height:1.7;color:var(--text-main);}
+.tip-tag{display:inline-block;font-size:10px;background:#ffeef5;color:var(--accent-deep);padding:2px 8px;border-radius:10px;margin-right:4px;margin-bottom:4px;}
+
+/* 心情选择 */
+.mood-row{display:flex;gap:8px;justify-content:space-around;margin:8px 0 12px;}
+.mood-btn{
+  width:48px;height:48px;border-radius:50%;background:#fffdfa;border:2px solid #f6d5e2;
+  font-size:22px;display:flex;align-items:center;justify-content:center;transition:all .2s;cursor:pointer;
+}
+.mood-btn.selected{border-color:var(--title-pink);background:#ffeef5;transform:scale(1.12);box-shadow:var(--shadow-soft);}
+
+/* 状态行 */
+.stat-row{display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px dashed #fdeef4;font-size:13px;}
+.stat-row:last-child{border-bottom:none;}
+.stat-label{color:var(--text-soft);}
+.stat-val{font-weight:600;color:var(--title-deep);text-align:right;}
+.progress-track{background:#fdeef4;border-radius:8px;height:10px;overflow:hidden;margin-top:8px;}
+.progress-fill{height:100%;background:linear-gradient(90deg,#f4a7c3,#c5b3e6);border-radius:8px;transition:width .5s;}
+
+.date-display{font-size:12px;color:var(--text-soft);text-align:center;margin-bottom:8px;}
+.date-display span{color:var(--title-pink);font-weight:600;}
+.empty-state{text-align:center;padding:36px 20px;color:var(--text-soft);font-size:13px;}
+.empty-state .emoji{font-size:36px;display:block;margin-bottom:8px;}
+.mode-hint{font-size:11px;color:var(--text-soft);text-align:center;margin-bottom:8px;}
+
+/* toast */
+.toast{
+  position:fixed;top:50%;left:50%;transform:translate(-50%,-50%) scale(0.8);
+  background:rgba(90,74,86,0.85);color:#fff;padding:10px 20px;border-radius:20px;font-size:13px;
+  z-index:100;opacity:0;pointer-events:none;transition:all .25s;
+}
+.toast.show{opacity:1;transform:translate(-50%,-50%) scale(1);}
+
+/* ========== 平板适配（竖屏） ========== */
+@media (min-width:768px) and (max-width:899px){
+  .app{max-width:680px;}
+  .page-title{font-size:23px;}
+  .tab{font-size:14px;padding:8px 18px;}
+  .card-title{font-size:16px;}
+  .chk-text,.entry-body{font-size:14px;}
+}
+
+/* ========== 平板适配（横屏） ========== */
+@media (min-width:900px){
+  .app{max-width:1100px;}
+  .sidebar{width:230px;}
+  .avatar{width:66px;height:66px;font-size:32px;}
+  .nickname{font-size:14px;}
+  .nav-item{font-size:15px;padding:13px 18px;}
+  .nav-icon{font-size:20px;}
+  .main-header{padding:20px 24px 8px;}
+  .page-title{font-size:26px;}
+  .page-subtitle{font-size:13px;}
+  .home-strip{padding:6px 22px 10px;}
+  .hs-clock{font-size:15px;padding:8px 16px;}
+  .hs-checkin{font-size:13px;padding:9px 18px;}
+  .hs-mode button{font-size:12px;padding:6px 14px;}
+  .hs-quote{font-size:13px;padding:12px 16px;}
+  .hs-quote .en{font-size:12px;}
+  .tabs-wrap{padding:0 20px 10px;}
+  .tab{font-size:14px;padding:9px 20px;}
+  .content{padding:8px 20px 40px;columns:2;column-gap:14px;}
+  .date-display,.empty-state,.mode-hint{column-span:all;font-size:13px;}
+  .card{break-inside:avoid;padding:18px;}
+  .card-title{font-size:16px;}
+  .chk-text,.entry-body{font-size:14px;}
+  .stat-row{font-size:14px;}
+  .input,.textarea,select.input{font-size:14px;}
+}
+</style>
+</head>
+<body>
+<div class="app" id="app">
+
+  <!-- 侧边导航栏 -->
+  <aside class="sidebar" id="sidebar">
+    <button class="collapse-btn" id="collapseBtn">‹</button>
+    <div class="sidebar-header">
+      <div class="avatar">🌸</div>
+      <div class="nickname">晓敏的工作台</div>
+    </div>
+    <ul class="nav-list" id="navList"></ul>
+    <div class="sidebar-footer">💗 暑期成长 · 治愈同行</div>
+  </aside>
+
+  <!-- 主面板 -->
+  <main class="main">
+    <div class="main-header">
+      <div class="page-title" id="pageTitle">🌸 教师暑期成长</div>
+      <div class="page-subtitle" id="pageSubtitle">身心疗愈 · 体能提升 · 教学赋能 · 教研精进 · 自我沉淀</div>
+    </div>
+
+    <!-- 桌面核心组件条 -->
+    <div class="home-strip">
+      <div class="hs-row">
+        <div class="hs-clock">🕐<span id="clockTime">--:--:--</span><span class="hs-date" id="clockDate"></span></div>
+        <button class="hs-checkin" id="checkinBtn">☀️ 今日打卡</button>
+        <div class="hs-mode">
+          <button id="modeTodayBtn" class="active">☀️ 今日</button>
+          <button id="modeAllBtn">📚 累计</button>
+        </div>
+      </div>
+      <div class="hs-quote" id="dailyQuote"></div>
+    </div>
+
+    <div class="tabs-wrap"><div class="tabs" id="tabs"></div></div>
+    <div class="content" id="content"></div>
+  </main>
+
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+/* ============================================================
+   数据层：localStorage 持久化
+============================================================ */
+const STORE_KEY = 'xiaomin_teacher_v1';
+let DB = {};
+function loadDB(){ try{ DB = JSON.parse(localStorage.getItem(STORE_KEY)) || {}; }catch(e){ DB = {}; } }
+function saveDB(){ localStorage.setItem(STORE_KEY, JSON.stringify(DB)); }
+function getDB(key, def){ if(!(key in DB)){ DB[key] = def; } return DB[key]; }
+function setDB(key, val){ DB[key] = val; saveDB(); }
+function toast(msg){
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'), 1400);
+}
+function escapeHtml(s){ return String(s||'').replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+const pad2 = n => String(n).padStart(2,'0');
+function today(){ const d=new Date(); return `${d.getFullYear()}-${pad2(d.getMonth()+1)}-${pad2(d.getDate())}`; }
+function todayCN(){ const d=new Date(); return `${d.getMonth()+1}月${d.getDate()}日`; }
+function addDays(ds,n){ const d=new Date(ds+'T12:00:00'); d.setDate(d.getDate()+n); return `${d.getFullYear()}-${pad2(d.getMonth()+1)}-${pad2(d.getDate())}`; }
+const WEEK_CN = ['周日','周一','周二','周三','周四','周五','周六'];
+
+/* ============================================================
+   菜单配置（11个专属功能菜单）
+============================================================ */
+const MENUS = [
+  { id:'heal', icon:'💖', name:'心理疗愈', sub:'情绪打卡 · 心灵随笔 · 冥想 · 心理干货',
+    tabs:[
+      {id:'mood', name:'情绪打卡'},
+      {id:'essay', name:'心灵随笔'},
+      {id:'meditation', name:'解压冥想'},
+      {id:'psy', name:'心理干货'},
+    ]
+  },
+  { id:'sport', icon:'🏃', name:'体能锻炼', sub:'拉伸 · 肩颈 · 有氧 · 体态',
+    tabs:[
+      {id:'sport_check', name:'今日打卡'},
+      {id:'sport_lib', name:'运动清单'},
+      {id:'body_rec', name:'身体记录'},
+    ]
+  },
+  { id:'ai', icon:'🤖', name:'AI教学赋能', sub:'工具库 · 实操案例 · 收藏',
+    tabs:[
+      {id:'ai_tools', name:'AI工具库'},
+      {id:'ai_case', name:'实操案例'},
+      {id:'ai_fav', name:'我的收藏'},
+    ]
+  },
+  { id:'lesson', icon:'📚', name:'新学期备课', sub:'备课记录 · 素材库 · 听课反思',
+    tabs:[
+      {id:'lesson_rec', name:'备课记录'},
+      {id:'lesson_mat', name:'素材库'},
+      {id:'lesson_ref', name:'听课反思'},
+    ]
+  },
+  { id:'listen', icon:'🎧', name:'听课学习', sub:'观摩记录 · 好课清单',
+    tabs:[
+      {id:'listen_rec', name:'观摩记录'},
+      {id:'listen_list', name:'好课清单'},
+    ]
+  },
+  { id:'read', icon:'📖', name:'暑期阅读', sub:'书单 · 阅读打卡 · 读书笔记',
+    tabs:[
+      {id:'read_list', name:'我的书单'},
+      {id:'read_check', name:'阅读打卡'},
+      {id:'read_note', name:'读书笔记'},
+    ]
+  },
+  { id:'write', icon:'✍️', name:'教育写作', sub:'教育随笔 · 选题清单 · 写作打卡',
+    tabs:[
+      {id:'write_essay', name:'教育随笔'},
+      {id:'write_topic', name:'选题清单'},
+      {id:'write_check', name:'写作打卡'},
+    ]
+  },
+  { id:'skill', icon:'🖊️', name:'教学基本功', sub:'粉笔字 · 普通话 · 简笔画',
+    tabs:[
+      {id:'skill_check', name:'每日练习'},
+      {id:'skill_rec', name:'练习记录'},
+    ]
+  },
+  { id:'clazz', icon:'🌟', name:'班级管理', sub:'班主任锦囊 · 家校沟通 · 开学第一课',
+    tabs:[
+      {id:'class_tip', name:'班主任锦囊'},
+      {id:'class_home', name:'家校沟通'},
+      {id:'class_first', name:'开学第一课'},
+    ]
+  },
+  { id:'life', icon:'🌸', name:'生活美学', sub:'小确幸 · 心愿清单',
+    tabs:[
+      {id:'life_joy', name:'小确幸'},
+      {id:'life_wish', name:'心愿清单'},
+    ]
+  },
+  { id:'plan', icon:'📋', name:'计划复盘', sub:'今日计划 · 晚间复盘 · 周总结',
+    tabs:[
+      {id:'plan_todo', name:'今日计划'},
+      {id:'plan_rev', name:'晚间复盘'},
+      {id:'plan_week', name:'每周总结'},
+    ]
+  },
+];
+
+let currentMenu = 'heal';
+let currentTab = 'mood';
+let VIEW_MODE = 'today'; // today=每日重置 | all=累积记录
+
+/* ============================================================
+   每日一句（中文 + 英文翻译，每日自动更新）
+============================================================ */
+const QUOTES = [
+  {cn:'教育是一棵树摇动另一棵树，一朵云推动另一朵云。', en:'Education is one tree shaking another, one cloud pushing another.'},
+  {cn:'学高为师，身正为范。', en:'Deep learning makes a teacher; integrity sets the example.'},
+  {cn:'每一次耐心的讲解，都在点亮一颗心。', en:'Every patient explanation lights up a heart.'},
+  {cn:'慢慢来，好戏都在烟火里。', en:'Good things take time; magic lives in the everyday.'},
+  {cn:'你未必光芒万丈，但始终温暖有光。', en:'You may not dazzle, but you always glow with warmth.'},
+  {cn:'把平凡的事做好，就是不平凡。', en:'Doing ordinary things well is extraordinary.'},
+  {cn:'休息，是为了更好地出发。', en:'Rest is the start of a better journey.'},
+  {cn:'先治愈自己，再照亮别人。', en:'Heal yourself first, then light the way for others.'},
+  {cn:'今天也要元气满满呀。', en:'Stay energetic today, too.'},
+  {cn:'孩子的心灵，值得温柔以待。', en:"Every child's heart deserves gentleness."},
+  {cn:'你若盛开，清风自来。', en:'Bloom, and the breeze will come.'},
+  {cn:'好习惯，是送给自己最好的礼物。', en:'Good habits are the best gift to yourself.'},
+  {cn:'读过的书，走过的路，都算数。', en:'Every book read and road traveled counts.'},
+  {cn:'做一个眼里有光的老师。', en:'Be a teacher with light in your eyes.'},
+  {cn:'热爱生活的人，也会被生活治愈。', en:'Those who love life are healed by it.'},
+  {cn:'认真备课的你，真的很了不起。', en:'You, preparing lessons so earnestly, are amazing.'},
+  {cn:'一分耕耘，一分收获。', en:'No pains, no gains.'},
+  {cn:'保持热爱，奔赴山海。', en:'Keep your passion and chase your dreams.'},
+  {cn:'小小的进步，也值得庆祝。', en:'Small progress is worth celebrating.'},
+  {cn:'温柔且坚定，知足且上进。', en:'Gentle yet firm, content yet striving.'},
+  {cn:'愿你被这个世界温柔以待。', en:'May the world treat you gently.'},
+  {cn:'每天进步一点点。', en:'Improve a little every day.'},
+  {cn:'心有阳光，一路芬芳。', en:'With sunshine in your heart, the road is fragrant.'},
+  {cn:'教育者的幸福，藏在孩子的笑容里。', en:"A teacher's happiness hides in students' smiles."},
+  {cn:'不负时光，不负自己。', en:'Live up to time, live up to yourself.'},
+  {cn:'静下来，听见内心的声音。', en:'Be still and hear your inner voice.'},
+  {cn:'身体是革命的本钱。', en:'Health is the foundation of everything.'},
+  {cn:'万事开头难，坚持就是胜利。', en:'Beginning is hard; persistence wins.'},
+  {cn:'你的努力，时间看得见。', en:'Time sees your effort.'},
+  {cn:'新学期，遇见更好的自己。', en:'New semester, meet a better self.'},
+  {cn:'眼里有学生，心中有教育。', en:'Students in your eyes, education in your heart.'},
+];
+
+/* ============================================================
+   渲染：侧边栏 / 标签栏 / 内容区
+============================================================ */
+function renderNav(){
+  const nav = document.getElementById('navList');
+  nav.innerHTML = MENUS.map(m=>`
+    <li class="nav-item ${m.id===currentMenu?'active':''}" data-menu="${m.id}">
+      <span class="nav-icon">${m.icon}</span>
+      <span class="nav-text">${m.name}</span>
+    </li>
+  `).join('');
+  nav.querySelectorAll('.nav-item').forEach(el=>{
+    el.onclick = ()=>{
+      currentMenu = el.dataset.menu;
+      currentTab = MENUS.find(m=>m.id===currentMenu).tabs[0].id;
+      renderAll();
+    };
+  });
+}
+
+function renderTabs(){
+  const menu = MENUS.find(m=>m.id===currentMenu);
+  document.getElementById('pageTitle').innerHTML = `${menu.icon} ${menu.name}`;
+  document.getElementById('pageSubtitle').textContent = menu.sub;
+  const tabs = document.getElementById('tabs');
+  tabs.innerHTML = menu.tabs.map(t=>`
+    <div class="tab ${t.id===currentTab?'active':''}" data-tab="${t.id}">${t.name}</div>
+  `).join('');
+  tabs.querySelectorAll('.tab').forEach(el=>{
+    el.onclick = ()=>{ currentTab = el.dataset.tab; renderTabs(); renderContent(); };
+  });
+}
+
+function renderContent(){
+  const c = document.getElementById('content');
+  c.scrollTop = 0;
+  const fn = RENDERS[currentTab];
+  c.innerHTML = fn ? fn() : '<div class="empty-state"><span class="emoji">🚧</span>建设中...</div>';
+}
+
+function renderAll(){ renderNav(); renderTabs(); renderContent(); renderTopbar(); }
+
+/* ============================================================
+   桌面核心组件：实时时钟 / 每日打卡 / 每日一句 / 模式切换
+============================================================ */
+function renderTopbar(){
+  // 每日一句
+  const now = new Date();
+  const start = new Date(now.getFullYear(),0,0);
+  const dayOfYear = Math.floor((now-start)/86400000);
+  const q = QUOTES[dayOfYear % QUOTES.length];
+  document.getElementById('dailyQuote').innerHTML =
+    `💬 每日一句：${escapeHtml(q.cn)}<span class="en">${escapeHtml(q.en)}</span>`;
+  // 打卡按钮
+  const days = getDB('checkin_dates', []);
+  const btn = document.getElementById('checkinBtn');
+  const has = days.includes(today());
+  const streak = getStreak();
+  btn.className = 'hs-checkin' + (has ? ' done' : '');
+  btn.textContent = has ? `✅ 已打卡 · 连续${streak}天` : (streak>0 ? `☀️ 今日打卡 · 已连${streak}天` : '☀️ 今日打卡');
+  // 模式按钮
+  document.getElementById('modeTodayBtn').className = VIEW_MODE==='today' ? 'active' : '';
+  document.getElementById('modeAllBtn').className = VIEW_MODE==='all' ? 'active' : '';
+}
+
+function getStreak(){
+  const set = new Set(getDB('checkin_dates', []));
+  let streak = 0, cursor = today();
+  if(!set.has(cursor)) cursor = addDays(cursor,-1);
+  while(set.has(cursor)){ streak++; cursor = addDays(cursor,-1); }
+  return streak;
+}
+
+document.getElementById('checkinBtn').onclick = ()=>{
+  const days = getDB('checkin_dates', []);
+  const t = today();
+  const i = days.indexOf(t);
+  if(i>=0){ days.splice(i,1); toast('已取消今日打卡'); }
+  else { days.push(t); toast('打卡成功 🎉'); }
+  setDB('checkin_dates', days);
+  renderTopbar();
+};
+
+document.getElementById('modeTodayBtn').onclick = ()=>{ VIEW_MODE='today'; setDB('view_mode','today'); renderTopbar(); renderContent(); };
+document.getElementById('modeAllBtn').onclick = ()=>{ VIEW_MODE='all'; setDB('view_mode','all'); renderTopbar(); renderContent(); };
+
+function tickClock(){
+  const d = new Date();
+  document.getElementById('clockTime').textContent = `${pad2(d.getHours())}:${pad2(d.getMinutes())}:${pad2(d.getSeconds())}`;
+  document.getElementById('clockDate').textContent = ` ${d.getMonth()+1}月${d.getDate()}日 ${WEEK_CN[d.getDay()]}`;
+}
+setInterval(tickClock, 1000);
+
+/* ============================================================
+   渲染器工厂
+============================================================ */
+const RENDERS = {};
+
+/* ---------- 工厂1：清单打卡（persist=true 累积清单 / false 每日重置） ---------- */
+function checklistRenderer(key, cfg){
+  return function(){
+    const d = today();
+    const customKey = `cl_${key}_items`;
+    const doneKey = cfg.persist ? `cl_${key}_done` : `cl_${key}_done_${d}`;
+    const customs = getDB(customKey, []);
+    const done = getDB(doneKey, {});
+    const items = [
+      ...cfg.presets.map((p,i)=>({id:'p'+i, text:p.text, mins:p.mins||0, preset:true})),
+      ...customs.map(c=>({id:'c'+c.id, text:c.text, mins:c.mins||0, preset:false})),
+    ];
+    const doneCount = items.filter(it=>done[it.id]).length;
+    const totalMins = items.filter(it=>done[it.id]).reduce((s,it)=>s+(it.mins||0),0);
+    const rate = items.length ? Math.round(doneCount/items.length*100) : 0;
+
+    let html = `<div class="date-display">📅 <span>${todayCN()}</span> · ${cfg.icon} ${cfg.title}</div>`;
+
+    if(cfg.persist){
+      html += `
+        <div class="card">
+          <div class="card-title">${cfg.icon} ${cfg.title}<span class="right">累积完成 ${doneCount}/${items.length}</span></div>
+          <div class="progress-track"><div class="progress-fill" style="width:${rate}%;"></div></div>
+        </div>`;
+    } else if(VIEW_MODE==='all'){
+      const stats = checklistStats(key);
+      html += `
+        <div class="card">
+          <div class="card-title">📚 累计记录<span class="right">切换到「今日」可打卡</span></div>
+          <div class="stat-row"><span class="stat-label">累计打卡天数</span><span class="stat-val">${stats.days} 天</span></div>
+          <div class="stat-row"><span class="stat-label">累计完成项目</span><span class="stat-val">${stats.total} 项</span></div>
+          ${stats.totalMins ? `<div class="stat-row"><span class="stat-label">累计时长</span><span class="stat-val">${stats.totalMins} 分钟</span></div>` : ''}
+        </div>
+        <div class="card">
+          <div class="card-title">🗓️ 最近7天</div>
+          ${stats.recent}
+        </div>`;
+      return html;
+    } else {
+      html += `
+        <div class="card">
+          <div class="card-title">${cfg.icon} ${cfg.title}<span class="right">${doneCount}/${items.length} 完成</span></div>
+          ${cfg.desc ? `<div style="font-size:12px;color:var(--text-soft);margin-bottom:8px;">${cfg.desc}</div>` : ''}
+          <div class="progress-track"><div class="progress-fill" style="width:${rate}%;"></div></div>
+          ${cfg.hasMins ? `<div class="stat-row" style="margin-top:6px;"><span class="stat-label">今日累计时长</span><span class="stat-val">⏱️ ${totalMins} 分钟</span></div>` : ''}
+        </div>`;
+    }
+
+    html += `<div class="card"><div class="card-title">📋 ${cfg.persist?'清单':'今日清单'}<span class="right">点击圆圈打卡</span></div>`;
+    if(!items.length) html += `<div class="empty-state"><span class="emoji">🌱</span>还没有内容，在下方添加一条吧</div>`;
+    items.forEach(it=>{
+      const isDone = done[it.id];
+      html += `
+        <div class="chk-wrap ${isDone?'done':''}">
+          <div class="chk ${isDone?'checked':''}" onclick="clToggle('${key}','${it.id}',${cfg.persist?1:0})"></div>
+          <div class="chk-text">${escapeHtml(it.text)}</div>
+          ${it.mins ? `<span class="chk-mins">${it.mins}分钟</span>` : ''}
+          ${!it.preset ? `<button class="btn-del" onclick="clDelCustom('${key}','${it.id}')">删</button>` : ''}
+        </div>`;
+    });
+    html += `
+      <div style="display:flex;gap:6px;margin-top:8px;">
+        <input class="input" id="cl_add_${key}" placeholder="${cfg.addPh||'添加一项…'}" style="margin-bottom:0;flex:1;">
+        ${cfg.hasMins ? `<input class="input" id="cl_min_${key}" type="number" placeholder="分钟" style="margin-bottom:0;width:70px;">` : ''}
+        <button class="btn-add" onclick="clAdd('${key}',${cfg.hasMins?1:0})">＋</button>
+      </div>
+    </div>`;
+    return html;
+  };
+}
+
+function checklistStats(key){
+  const prefix = `cl_${key}_done_`;
+  const dayKeys = Object.keys(DB).filter(k=>k.startsWith(prefix));
+  let total = 0, totalMins = 0;
+  const cfg = CHECK_CFGS[key];
+  const allPresetMins = {};
+  if(cfg){ cfg.presets.forEach((p,i)=>{ allPresetMins['p'+i] = p.mins||0; }); }
+  const customs = getDB(`cl_${key}_items`, []);
+  customs.forEach(c=>{ allPresetMins['c'+c.id] = c.mins||0; });
+  dayKeys.forEach(k=>{
+    const done = DB[k]||{};
+    Object.keys(done).forEach(id=>{
+      if(done[id]){ total++; totalMins += allPresetMins[id]||0; }
+    });
+  });
+  const recent = dayKeys.sort().slice(-7).reverse().map(k=>{
+    const cnt = Object.values(DB[k]||{}).filter(Boolean).length;
+    const ds = k.replace(prefix,'');
+    return `<div class="stat-row"><span class="stat-label">${ds.slice(5).replace('-','月')}日</span><span class="stat-val">完成 ${cnt} 项</span></div>`;
+  }).join('') || '<div class="empty-state"><span class="emoji">🌱</span>暂无记录</div>';
+  return {days:dayKeys.length, total, totalMins, recent};
+}
+
+const CHECK_CFGS = {};
+function clToggle(key, id, persist){
+  const doneKey = persist ? `cl_${key}_done` : `cl_${key}_done_${today()}`;
+  const done = getDB(doneKey, {});
+  done[id] = !done[id];
+  setDB(doneKey, done);
+  renderContent();
+  if(done[id]) toast('打卡 ✓');
+}
+function clAdd(key, hasMins){
+  const inp = document.getElementById('cl_add_'+key);
+  const text = inp.value.trim();
+  if(!text){ toast('先写点内容哦'); return; }
+  const mins = hasMins ? (parseInt(document.getElementById('cl_min_'+key).value)||0) : 0;
+  const customs = getDB(`cl_${key}_items`, []);
+  customs.push({id:Date.now(), text, mins});
+  setDB(`cl_${key}_items`, customs);
+  toast('已添加 🌸');
+  renderContent();
+}
+function clDelCustom(key, cid){
+  let customs = getDB(`cl_${key}_items`, []);
+  customs = customs.filter(c=> 'c'+c.id !== cid);
+  setDB(`cl_${key}_items`, customs);
+  toast('已删除 🗑');
+  renderContent();
+}
+
+/* ---------- 工厂2：日记/记录列表（今日模式只看今天，累计模式看全部） ---------- */
+function journalRenderer(key, cfg){
+  return function(){
+    const listKey = `j_${key}`;
+    const list = getDB(listKey, []);
+    const t = today();
+    const shown = VIEW_MODE==='today' ? list.filter(e=>e.d===t) : [...list].reverse();
+    let html = `<div class="date-display">📅 <span>${todayCN()}</span> · ${cfg.icon} ${cfg.title}</div>`;
+    html += `
+      <div class="card">
+        <div class="card-title">${cfg.icon} ${cfg.title}<span class="right">${VIEW_MODE==='today'?'今日 '+shown.length+' 条':'累计 '+list.length+' 条'}</span></div>
+        ${cfg.desc ? `<div style="font-size:12px;color:var(--text-soft);margin-bottom:8px;">${cfg.desc}</div>` : ''}
+        ${cfg.fields.map(f=> f.multi
+          ? `<textarea class="textarea" id="jf_${key}_${f.name}" placeholder="${f.label}…"></textarea>`
+          : `<input class="input" id="jf_${key}_${f.name}" placeholder="${f.label}…">`).join('')}
+        <button class="btn-add" style="width:100%;" onclick="jAdd('${key}')">＋ 保存记录</button>
+      </div>
+      <div class="card">
+        <div class="card-title">🗂️ ${VIEW_MODE==='today'?'今日记录':'全部记录'}<span class="right">${shown.length} 条</span></div>`;
+    if(!shown.length) html += `<div class="empty-state"><span class="emoji">${cfg.emptyEmoji||'🌱'}</span>${VIEW_MODE==='today'?'今天还没有记录，写一条吧':'暂无记录'}</div>`;
+    shown.forEach(e=>{
+      html += `
+        <div class="entry">
+          <div class="entry-head">
+            <span class="entry-date">${e.d.slice(5).replace('-','月')}日</span>
+            ${e.title ? `<span class="entry-title">${escapeHtml(e.title)}</span>` : ''}
+            <button class="btn-del entry-del" onclick="jDel('${key}',${e.id})">删</button>
+          </div>
+          <div class="entry-body">${cfg.render(e)}</div>
+        </div>`;
+    });
+    html += `</div>`;
+    return html;
+  };
+}
+const JOURNAL_CFGS = {};
+function jAdd(key){
+  const cfg = JOURNAL_CFGS[key];
+  const e = {id:Date.now(), d:today(), v:{}};
+  let empty = true;
+  cfg.fields.forEach(f=>{
+    const el = document.getElementById(`jf_${key}_${f.name}`);
+    e.v[f.name] = el.value.trim();
+    if(e.v[f.name]) empty = false;
+  });
+  if(empty){ toast('先写点内容哦'); return; }
+  const titleField = cfg.fields[0];
+  e.title = titleField.multi ? '' : (e.v[titleField.name]||'').slice(0,30);
+  const list = getDB(`j_${key}`, []);
+  list.push(e);
+  setDB(`j_${key}`, list);
+  toast('已保存 💗');
+  renderContent();
+}
+function jDel(key, id){
+  let list = getDB(`j_${key}`, []);
+  list = list.filter(e=>e.id!==id);
+  setDB(`j_${key}`, list);
+  toast('已删除 🗑');
+  renderContent();
+}
+
+/* ---------- 工厂3：干货卡片（预设 + 可添加自己的） ---------- */
+function cardsRenderer(key, cfg){
+  return function(){
+    const customs = getDB(`cards_${key}`, []);
+    let html = `<div class="date-display">📅 <span>${todayCN()}</span> · ${cfg.icon} ${cfg.title}</div>`;
+    html += `<div class="card"><div class="card-title">${cfg.icon} ${cfg.title}</div>${cfg.desc?`<div style="font-size:12px;color:var(--text-soft);">${cfg.desc}</div>`:''}</div>`;
+    cfg.cards.forEach(c=>{
+      html += `
+        <div class="tip-card">
+          <h4>${c.tag ? `<span class="tip-tag">${c.tag}</span>` : ''}${escapeHtml(c.title)}</h4>
+          <p>${escapeHtml(c.body)}</p>
+        </div>`;
+    });
+    customs.forEach(c=>{
+      html += `
+        <div class="tip-card" style="border-left-color:var(--lavender);">
+          <h4>${escapeHtml(c.title)}<button class="btn-del" style="float:right;" onclick="cardDel('${key}',${c.id})">删</button></h4>
+          <p>${escapeHtml(c.body)}</p>
+        </div>`;
+    });
+    html += `
+      <div class="card">
+        <div class="card-title">✏️ 添加我自己的</div>
+        <input class="input" id="card_t_${key}" placeholder="标题…">
+        <textarea class="textarea" id="card_b_${key}" placeholder="内容…"></textarea>
+        <button class="btn-add" style="width:100%;" onclick="cardAdd('${key}')">＋ 添加</button>
+      </div>`;
+    return html;
+  };
+}
+function cardAdd(key){
+  const t = document.getElementById('card_t_'+key).value.trim();
+  const b = document.getElementById('card_b_'+key).value.trim();
+  if(!t && !b){ toast('先写点内容哦'); return; }
+  const customs = getDB(`cards_${key}`, []);
+  customs.push({id:Date.now(), title:t||'未命名', body:b});
+  setDB(`cards_${key}`, customs);
+  toast('已添加 🌸');
+  renderContent();
+}
+function cardDel(key, id){
+  let customs = getDB(`cards_${key}`, []);
+  customs = customs.filter(c=>c.id!==id);
+  setDB(`cards_${key}`, customs);
+  toast('已删除 🗑');
+  renderContent();
+}
+
+/* ============================================================
+   各菜单渲染器
+============================================================ */
+
+/* ---------- 1. 心理疗愈 ---------- */
+// 情绪打卡
+RENDERS.mood = function(){
+  const t = today();
+  const moodKey = `mood_${t}`;
+  const cur = getDB(moodKey, {mood:'', note:''});
+  const moods = [['great','🥰','超好'],['good','😊','不错'],['calm','😌','平静'],['tired','😮‍💨','疲惫'],['bad','😢','低落']];
+  // 近7天心情
+  const week = [];
+  for(let i=6;i>=0;i--){
+    const ds = addDays(t,-i);
+    const m = getDB(`mood_${ds}`, null);
+    week.push({ds, emoji: m && m.mood ? (moods.find(x=>x[0]===m.mood)||[])[1] : '·'});
+  }
+  let html = `
+    <div class="date-display">📅 <span>${todayCN()}</span> · 💖 情绪打卡</div>
+    <div class="card">
+      <div class="card-title">💗 今天的心情怎么样？</div>
+      <div class="mood-row">
+        ${moods.map(m=>`<div class="mood-btn ${cur.mood===m[0]?'selected':''}" data-mood="${m[0]}" title="${m[2]}">${m[1]}</div>`).join('')}
+      </div>
+      <textarea class="textarea" id="moodNote" placeholder="记录一下今天的心情吧…（可选）">${escapeHtml(cur.note||'')}</textarea>
+      <button class="btn-add" style="width:100%;" onclick="saveMood()">💾 保存今日心情</button>
+    </div>
+    <div class="card">
+      <div class="card-title">🗓️ 近7天心情</div>
+      <div style="display:flex;justify-content:space-around;">
+        ${week.map(w=>`<div style="text-align:center;"><div style="font-size:20px;">${w.emoji}</div><div style="font-size:10px;color:var(--text-soft);">${w.ds.slice(8)}日</div></div>`).join('')}
+      </div>
+    </div>`;
+  return html;
+};
+document.addEventListener('click', e=>{
+  const btn = e.target.closest('.mood-btn');
+  if(btn){
+    btn.parentElement.querySelectorAll('.mood-btn').forEach(b=>b.classList.remove('selected'));
+    btn.classList.add('selected');
+  }
+});
+function saveMood(){
+  const sel = document.querySelector('.mood-btn.selected');
+  const note = document.getElementById('moodNote').value.trim();
+  setDB(`mood_${today()}`, {mood: sel ? sel.dataset.mood : '', note});
+  toast('心情已记录 💗');
+  renderContent();
+}
+
+// 心灵随笔
+JOURNAL_CFGS.essay = {
+  icon:'📝', title:'心灵随笔', desc:'写下此刻的心情与想法，治愈职场内耗，与自己对话。',
+  fields:[{name:'title',label:'标题'},{name:'body',label:'此刻想说的话',multi:true}],
+  render:e=>`${e.v.body?escapeHtml(e.v.body):''}`,
+};
+RENDERS.essay = journalRenderer('essay', JOURNAL_CFGS.essay);
+
+// 解压冥想
+CHECK_CFGS.meditation = {
+  icon:'🧘', title:'解压冥想清单', persist:false, hasMins:true,
+  desc:'每天几分钟，给紧绷的神经放个假。完成一项点一项～',
+  presets:[
+    {text:'腹式呼吸放松（吸气4拍-屏息4拍-呼气6拍）', mins:5},
+    {text:'正念冥想：专注呼吸，清空杂念', mins:10},
+    {text:'身体扫描：从头到脚逐部位放松', mins:10},
+    {text:'感恩三件事：写下今天值得感恩的小事', mins:3},
+    {text:'睡前冥想：放下手机，安静入眠', mins:8},
+  ],
+  addPh:'添加自己的解压方式…',
+};
+RENDERS.meditation = checklistRenderer('meditation', CHECK_CFGS.meditation);
+
+// 心理干货
+RENDERS.psy = cardsRenderer('psy', {
+  icon:'🌈', title:'教师专属心理干货', desc:'给心灵充电的小知识，学会自我关怀。',
+  cards:[
+    {tag:'情绪管理', title:'情绪ABC理论', body:'让我们疲惫的往往不是事情本身，而是对事情的看法。学生调皮（A）→「他是故意针对我」（B）→生气内耗（C）。换个想法：「他还在成长，需要我的引导」（新B），情绪就松了（新C）。'},
+    {tag:'快速放松', title:'4-7-8呼吸法', body:'鼻子吸气4秒 → 屏住呼吸7秒 → 嘴巴缓慢呼气8秒，重复4组。能快速降低焦虑，监考、公开课前的救急神器。'},
+    {tag:'边界感', title:'下班后，把「老师」留在学校', body:'给自己一个明确的下班仪式：换鞋、泡杯茶、听一首歌。告诉自己：此刻起我只是我自己。边界感不是不负责任，而是为了走得更远。'},
+    {tag:'自我关怀', title:'允许自己「做不到完美」', body:'教案不必每篇都惊艳，课堂不必节节都完美。60分的自己同样值得被温柔以待。先照顾好自己，才能照亮学生。'},
+    {tag:'睡眠', title:'睡前「大脑倾倒法」', body:'睡前把脑子里的待办、烦恼全部写在纸上，告诉自己「已经记下了，明天再处理」。大脑确认安全后，更容易入睡。'},
+    {tag:'内耗', title:'停止反刍思维', body:'反复回想「那句话是不是说错了」时，立刻做一个具体动作：洗个苹果、整理桌面。用行动打断反刍，比说服自己「别想了」更有效。'},
+  ],
+});
+
+/* ---------- 2. 体能锻炼 ---------- */
+CHECK_CFGS.sport_check = {
+  icon:'🏃', title:'今日运动打卡', persist:false, hasMins:true,
+  desc:'为久坐备课的老师量身定制，改善肩颈腰痛职业病。',
+  presets:[
+    {text:'晨起全身拉伸（唤醒身体）', mins:10},
+    {text:'肩颈放松操（米字操+绕肩）', mins:8},
+    {text:'有氧轻运动（快走/跳操/跳绳任选）', mins:20},
+    {text:'体态矫正（靠墙站/开肩练习）', mins:15},
+    {text:'睡前腿部放松（缓解久站疲劳）', mins:5},
+  ],
+  addPh:'添加其他运动…',
+};
+RENDERS.sport_check = checklistRenderer('sport_check', CHECK_CFGS.sport_check);
+
+RENDERS.sport_lib = cardsRenderer('sport_lib', {
+  icon:'💪', title:'教师轻运动清单', desc:'动作温和、场地不限，办公室和家里都能做。',
+  cards:[
+    {tag:'肩颈', title:'米字操', body:'用头缓慢写「米」字，每个方向停留3秒。缓解低头备课、批作业导致的颈椎僵硬，每天2遍。'},
+    {tag:'肩颈', title:'绕肩+扩胸', body:'双肩向后画圈20次，再用力扩胸10次。改善含胸驼背，课间在办公室就能做。'},
+    {tag:'腰部', title:'猫式伸展', body:'四足跪姿，吸气塌腰抬头、呼气拱背低头，重复10次。放松久坐紧绷的腰背。'},
+    {tag:'体态', title:'靠墙站', body:'后脑勺、肩胛骨、臀部、脚跟贴墙，收腹站立5-10分钟。矫正圆肩驼背，提升讲台气场。'},
+    {tag:'有氧', title:'快走/慢跑20分钟', body:'晚饭后楼下快走20分钟，微微出汗即可。提升心肺，助眠效果一流。'},
+    {tag:'嗓音', title:'腹式呼吸+唇颤音', body:'手放腹部感受起伏呼吸10次，再做唇颤音（打嘟噜）1分钟。保护嗓子，教师嗓音保养必修课。'},
+  ],
+});
+
+JOURNAL_CFGS.body_rec = {
+  icon:'📊', title:'身体记录', desc:'记录体重、睡眠和身体感受，见证暑期状态回升。',
+  fields:[{name:'weight',label:'体重（kg，可选）'},{name:'sleep',label:'睡眠时长（小时，可选）'},{name:'note',label:'今天的身体感受',multi:true}],
+  render:e=>{
+    let s = '';
+    if(e.v.weight) s += `<span class="field-label">⚖️ 体重</span>${escapeHtml(e.v.weight)}kg　`;
+    if(e.v.sleep) s += `<span class="field-label">😴 睡眠</span>${escapeHtml(e.v.sleep)}小时`;
+    if(e.v.note) s += `${s?'<br>':''}${escapeHtml(e.v.note)}`;
+    return s || '—';
+  },
+};
+RENDERS.body_rec = journalRenderer('body_rec', JOURNAL_CFGS.body_rec);
+
+/* ---------- 3. AI教学赋能 ---------- */
+RENDERS.ai_tools = cardsRenderer('ai_tools', {
+  icon:'🤖', title:'AI教学工具库', desc:'精选适配中小学教学的AI工具，减负增效。',
+  cards:[
+    {tag:'课件制作', title:'Kimi / 文心一言', body:'输入课题和教学目标，一键生成课件大纲与逐页内容。技巧：把教材原文拍照上传，让它「根据这段内容设计3个课堂提问」。'},
+    {tag:'教案优化', title:'豆包 / 讯飞星火', body:'把写好的教案发给它，说「请按新课标要求优化这份教案，突出核心素养」。30秒获得专业修改建议。'},
+    {tag:'作业设计', title:'DeepSeek / 通义千问', body:'提示词示例：「请为小学五年级《分数的初步认识》设计基础/提高/拓展三层作业各3题，附答案」。分层作业一键搞定。'},
+    {tag:'学情分析', title:'智谱清言', body:'把班级成绩表（去掉姓名）发给它，自动分析分数段分布、薄弱知识点，生成分层辅导建议。'},
+    {tag:'课堂互动', title:'希沃白板AI', body:'自带AI课堂活动生成器：随机点名、知识竞赛小游戏一键生成，让课堂氛围活起来。'},
+    {tag:'习题生成', title:'组卷网AI / 作业帮AI', body:'按知识点、难度智能组卷，自动排版可打印。单元测验10分钟出卷。'},
+    {tag:'微课视频', title:'剪映AI', body:'图文成片功能：粘贴知识点文案，自动配图配音生成微课视频，做课前预习材料超快。'},
+    {tag:'评语助手', title:'豆包', body:'输入「为一位数学好但粗心的男孩写期末评语，200字，鼓励为主」，批量生成后再个性化修改，期末评语不再熬夜。'},
+  ],
+});
+
+RENDERS.ai_case = cardsRenderer('ai_case', {
+  icon:'💡', title:'实操案例库', desc:'直接抄作业的提示词模板，改改就能用。',
+  cards:[
+    {tag:'备课', title:'案例：10分钟备好一节课', body:'提示词：「你是资深小学语文教师，请为三年级下册《荷花》设计一份40分钟教案，包含：情境导入、初读感知、精读品析、拓展延伸四个环节，标注每个环节时长，设计2个互动提问。」'},
+    {tag:'作业', title:'案例：分层作业设计', body:'提示词：「请为初中数学《一次函数》设计分层作业：A层基础巩固5题、B层能力提升3题、C层思维拓展2题，附详细答案和易错点提示。」'},
+    {tag:'评语', title:'案例：期末评语批量写', body:'提示词：「请为以下5类学生各写一条期末评语（150字）：①成绩优异但内向 ②活泼好动成绩中等 ③进步明显 ④偏科严重 ⑤学习困难但努力。要求：具体、温暖、有期待。」'},
+    {tag:'班会', title:'案例：主题班会方案', body:'提示词：「设计一节『拒绝手机沉迷』主题班会（40分钟），包含1个破冰小游戏、1个情景剧脚本大纲、小组讨论问题和总结升华环节。」'},
+    {tag:'家长沟通', title:'案例：高情商回复家长', body:'提示词：「家长在群里质疑作业太多，语气激动。请帮我写一段回复：先共情、再解释作业设计意图、最后给出解决方案，语气真诚不卑不亢。」'},
+  ],
+});
+
+CHECK_CFGS.ai_fav = {
+  icon:'⭐', title:'我的AI工具收藏', persist:true, hasMins:false,
+  desc:'收藏你用着顺手的AI工具，慢慢攒成自己的武器库。',
+  presets:[
+    {text:'豆包（教案/评语）'},
+    {text:'Kimi（长文档/课件）'},
+    {text:'DeepSeek（作业设计）'},
+  ],
+  addPh:'收藏一个好用的AI工具…',
+};
+RENDERS.ai_fav = checklistRenderer('ai_fav', CHECK_CFGS.ai_fav);
+
+/* ---------- 4. 新学期备课 ---------- */
+JOURNAL_CFGS.lesson_rec = {
+  icon:'📚', title:'备课记录', desc:'分学科分单元梳理，开学不慌张。',
+  fields:[
+    {name:'subject',label:'学科 + 年级（如：语文 三年级）'},
+    {name:'unit',label:'单元 / 课题'},
+    {name:'points',label:'新课标重点难点',multi:true},
+    {name:'design',label:'课时设计思路 / 导入方案 / 分层作业设计',multi:true},
+  ],
+  render:e=>{
+    let s = `<span class="field-label">🏫 学科</span>${escapeHtml(e.v.subject)}　<span class="field-label">📖 课题</span>${escapeHtml(e.v.unit)}`;
+    if(e.v.points) s += `<br><span class="field-label">🎯 重难点</span>${escapeHtml(e.v.points)}`;
+    if(e.v.design) s += `<br><span class="field-label">💡 设计</span>${escapeHtml(e.v.design)}`;
+    return s;
+  },
+};
+RENDERS.lesson_rec = journalRenderer('lesson_rec', JOURNAL_CFGS.lesson_rec);
+
+JOURNAL_CFGS.lesson_mat = {
+  icon:'🗂️', title:'备课素材库', desc:'好词好句、优质课件、灵感素材都存这里。',
+  fields:[{name:'title',label:'素材名称 / 来源'},{name:'body',label:'素材内容 / 链接 / 摘抄',multi:true}],
+  render:e=>escapeHtml(e.v.body),
+};
+RENDERS.lesson_mat = journalRenderer('lesson_mat', JOURNAL_CFGS.lesson_mat);
+
+JOURNAL_CFGS.lesson_ref = {
+  icon:'🪞', title:'听课反思', desc:'听完好课随手记，把别人的亮点变成自己的。',
+  fields:[
+    {name:'title',label:'课题 / 课程名称'},
+    {name:'teacher',label:'授课人 / 平台'},
+    {name:'body',label:'亮点与收获 / 我的改进想法',multi:true},
+  ],
+  render:e=>{
+    let s = '';
+    if(e.v.teacher) s += `<span class="field-label">👩‍🏫 授课</span>${escapeHtml(e.v.teacher)}<br>`;
+    s += escapeHtml(e.v.body);
+    return s;
+  },
+};
+RENDERS.lesson_ref = journalRenderer('lesson_ref', JOURNAL_CFGS.lesson_ref);
+
+/* ---------- 5. 听课学习 ---------- */
+RENDERS.listen_rec = journalRenderer('listen_rec', JOURNAL_CFGS.lesson_ref);
+
+CHECK_CFGS.listen_list = {
+  icon:'🎧', title:'暑期好课清单', persist:true, hasMins:false,
+  desc:'精选优质课资源平台，刷一节勾一节。',
+  presets:[
+    {text:'国家中小学智慧教育平台 · 本学科优质课2节'},
+    {text:'一师一优课 · 部级优课1节'},
+    {text:'名师空中课堂 · 新课标示范课1节'},
+    {text:'B站名师课堂实录 · 2节'},
+    {text:'听课后完成1篇听课反思（去「听课反思」记录）'},
+  ],
+  addPh:'添加想看的好课…',
+};
+RENDERS.listen_list = checklistRenderer('listen_list', CHECK_CFGS.listen_list);
+
+/* ---------- 6. 暑期阅读 ---------- */
+// 书单（想读/在读/读完 状态流转）
+RENDERS.read_list = function(){
+  const books = getDB('read_books', []);
+  const STATUS = ['📖 想读','⏳ 在读','✅ 读完'];
+  let html = `
+    <div class="date-display">📅 <span>${todayCN()}</span> · 📖 我的书单</div>
+    <div class="card">
+      <div class="card-title">📚 添加新书</div>
+      <input class="input" id="book_name" placeholder="书名…">
+      <input class="input" id="book_author" placeholder="作者（可选）…">
+      <button class="btn-add" style="width:100%;" onclick="bookAdd()">＋ 加入书单</button>
+    </div>
+    <div class="card">
+      <div class="card-title">📖 我的书单<span class="right">共 ${books.length} 本 · 读完 ${books.filter(b=>b.s===2).length} 本</span></div>`;
+  if(!books.length) html += `<div class="empty-state"><span class="emoji">🌱</span>书单还是空的，添加第一本吧</div>`;
+  books.forEach((b,i)=>{
+    html += `
+      <div class="entry">
+        <div class="entry-head">
+          <span class="entry-title">《${escapeHtml(b.name)}》${b.author?' · '+escapeHtml(b.author):''}</span>
+          <button class="btn-mini" onclick="bookNext(${i})">${STATUS[b.s]}</button>
+          <button class="btn-del entry-del" onclick="bookDel(${i})">删</button>
+        </div>
+      </div>`;
+  });
+  html += `</div>
+    <div class="tip-card"><h4>💡 教师暑期推荐书单</h4><p>《给教师的建议》苏霍姆林斯基 · 《爱心与教育》李镇西 · 《班主任工作漫谈》魏书生 · 《学习之道》芭芭拉·奥克利 · 《被讨厌的勇气》岸见一郎</p></div>`;
+  return html;
+};
+function bookAdd(){
+  const name = document.getElementById('book_name').value.trim();
+  if(!name){ toast('先写书名哦'); return; }
+  const author = document.getElementById('book_author').value.trim();
+  const books = getDB('read_books', []);
+  books.push({name, author, s:0});
+  setDB('read_books', books);
+  toast('已加入书单 📖');
+  renderContent();
+}
+function bookNext(i){
+  const books = getDB('read_books', []);
+  books[i].s = (books[i].s+1) % 3;
+  setDB('read_books', books);
+  if(books[i].s===2) toast('又读完一本 🎉');
+  renderContent();
+}
+function bookDel(i){
+  const books = getDB('read_books', []);
+  books.splice(i,1);
+  setDB('read_books', books);
+  toast('已删除 🗑');
+  renderContent();
+}
+
+CHECK_CFGS.read_check = {
+  icon:'📖', title:'今日阅读打卡', persist:false, hasMins:true,
+  desc:'每天一点阅读时光，假期悄悄拔尖。',
+  presets:[
+    {text:'专注阅读（纸质书最佳）', mins:30},
+    {text:'摘抄一句打动你的话', mins:5},
+    {text:'写一段读书心得（50字即可）', mins:10},
+  ],
+  addPh:'添加阅读任务…',
+};
+RENDERS.read_check = checklistRenderer('read_check', CHECK_CFGS.read_check);
+
+JOURNAL_CFGS.read_note = {
+  icon:'📝', title:'读书笔记', desc:'金句与感悟，都是日后课堂上的光。',
+  fields:[{name:'title',label:'书名'},{name:'body',label:'金句摘抄 / 我的心得',multi:true}],
+  render:e=>escapeHtml(e.v.body),
+};
+RENDERS.read_note = journalRenderer('read_note', JOURNAL_CFGS.read_note);
+
+/* ---------- 7. 教育写作 ---------- */
+JOURNAL_CFGS.write_essay = {
+  icon:'✍️', title:'教育随笔', desc:'记录教学中的感动与思考，是最珍贵的教研素材。',
+  fields:[{name:'title',label:'标题'},{name:'body',label:'正文（随意写，不用完美）',multi:true}],
+  render:e=>escapeHtml(e.v.body),
+};
+RENDERS.write_essay = journalRenderer('write_essay', JOURNAL_CFGS.write_essay);
+
+CHECK_CFGS.write_topic = {
+  icon:'💡', title:'写作选题清单', persist:true, hasMins:false,
+  desc:'好选题攒起来，论文随笔都不愁。',
+  presets:[
+    {text:'「双减」背景下的分层作业设计实践'},
+    {text:'AI进课堂：机遇与边界'},
+    {text:'班主任的沟通艺术：与家长相处的分寸感'},
+    {text:'新课标核心素养如何落地课堂'},
+    {text:'一个「问题学生」的转变记录'},
+  ],
+  addPh:'记录一个写作灵感…',
+};
+RENDERS.write_topic = checklistRenderer('write_topic', CHECK_CFGS.write_topic);
+
+CHECK_CFGS.write_check = {
+  icon:'✍️', title:'今日写作打卡', persist:false, hasMins:true,
+  desc:'写作是思考的体操，每天300字就够。',
+  presets:[
+    {text:'自由写作（随笔/反思/案例均可）', mins:20},
+    {text:'修改一篇旧文', mins:15},
+    {text:'积累一个写作素材（案例/金句/数据）', mins:10},
+  ],
+  addPh:'添加写作任务…',
+};
+RENDERS.write_check = checklistRenderer('write_check', CHECK_CFGS.write_check);
+
+/* ---------- 8. 教学基本功 ---------- */
+CHECK_CFGS.skill_check = {
+  icon:'🖊️', title:'每日基本功练习', persist:false, hasMins:true,
+  desc:'粉笔字、普通话、简笔画——讲台上的底气都是练出来的。',
+  presets:[
+    {text:'粉笔字练习（抄一首诗/一段课文）', mins:15},
+    {text:'普通话跟读（新闻/课文朗读）', mins:15},
+    {text:'简笔画练习（画3个课堂常用小图）', mins:10},
+    {text:'板书设计1份（为下学期一节课设计）', mins:15},
+  ],
+  addPh:'添加练习项目…',
+};
+RENDERS.skill_check = checklistRenderer('skill_check', CHECK_CFGS.skill_check);
+
+JOURNAL_CFGS.skill_rec = {
+  icon:'📈', title:'练习记录', desc:'记录每次练习，见证进步轨迹。',
+  fields:[{name:'title',label:'练习项目（如：粉笔字）'},{name:'body',label:'练习内容 / 心得 / 自我评分',multi:true}],
+  render:e=>escapeHtml(e.v.body),
+};
+RENDERS.skill_rec = journalRenderer('skill_rec', JOURNAL_CFGS.skill_rec);
+
+/* ---------- 9. 班级管理 ---------- */
+RENDERS.class_tip = cardsRenderer('class_tip', {
+  icon:'🌟', title:'班主任锦囊', desc:'带班小智慧，新学期更从容。',
+  cards:[
+    {tag:'开学', title:'开学第一周立规矩', body:'规矩要少而精：不超过5条，每条都具体可执行（如「预备铃响，课本放左上角」）。第一周狠抓落实，后面一学期都省心。'},
+    {tag:'沟通', title:'与家长沟通的三明治法则', body:'先说优点（「孩子最近发言很积极」）→ 再谈问题（「但作业书写有些潦草」）→ 最后给方法（「我们这样配合……」）。家长更愿意配合。'},
+    {tag:'表扬', title:'表扬要具体', body:'「你真棒」不如「你刚才主动帮同桌讲题，这就是乐于助人」。具体的表扬让孩子知道自己哪里做得好，才会重复好行为。'},
+    {tag:'批评', title:'批评私下，表扬公开', body:'当众批评伤自尊还容易对抗。把学生叫到走廊轻声说，效果远好于教室里的疾风暴雨。'},
+    {tag:'班干部', title:'人人有事做，事事有人管', body:'把班级事务拆成30+个小岗位（灯长、花长、图书管理员……），让每个孩子都有责任感，班主任轻松一半。'},
+    {tag:'自护', title:'重要沟通留痕', body:'涉及学生安全、费用的沟通，尽量用文字（微信/通知单），关键节点拍照留存。保护自己，也是规范工作。'},
+  ],
+});
+
+JOURNAL_CFGS.class_home = {
+  icon:'📞', title:'家校沟通记录', desc:'重要的沟通记下来，工作留痕更安心。',
+  fields:[{name:'title',label:'沟通对象（如：小明妈妈）'},{name:'body',label:'沟通事项 / 结果 / 后续跟进',multi:true}],
+  render:e=>escapeHtml(e.v.body),
+};
+RENDERS.class_home = journalRenderer('class_home', JOURNAL_CFGS.class_home);
+
+JOURNAL_CFGS.class_first = {
+  icon:'🎬', title:'开学第一课构思', desc:'把灵感攒起来，开学惊艳全班。',
+  fields:[{name:'title',label:'创意主题（如：暑期分享会）'},{name:'body',label:'活动设计 / 流程 / 金点子',multi:true}],
+  render:e=>escapeHtml(e.v.body),
+};
+RENDERS.class_first = journalRenderer('class_first', JOURNAL_CFGS.class_first);
+
+/* ---------- 10. 生活美学 ---------- */
+JOURNAL_CFGS.life_joy = {
+  icon:'🌸', title:'今日小确幸', desc:'记录生活里的微小美好，幸福感会越攒越多。',
+  fields:[{name:'body',label:'今天的小确幸（一顿美食/一朵云/一句夸奖…）',multi:true}],
+  render:e=>escapeHtml(e.v.body),
+  emptyEmoji:'🌷',
+};
+RENDERS.life_joy = journalRenderer('life_joy', JOURNAL_CFGS.life_joy);
+
+CHECK_CFGS.life_wish = {
+  icon:'🌟', title:'暑期心愿清单', persist:true, hasMins:false,
+  desc:'这个假期，也别忘了好好宠爱自己。',
+  presets:[
+    {text:'看一场日出或日落'},
+    {text:'读完3本喜欢的书'},
+    {text:'学会一道新菜'},
+    {text:'安排一次短途旅行'},
+    {text:'拍一组好看的照片'},
+    {text:'和朋友好好聚一次'},
+  ],
+  addPh:'许下一个小心愿…',
+};
+RENDERS.life_wish = checklistRenderer('life_wish', CHECK_CFGS.life_wish);
+
+/* ---------- 11. 计划复盘 ---------- */
+CHECK_CFGS.plan_todo = {
+  icon:'📋', title:'今日计划', persist:false, hasMins:false,
+  desc:'每天早上列3-5件最重要的事，做完就勾掉。',
+  presets:[],
+  addPh:'今天要做什么？（如：备课1节/运动30分钟）',
+};
+RENDERS.plan_todo = checklistRenderer('plan_todo', CHECK_CFGS.plan_todo);
+
+JOURNAL_CFGS.plan_rev = {
+  icon:'🌙', title:'晚间复盘', desc:'睡前5分钟，回顾今天，安放明天。',
+  fields:[{name:'good',label:'今天做得好的3件事',multi:true},{name:'better',label:'可以更好的地方 / 明天最重要的事',multi:true}],
+  render:e=>{
+    let s = '';
+    if(e.v.good) s += `<span class="field-label">👍 好事</span>${escapeHtml(e.v.good)}`;
+    if(e.v.better) s += `${s?'<br>':''}<span class="field-label">🎯 改进</span>${escapeHtml(e.v.better)}`;
+    return s;
+  },
+};
+RENDERS.plan_rev = journalRenderer('plan_rev', JOURNAL_CFGS.plan_rev);
+
+JOURNAL_CFGS.plan_week = {
+  icon:'🗓️', title:'每周总结', desc:'一周一小结，假期结束你会感谢现在的自己。',
+  fields:[{name:'title',label:'第几周（如：暑期第2周）'},{name:'body',label:'本周收获 / 成长 / 下周计划',multi:true}],
+  render:e=>escapeHtml(e.v.body),
+};
+RENDERS.plan_week = journalRenderer('plan_week', JOURNAL_CFGS.plan_week);
+
+/* ============================================================
+   侧边栏伸缩 & 初始化
+============================================================ */
+document.getElementById('collapseBtn').onclick = ()=>{
+  document.getElementById('sidebar').classList.toggle('collapsed');
+};
+
+loadDB();
+VIEW_MODE = getDB('view_mode','today');
+// 窄屏设备默认收起侧栏，内容区更大
+if(window.innerWidth < 768) document.getElementById('sidebar').classList.add('collapsed');
+tickClock();
+renderAll();
+</script>
+</body>
+</html>
