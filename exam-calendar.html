@@ -180,6 +180,31 @@ body{
 }
 .legend span{display:flex;align-items:center;gap:4px;}
 .legend-dot{width:10px;height:10px;border-radius:3px;display:inline-block;}
+
+/* ===== 报名提醒中心 ===== */
+.badge{display:inline-block;padding:3px 9px;border-radius:11px;font-size:11px;font-weight:600;background:#eef7fd;color:var(--accent-blue-deep);white-space:nowrap;}
+.badge.red{background:#ffe3e3;color:#e85555;animation:blink 1.2s infinite;}
+.badge.orange{background:#fff1e0;color:#e8873a;}
+.badge.green{background:#e2f6e8;color:#3aa855;}
+.badge.gray{background:#eef2f5;color:var(--text-soft);animation:none;}
+@keyframes blink{0%,100%{opacity:1;}50%{opacity:.55;}}
+.alert-bar{border-radius:10px;padding:9px 12px;font-size:12px;margin-bottom:6px;line-height:1.5;}
+.alert-bar.warn{background:#fff1e0;color:#b25a1b;border-left:4px solid #e8873a;}
+.alert-bar.ongoing{background:#e2f6e8;color:#23743d;border-left:4px solid #3aa855;}
+.alert-bar.calm{background:#eef7fd;color:var(--accent-blue-deep);border-left:4px solid var(--accent-blue);}
+.remind-btn{border:none;border-radius:20px;padding:9px 16px;font-size:13px;font-weight:600;background:linear-gradient(135deg,#7ec5e8,#5bb0d8);color:#fff;box-shadow:0 3px 10px rgba(126,197,232,0.3);cursor:pointer;}
+.remind-btn.green{background:linear-gradient(135deg,#5ec98a,#3aa855);}
+.remind-btn:active{transform:scale(.96);}
+.official-links{display:flex;flex-wrap:wrap;gap:8px;margin-top:6px;}
+.official-links a{font-size:12px;color:var(--accent-blue-deep);background:#eaf6ff;padding:6px 12px;border-radius:14px;text-decoration:none;}
+
+/* ===== 平板横屏适配 ===== */
+@media (min-width:900px){
+  body{max-width:860px;}
+  .header h1{font-size:24px;}
+  .summary-table{font-size:13px;}
+  .exam-card{padding:18px;}
+}
 </style>
 </head>
 <body>
@@ -197,7 +222,7 @@ body{
     <li><strong>时间冲突预警</strong>：事业单位联考(10月)与银行秋招笔试(10月)高度重叠，需提前抉择</li>
     <li><strong>黄金备考期</strong>：8-9月是打基础的关键期，建议每天学习3-4小时</li>
     <li><strong>多线并行</strong>：行测/职测/公基有重叠，可同时备考多个考试提高上岸率</li>
-    <li><strong>报名提醒</strong>：各考试报名窗口短(5-10天)，建议设闹钟提醒，错过等一年</li>
+    <li><strong>报名提醒</strong>：用下方「🔔报名提醒中心」一键导入手机日历，到点自动响铃，错过等一年</li>
     <li><strong>届别注意</strong>：国企/银行秋招大多限应届生，国考应届岗占比高</li>
   </ul>
 </div>
@@ -206,6 +231,33 @@ body{
   <span><span class="legend-dot" style="background:#ff6b6b;"></span>核心重头戏</span>
   <span><span class="legend-dot" style="background:#7ec5e8;"></span>常规编制</span>
   <span><span class="legend-dot" style="background:#3aa855;"></span>国企/银行</span>
+</div>
+
+<!-- ===== 报名提醒中心 ===== -->
+<div class="exam-card urgent" id="remindCenter">
+  <div class="exam-head">
+    <span class="exam-name">🔔 报名提醒中心</span>
+    <span class="exam-type hot">⏰ 到点提醒</span>
+  </div>
+  <div id="todayAlert" style="margin-top:10px;"></div>
+  <div style="display:flex;gap:8px;flex-wrap:wrap;margin:10px 0;">
+    <button class="remind-btn" id="notifBtn">🔔 开启浏览器到点提醒</button>
+    <button class="remind-btn green" id="icsBtn">📅 导入手机日历（带闹钟）</button>
+  </div>
+  <div style="font-size:11px;color:var(--text-soft);line-height:1.6;margin-bottom:10px;">
+    💡 点「导入手机日历」会下载日历文件，打开即可加入手机自带日历：<strong>到报名/考试时间，手机会像闹钟一样自动响铃提醒</strong>（提前3天、前1天、当天共3次）。日期为预计时间，正式通告以官方为准👇
+  </div>
+  <table class="summary-table">
+    <thead><tr><th>关键节点</th><th>日期(预计)</th><th>倒计时</th></tr></thead>
+    <tbody id="remindBody"></tbody>
+  </table>
+  <div class="tip-title" style="font-size:13px;color:var(--title-red);font-weight:700;margin:10px 0 4px;">📢 官方通告直达（出公告第一时间看这里）</div>
+  <div class="official-links">
+    <a href="http://bm.scs.gov.cn" target="_blank">🏛️ 国家公务员局</a>
+    <a href="http://81rc.81.cn" target="_blank">🎖️ 军队人才网</a>
+    <a href="https://zhaopin.sgcc.com.cn" target="_blank">⚡ 国家电网招聘</a>
+    <a href="http://www.cpta.com.cn" target="_blank">📋 中国人事考试网</a>
+  </div>
 </div>
 
 <!-- ===== 8月 ===== -->
@@ -613,6 +665,154 @@ body{
   <p style="margin-top:8px;font-size:11px;">📌 数据来源：国家公务员局、军队人才网、各省人事考试网、国家电网招聘平台等官方渠道<br>具体时间以2026年下半年官方公告为准</p>
   <p style="margin-top:8px;font-size:11px;">🗓️ 整理日期：2026年7月31日 · 对应2027年度招考批次</p>
 </div>
+
+<script>
+/* ============================================================
+   报名提醒中心：倒计时 + 浏览器通知 + 手机日历闹钟导入
+============================================================ */
+const EXAM_EVENTS = [
+  {icon:'🏫', name:'事业编联考报名', start:'2026-08-25', end:'2026-09-15'},
+  {icon:'🏦', name:'银行秋招集中网申', start:'2026-08-31', end:'2026-10-15'},
+  {icon:'📋', name:'浙江事业编统考笔试', start:'2026-09-19'},
+  {icon:'🏛️', name:'国考公告发布', start:'2026-10-14'},
+  {icon:'🏛️', name:'国考报名', start:'2026-10-15', end:'2026-10-24'},
+  {icon:'🏦', name:'银行秋招笔试(首批)', start:'2026-10-17'},
+  {icon:'📋', name:'事业单位联考笔试', start:'2026-10-24'},
+  {icon:'🎖️', name:'军队文职公告', start:'2026-10-30'},
+  {icon:'🎖️', name:'军队文职报名', start:'2026-11-03', end:'2026-11-09'},
+  {icon:'🗺️', name:'省考报名(非联考省份)', start:'2026-11-09', end:'2026-11-16'},
+  {icon:'⚡', name:'国家电网一批报名', start:'2026-11-16', end:'2026-11-20'},
+  {icon:'⚡', name:'国家电网一批笔试', start:'2026-11-22'},
+  {icon:'🏛️', name:'国考笔试', start:'2026-11-29'},
+  {icon:'🗺️', name:'省考笔试(非联考)', start:'2026-12-12'},
+  {icon:'🎖️', name:'军队文职笔试', start:'2026-12-14'},
+];
+
+function _todayStr(){
+  const d = new Date();
+  return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+}
+function _daysTo(ds){ return Math.round((new Date(ds) - new Date(_todayStr())) / 86400000); }
+function _fmt(ds){ return ds.slice(5).replace('-','/'); }
+
+function eventStatus(ev){
+  const t = _todayStr();
+  if(ev.end){
+    if(t >= ev.start && t <= ev.end) return {cls:'green', txt:'🔥 进行中', urgent:1};
+    if(t > ev.end) return {cls:'gray', txt:'已结束'};
+    const d = _daysTo(ev.start);
+    if(d === 0) return {cls:'red', txt:'今天开始！', urgent:1};
+    return {cls: d<=3 ? 'red' : (d<=7 ? 'orange' : ''), txt:'还有'+d+'天', urgent: d<=7 ? 1 : 0};
+  }
+  const d = _daysTo(ev.start);
+  if(d < 0) return {cls:'gray', txt:'已结束'};
+  if(d === 0) return {cls:'red', txt:'就是今天！', urgent:1};
+  return {cls: d<=3 ? 'red' : (d<=7 ? 'orange' : ''), txt:'还有'+d+'天', urgent: d<=7 ? 1 : 0};
+}
+
+function renderRemindTable(){
+  const rows = [...EXAM_EVENTS].sort((a,b)=> a.start < b.start ? -1 : 1).map(ev=>{
+    const s = eventStatus(ev);
+    const range = ev.end ? `${_fmt(ev.start)} ~ ${_fmt(ev.end)}` : _fmt(ev.start);
+    return `<tr><td>${ev.icon} ${ev.name}</td><td>${range}</td><td><span class="badge ${s.cls}">${s.txt}</span></td></tr>`;
+  }).join('');
+  document.getElementById('remindBody').innerHTML = rows;
+}
+
+function renderTodayAlert(){
+  const urgent = EXAM_EVENTS.map(e=>({e, s:eventStatus(e)})).filter(x=>x.s.urgent);
+  const box = document.getElementById('todayAlert');
+  if(!urgent.length){
+    box.innerHTML = '<div class="alert-bar calm">✅ 未来7天没有紧急节点，安心备考～</div>';
+    return;
+  }
+  box.innerHTML = urgent.map(x=>{
+    const range = x.e.end ? `${_fmt(x.e.start)} ~ ${_fmt(x.e.end)}` : _fmt(x.e.start);
+    return `<div class="alert-bar ${x.s.cls==='green'?'ongoing':'warn'}">${x.e.icon} <strong>${x.e.name}</strong>（${range}）${x.s.txt}</div>`;
+  }).join('');
+}
+
+/* ---------- 浏览器通知（打开页面时到点提醒） ---------- */
+function checkAndNotify(force){
+  if(!('Notification' in window) || Notification.permission !== 'granted') return;
+  const today = _todayStr();
+  EXAM_EVENTS.forEach(ev=>{
+    const s = eventStatus(ev);
+    if(!s.urgent) return;
+    const flag = 'notified_' + today + '_' + ev.name;
+    if(!force && localStorage.getItem(flag)) return;
+    localStorage.setItem(flag, '1');
+    const range = ev.end ? `${_fmt(ev.start)} ~ ${_fmt(ev.end)}` : _fmt(ev.start);
+    new Notification('📚 编制考试提醒', { body: `${ev.icon} ${ev.name}（${range}）${s.txt}` });
+  });
+}
+
+document.getElementById('notifBtn').onclick = async function(){
+  if(!('Notification' in window)){
+    alert('当前浏览器不支持通知\n建议改用「导入手机日历」，手机闹钟更靠谱！');
+    return;
+  }
+  const p = await Notification.requestPermission();
+  if(p === 'granted'){
+    this.textContent = '✅ 提醒已开启（每次打开日历自动检查）';
+    checkAndNotify(true);
+  } else {
+    alert('未获得通知权限\n可在浏览器设置中允许通知，或改用「导入手机日历」');
+  }
+};
+
+/* ---------- 生成带闹钟的手机日历文件(.ics) ---------- */
+function _icsDate(ds){ return ds.replace(/-/g,''); }
+function _icsDT(ds, h){ return ds.replace(/-/g,'') + 'T' + String(h).padStart(2,'0') + '0000'; }
+function _addDays(ds, n){ const d = new Date(ds); d.setDate(d.getDate()+n); return d.toISOString().slice(0,10); }
+
+function downloadICS(){
+  const L = ['BEGIN:VCALENDAR','VERSION:2.0','PRODID:-//xiaomin//exam-reminder//CN','CALSCALE:GREGORIAN'];
+  let uid = 0;
+  const stamp = new Date().toISOString().replace(/[-:]/g,'').split('.')[0] + 'Z';
+  function addEvent(ds, summary, desc){
+    uid++;
+    L.push('BEGIN:VEVENT');
+    L.push('UID:exam' + uid + '@xiaomin-reminder');
+    L.push('DTSTAMP:' + stamp);
+    L.push('DTSTART;VALUE=DATE:' + _icsDate(ds));
+    L.push('SUMMARY:' + summary);
+    if(desc) L.push('DESCRIPTION:' + desc);
+    L.push('BEGIN:VALARM','ACTION:DISPLAY','TRIGGER;VALUE=DATE-TIME:' + _icsDT(_addDays(ds,-3), 9),'END:VALARM');
+    L.push('BEGIN:VALARM','ACTION:DISPLAY','TRIGGER;VALUE=DATE-TIME:' + _icsDT(_addDays(ds,-1), 9),'END:VALARM');
+    L.push('BEGIN:VALARM','ACTION:DISPLAY','TRIGGER;VALUE=DATE-TIME:' + _icsDT(ds, 8),'END:VALARM');
+    L.push('END:VEVENT');
+  }
+  EXAM_EVENTS.forEach(ev=>{
+    if(ev.end){
+      addEvent(ev.start, ev.icon + ev.name + '开始（预计）', '报名窗口 ' + _fmt(ev.start) + ' ~ ' + _fmt(ev.end) + '，以官方公告为准');
+      addEvent(ev.end, '⚠️' + ev.name + '最后一天！（预计）', '今天是截止日，错过等一年！');
+    } else {
+      addEvent(ev.start, ev.icon + ev.name + '（预计）', '以官方公告为准');
+    }
+  });
+  L.push('END:VCALENDAR');
+  const blob = new Blob(['\ufeff' + L.join('\r\n')], {type:'text/calendar;charset=utf-8'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = '2026下半年编制考试提醒.ics';
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  alert('📅 日历文件已下载！\n\n打开文件即可导入手机自带日历，\n到报名/考试时间会自动响铃提醒 ⏰\n（提前3天、前1天、当天各提醒1次）');
+}
+document.getElementById('icsBtn').onclick = downloadICS;
+
+/* ---------- 初始化 ---------- */
+renderRemindTable();
+renderTodayAlert();
+window.addEventListener('load', ()=>{
+  if('Notification' in window && Notification.permission === 'granted'){
+    document.getElementById('notifBtn').textContent = '✅ 提醒已开启（每次打开日历自动检查）';
+    checkAndNotify(false);
+  }
+});
+</script>
 
 </body>
 </html>
