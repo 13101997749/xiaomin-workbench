@@ -810,14 +810,12 @@ function escapeHtml(s){ return String(s||'').replace(/[&<>"']/g, c=>({'&':'&amp;
    菜单结构
 ============================================================ */
 const MENUS = [
-  { id:'plan', icon:'📋', name:'每日背诵计划', sub:'事业编时政 · 军队文职时政 · 饮食 · 待办 · 日程 · 作息',
+  { id:'plan', icon:'📋', name:'每日背诵计划', sub:'事业编时政 · 文职时政 · 事业编任务 · 文职任务',
     tabs:[
       {id:'policy_recite_syb', name:'✅事业编时政'},
       {id:'policy_recite_wz', name:'✅军队文职时政'},
-      {id:'food', name:'✅饮食'},
-      {id:'todo', name:'✅待办清单'},
-      {id:'schedule', name:'✅日程规划'},
-      {id:'sleep', name:'✅作息打卡'},
+      {id:'syb_tasks', name:'📚事业编任务'},
+      {id:'wz_tasks', name:'🎖️文职任务'},
     ]
   },
 ];
@@ -1216,6 +1214,161 @@ function togglePolicyRecite(trackKey, i){
   setDB(key, checked);
   renderContent();
   if(checked[i]) toast('背诵打卡 ✓');
+}
+
+/* ---------- 每日备考任务（事业编 / 军队文职，规划至考前） ---------- */
+const STUDY_PLANS = {
+  syb:{
+    icon:'📚', name:'事业编A类', examName:'事业单位联考笔试', examDate:'2026-10-24', examLabel:'10月24日（预计）',
+    phases:[
+      {name:'基础夯实期', start:'2026-08-02', end:'2026-09-10', pages:30, questions:30, mode:'basic', desc:'通读教材打基础，理解每个模块的核心考点'},
+      {name:'强化刷题期', start:'2026-09-11', end:'2026-10-10', pages:15, questions:60, mode:'boost', desc:'专项突破弱项模块，限时刷题提升速度'},
+      {name:'冲刺模考期', start:'2026-10-11', end:'2026-10-23', pages:0, questions:0, mode:'sprint', desc:'全真套卷模拟，查漏补缺保持手感'},
+    ],
+    weekly:[
+      {subject:'每周复盘日', icon:'🧹', content:'错题重做、笔记梳理、下周规划'},
+      {subject:'言语理解与表达', icon:'💬', content:'逻辑填空（实词/成语辨析）、片段阅读（主旨概括、意图判断）、语句排序'},
+      {subject:'判断推理', icon:'🔍', content:'图形推理、定义判断、类比推理、逻辑判断（加强/削弱）'},
+      {subject:'资料分析', icon:'📊', content:'增长率、比重、平均数、倍数 + 截位直除等速算技巧'},
+      {subject:'数量关系', icon:'🔢', content:'工程问题、行程问题、排列组合、概率、几何最值'},
+      {subject:'常识判断', icon:'🌍', content:'政治理论、法律常识、经济常识、科技成就、人文历史'},
+      {subject:'综合应用能力A类', icon:'✍️', content:'归纳概括、提出对策、应急处理、公文写作'},
+    ],
+    tips:'📌 职测五大模块每天轮换，周日复盘巩固<br>📌 综应A类每周六练笔，主观题一定要动手写<br>📌 错题本比刷题量更重要，每道错题标注错误原因<br>📌 学完记得去「事业编时政」标签完成今日背诵打卡',
+  },
+  wz:{
+    icon:'🎖️', name:'军队文职', examName:'军队文职笔试（2027年度）', examDate:'2026-12-14', examLabel:'12月14日（预计）',
+    phases:[
+      {name:'基础夯实期', start:'2026-08-02', end:'2026-09-30', pages:30, questions:30, mode:'basic', desc:'通读公共科目+专业科目教材，搭建知识框架'},
+      {name:'强化刷题期', start:'2026-10-01', end:'2026-11-20', pages:15, questions:60, mode:'boost', desc:'分模块专项突破，国防军队知识重点记忆'},
+      {name:'冲刺模考期', start:'2026-11-21', end:'2026-12-13', pages:0, questions:0, mode:'sprint', desc:'套卷模拟+高频考点背诵，调整答题节奏'},
+    ],
+    weekly:[
+      {subject:'每周复盘日', icon:'🧹', content:'错题重做、笔记梳理、下周规划'},
+      {subject:'言语理解与表达', icon:'💬', content:'选词填空、语句表达、阅读理解（与事业编互通，可对比练习）'},
+      {subject:'判断推理', icon:'🔍', content:'图形推理、定义判断、类比推理、逻辑判断、事件排序'},
+      {subject:'资料分析', icon:'📊', content:'文字/表格/图形/综合材料，速算技巧与估算能力'},
+      {subject:'数量关系', icon:'🔢', content:'数字推理、数学运算（工程、行程、利润、几何）'},
+      {subject:'基本知识·政治法律', icon:'⚖️', content:'马克思主义理论、宪法、民法、刑法、国防法相关条文'},
+      {subject:'国防军队+专业科目', icon:'🎖️', content:'国防常识、军队知识 + 报考专业科目教材（按自己的专业）'},
+    ],
+    tips:'📌 公共科目=基本知识+岗位能力，国防军队知识是文职特色重点<br>📌 专业科目按报考岗位的教材复习，每周六集中攻克<br>📌 言语/判断/资料/数量与事业编高度重叠，一份努力两份收获<br>📌 学完记得去「军队文职时政」标签完成今日背诵打卡（含3条国防）',
+  },
+};
+
+function makeStudyRenderer(trackKey){
+  return function(){
+    const plan = STUDY_PLANS[trackKey];
+    const dateStr = today();
+    const phase = plan.phases.find(p=>dateStr>=p.start && dateStr<=p.end) || null;
+    const dow = new Date(dateStr+'T00:00:00Z').getUTCDay();
+    const day = plan.weekly[dow];
+    const key = `study_${trackKey}_${dateStr}`;
+    const checked = getDB(key, {});
+    const daysToExam = _pDays(dateStr, plan.examDate);
+    const isExamArrived = daysToExam <= 0;
+
+    // 生成今日任务
+    let tasks = [];
+    if(phase && phase.mode==='sprint'){
+      tasks = [
+        {icon:'📝', text:`限时完成【${day.subject}】真题/模拟套卷 1 套`},
+        {icon:'🔍', text:'对照解析逐题复盘，标记每道错题的错误原因'},
+        {icon:'📖', text:`回看【${day.subject}】高频考点笔记 20 分钟`},
+        {icon:'⏰', text:'完成今日时政背诵打卡（见上方时政标签页）'},
+      ];
+    } else if(dow===0){
+      tasks = [
+        {icon:'📒', text:'重做本周错题本全部错题，仍错的做重点标记'},
+        {icon:'🧠', text:'梳理本周知识点，完善思维导图/笔记'},
+        {icon:'📊', text:'本周所学模块小测验 20 题，检验掌握程度'},
+        {icon:'🗓️', text:'制定下周学习计划，预习下周模块前两节'},
+      ];
+    } else if(phase){
+      tasks = [
+        {icon:'📖', text:`看教材【${day.subject}】${phase.pages} 页`},
+        {icon:'🎯', text:`学习内容：${day.content}`},
+        {icon:'✏️', text:`做【${day.subject}】专项练习 ${phase.questions} 题${phase.mode==='boost'?'（限时完成）':''}`},
+        {icon:'📒', text:'整理今日错题，标注错误原因'},
+        {icon:'⏰', text:'完成今日时政背诵打卡（见上方时政标签页）'},
+      ];
+    } else {
+      tasks = [{icon:'🎉', text:'备考计划已全部完成，保持状态，祝考试顺利上岸！'}];
+    }
+
+    const doneCount = Object.values(checked).filter(v=>v).length;
+    const rate = tasks.length ? Math.round(doneCount/tasks.length*100) : 0;
+    const phaseDayNo = phase ? _pDays(phase.start, dateStr)+1 : 0;
+    const phaseTotal = phase ? _pDays(phase.start, phase.end)+1 : 0;
+
+    // 本周课表（周一开头，今日高亮）
+    const weekNames = ['周日','周一','周二','周三','周四','周五','周六'];
+    const weekRows = [1,2,3,4,5,6,0].map(i=>{
+      const w = plan.weekly[i];
+      const isToday = i===dow;
+      return `<div class="stat-row"${isToday?' style="background:#fff5f5;border-radius:8px;padding-left:8px;padding-right:8px;"':''}>
+        <span class="stat-label">${isToday?'👉 ':''}${weekNames[i]}</span>
+        <span class="stat-val" style="font-size:12px;">${w.icon} ${w.subject}</span>
+      </div>`;
+    }).join('');
+
+    let html = `
+      <div class="date-display">📅 <span>${dateStr.slice(5).replace('-','月')}日</span> · ${plan.icon} ${plan.name}每日任务</div>
+      <div class="card">
+        <div class="card-title">🎯 备考进度</div>
+        <div class="stat-row"><span class="stat-label">目标考试</span><span class="stat-val">${plan.examName}</span></div>
+        <div class="stat-row"><span class="stat-label">笔试时间</span><span class="stat-val">${plan.examLabel}</span></div>
+        <div class="stat-row"><span class="stat-label">${isExamArrived?'考试状态':'距考试还有'}</span><span class="stat-val">${isExamArrived?'🎉 祝上岸！':daysToExam+' 天'}</span></div>
+        ${phase?`<div class="stat-row"><span class="stat-label">当前阶段</span><span class="stat-val">${phase.name}（第${phaseDayNo}/${phaseTotal}天）</span></div>`:''}
+        <div class="stat-row"><span class="stat-label">今日模块</span><span class="stat-val">${day.icon} ${day.subject}</span></div>
+      </div>
+      <div class="card">
+        <div class="card-title">📋 今日任务清单
+          <span style="margin-left:auto;font-size:11px;color:var(--text-soft);">${doneCount}/${tasks.length} 完成 (${rate}%)</span>
+        </div>
+        ${phase&&phase.mode!=='sprint'&&dow!==0?`<div style="font-size:12px;color:var(--text-soft);margin-bottom:10px;">💡 ${phase.desc}</div>`:''}
+    `;
+    tasks.forEach((t,i)=>{
+      const isDone = checked[i];
+      html += `
+        <div class="chk-wrap ${isDone?'done':''}">
+          <div class="chk ${isDone?'checked':''}" onclick="toggleStudyTask('${trackKey}',${i})"></div>
+          <div class="chk-text">${t.icon} ${escapeHtml(t.text)}</div>
+        </div>
+      `;
+    });
+    html += `</div>`;
+    html += `
+      <div class="card">
+        <div class="card-title">🗓️ 每周学习课表</div>
+        ${weekRows}
+      </div>
+      <div class="card">
+        <div class="card-title">📈 三阶段总体规划</div>
+        ${plan.phases.map(p=>{
+          const total = _pDays(p.start,p.end)+1;
+          const label = p.mode==='sprint' ? '真题套卷 + 复盘' : `每天看书${p.pages}页 · 做题${p.questions}道`;
+          return `<div class="stat-row"><span class="stat-label">${p.name}<br><span style="font-size:11px;color:var(--text-soft);">${p.start.slice(5).replace('-','/')} - ${p.end.slice(5).replace('-','/')} · ${total}天</span></span><span class="stat-val" style="font-size:12px;text-align:right;">${label}</span></div>`;
+        }).join('')}
+      </div>
+      <div class="card">
+        <div class="card-title">💡 备考小贴士</div>
+        <div style="font-size:12px;line-height:1.7;color:var(--text-main);">${plan.tips}</div>
+      </div>
+    `;
+    return html;
+  };
+}
+RENDERS.syb_tasks = makeStudyRenderer('syb');
+RENDERS.wz_tasks = makeStudyRenderer('wz');
+
+function toggleStudyTask(trackKey, i){
+  const key = `study_${trackKey}_${today()}`;
+  const checked = getDB(key, {});
+  checked[i] = !checked[i];
+  setDB(key, checked);
+  renderContent();
+  if(checked[i]) toast('任务完成 ✓');
 }
 
 // 饮食
