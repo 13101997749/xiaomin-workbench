@@ -329,11 +329,10 @@ const MENUS = [
       {id:'psy', name:'心理干货'},
     ]
   },
-  { id:'sport', icon:'🏃', name:'体能锻炼', sub:'拉伸 · 肩颈 · 有氧 · 体态',
+  { id:'art', icon:'🎨', name:'美术教研', sub:'人教版1-6年级上册 · 备课进度',
     tabs:[
-      {id:'sport_check', name:'今日打卡'},
-      {id:'sport_lib', name:'运动清单'},
-      {id:'body_rec', name:'身体记录'},
+      {id:'art_books', name:'教材目录'},
+      {id:'art_points', name:'学段要点'},
     ]
   },
   { id:'ai', icon:'🤖', name:'AI教学赋能', sub:'工具库 · 实操案例 · 收藏',
@@ -856,45 +855,157 @@ RENDERS.psy = cardsRenderer('psy', {
   ],
 });
 
-/* ---------- 2. 体能锻炼 ---------- */
-CHECK_CFGS.sport_check = {
-  icon:'🏃', title:'今日运动打卡', persist:false, hasMins:true,
-  desc:'为久坐备课的老师量身定制，改善肩颈腰痛职业病。',
-  presets:[
-    {text:'晨起全身拉伸（唤醒身体）', mins:10},
-    {text:'肩颈放松操（米字操+绕肩）', mins:8},
-    {text:'有氧轻运动（快走/跳操/跳绳任选）', mins:20},
-    {text:'体态矫正（靠墙站/开肩练习）', mins:15},
-    {text:'睡前腿部放松（缓解久站疲劳）', mins:5},
-  ],
-  addPh:'添加其他运动…',
+/* ---------- 2. 美术教研（人教版1-6年级上册） ---------- */
+// 预设教材目录（首次使用自动载入，之后可自由增删课题，数据存本地）
+const ART_BOOKS_PRESET = {
+  g1:{ title:'一年级上册', edition:'2024秋新教材', units:[
+    {name:'第一单元 龙的传人', lessons:['我的名字','生肖大家庭','龙的故事','灵动的龙','中秋月儿圆']},
+    {name:'第二单元 奉献最美', lessons:['落叶去哪儿了','勤劳的蚕宝宝','寸草心']},
+    {name:'第三单元 成长足迹', lessons:['新龟兔赛跑','蜗牛的坚持','看我七十二变']},
+    {name:'第四单元 我的祖国', lessons:['红星闪闪','时光记忆','山河新貌','星辰大海']},
+  ]},
+  g2:{ title:'二年级上册', edition:'2025秋新教材', note:'新教材目录以实际课本为准，可自由增删课题', units:[
+    {name:'第一单元 身边的自然', lessons:['树叶的“血管”','拼摆的乐趣','与风做朋友','吹皱的水波']},
+    {name:'第三单元 我是小工匠', lessons:['有序地缠绕','声音的秘密（我的小乐器）']},
+  ]},
+  g3:{ title:'三年级上册', edition:'2025秋新教材', note:'新教材目录以实际课本为准，可自由增删课题', units:[
+    {name:'第一单元 童年生活（美术作品欣赏）', lessons:['童年艺趣','我的童年游戏','童年记忆手账']},
+    {name:'第二单元 幸福家庭', lessons:['幸福一家亲']},
+  ]},
+  g4:{ title:'四年级上册', edition:'人教经典版', units:[
+    {name:'全册课题', lessons:['色彩的冷与暖','画家的调色板','蔬果的剖面','生活中的线条','节奏的美感','最受尊敬的人','今天我值日','趣味游乐园','彩墨世界','我是汽车设计师','拟人的形象','精美的邮票','规划每一天','给您提个醒儿','有创意的书','穿编的乐趣','会“走”的玩具','电脑美术——“变形”画画','我快乐 我成长','漫画欣赏']},
+  ]},
+  g5:{ title:'五年级上册', edition:'人教经典版', units:[
+    {name:'全册课题', lessons:['色彩的对比','色彩的和谐','美丽的纹样','趣味文字','画龙点睛','快乐刮画','无笔画','鸟语花香','诗情画意','彩墨脸谱','陶泥的世界','元宵节里挂彩灯','太空新居','会跳的玩具','神奇的装饰柱','电脑美术——“反色”效果','电脑动画','美术学习记录袋','爱护家园','珍爱国宝——古代陶瓷艺术']},
+  ]},
+  g6:{ title:'六年级上册', edition:'人教经典版', units:[
+    {name:'全册课题', lessons:['基本形体切挖','点的集合','远去的路','线与造型','风景写生','让剪影动起来','漂浮的画','山山水水','彩墨家园','我做的乐器','废旧物的“新生命”','保护文物','古建筑的保护','电脑美术——版画效果的图画','中国画与油画欣赏']},
+  ]},
 };
-RENDERS.sport_check = checklistRenderer('sport_check', CHECK_CFGS.sport_check);
+const ART_GRADES = ['g1','g2','g3','g4','g5','g6'];
+const ART_GRADE_NAMES = {g1:'一年级',g2:'二年级',g3:'三年级',g4:'四年级',g5:'五年级',g6:'六年级'};
 
-RENDERS.sport_lib = cardsRenderer('sport_lib', {
-  icon:'💪', title:'教师轻运动清单', desc:'动作温和、场地不限，办公室和家里都能做。',
+function getArtBooks(){
+  let books = getDB('art_books', null);
+  if(!books){
+    books = {};
+    ART_GRADES.forEach(g=>{
+      const src = ART_BOOKS_PRESET[g];
+      books[g] = {
+        title:src.title, edition:src.edition, note:src.note||'',
+        units: src.units.map((u,ui)=>({
+          name:u.name,
+          lessons: u.lessons.map((l,li)=>({uid:`${g}u${ui}l${li}`, name:l})),
+        })),
+      };
+    });
+    setDB('art_books', books);
+  }
+  return books;
+}
+
+RENDERS.art_books = function(){
+  const books = getArtBooks();
+  const curG = getDB('art_grade', 'g1');
+  const book = books[curG];
+  const prep = getDB('art_prep', {});
+  const myPrep = prep[curG] || {};
+  const totalLessons = book.units.reduce((s,u)=>s+u.lessons.length,0);
+  const doneLessons = book.units.reduce((s,u)=>s+u.lessons.filter(l=>myPrep[l.uid]).length,0);
+  const rate = totalLessons ? Math.round(doneLessons/totalLessons*100) : 0;
+
+  let html = `
+    <div class="date-display">📅 <span>${todayCN()}</span> · 🎨 人教版美术教材目录</div>
+    <div class="card">
+      <div class="card-title">📚 选择年级（上册）</div>
+      <div style="display:flex;gap:6px;flex-wrap:wrap;">
+        ${ART_GRADES.map(g=>`<button class="btn-mini" style="${g===curG?'background:var(--title-pink);color:#fff;border-color:var(--title-pink);':''}" onclick="artGrade('${g}')">${ART_GRADE_NAMES[g]}</button>`).join('')}
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">${book.title} · ${book.edition}
+        <span class="right">已备 ${doneLessons}/${totalLessons} 课</span>
+      </div>
+      ${book.note?`<div style="font-size:11px;color:#e8873a;margin-bottom:6px;">⚠️ ${book.note}</div>`:''}
+      <div class="progress-track"><div class="progress-fill" style="width:${rate}%;"></div></div>
+      <div class="stat-row" style="margin-top:6px;"><span class="stat-label">本学期备课进度</span><span class="stat-val">${rate}%</span></div>
+    </div>`;
+
+  book.units.forEach((u,ui)=>{
+    html += `<div class="card"><div class="card-title">📖 ${escapeHtml(u.name)}<span class="right">${u.lessons.filter(l=>myPrep[l.uid]).length}/${u.lessons.length}</span></div>`;
+    u.lessons.forEach(l=>{
+      const isDone = myPrep[l.uid];
+      html += `
+        <div class="chk-wrap ${isDone?'done':''}">
+          <div class="chk ${isDone?'checked':''}" onclick="artToggle('${curG}','${l.uid}')"></div>
+          <div class="chk-text">${escapeHtml(l.name)}</div>
+          ${isDone?'<span class="chk-mins">已备课</span>':''}
+          <button class="btn-del" onclick="artDelLesson('${curG}',${ui},'${l.uid}')">删</button>
+        </div>`;
+    });
+    html += `
+      <div style="display:flex;gap:6px;margin-top:8px;">
+        <input class="input" id="art_add_${curG}_${ui}" placeholder="补充本单元课题…" style="margin-bottom:0;flex:1;">
+        <button class="btn-add" onclick="artAddLesson('${curG}',${ui})">＋</button>
+      </div>
+    </div>`;
+  });
+
+  html += `
+    <div class="card" style="text-align:center;">
+      <button class="btn-mini" onclick="artReset('${curG}')">🔄 恢复本册默认目录</button>
+      <div style="font-size:11px;color:var(--text-soft);margin-top:6px;">目录可自由增删，数据保存在本机。课题以学校实际使用的课本为准。</div>
+    </div>`;
+  return html;
+};
+
+function artGrade(g){ setDB('art_grade', g); renderContent(); }
+function artToggle(g, uid){
+  const prep = getDB('art_prep', {});
+  if(!prep[g]) prep[g] = {};
+  prep[g][uid] = !prep[g][uid];
+  setDB('art_prep', prep);
+  renderContent();
+  if(prep[g][uid]) toast('备课完成 ✓');
+}
+function artAddLesson(g, ui){
+  const inp = document.getElementById(`art_add_${g}_${ui}`);
+  const name = inp.value.trim();
+  if(!name){ toast('先写课题名称哦'); return; }
+  const books = getArtBooks();
+  books[g].units[ui].lessons.push({uid:'c'+Date.now(), name});
+  setDB('art_books', books);
+  toast('已添加 🎨');
+  renderContent();
+}
+function artDelLesson(g, ui, uid){
+  const books = getArtBooks();
+  books[g].units[ui].lessons = books[g].units[ui].lessons.filter(l=>l.uid!==uid);
+  setDB('art_books', books);
+  toast('已删除 🗑');
+  renderContent();
+}
+function artReset(g){
+  delete DB['art_books'];
+  const prep = getDB('art_prep', {});
+  if(prep[g]){ prep[g] = {}; setDB('art_prep', prep); }
+  getArtBooks();
+  toast('已恢复默认目录 🔄');
+  renderContent();
+}
+
+// 学段要点（义务教育艺术课程标准2022年版）
+RENDERS.art_points = cardsRenderer('art_points', {
+  icon:'🎯', title:'美术学段要点', desc:'依据《义务教育艺术课程标准（2022年版）》整理，备课对标不跑偏。',
   cards:[
-    {tag:'肩颈', title:'米字操', body:'用头缓慢写「米」字，每个方向停留3秒。缓解低头备课、批作业导致的颈椎僵硬，每天2遍。'},
-    {tag:'肩颈', title:'绕肩+扩胸', body:'双肩向后画圈20次，再用力扩胸10次。改善含胸驼背，课间在办公室就能做。'},
-    {tag:'腰部', title:'猫式伸展', body:'四足跪姿，吸气塌腰抬头、呼气拱背低头，重复10次。放松久坐紧绷的腰背。'},
-    {tag:'体态', title:'靠墙站', body:'后脑勺、肩胛骨、臀部、脚跟贴墙，收腹站立5-10分钟。矫正圆肩驼背，提升讲台气场。'},
-    {tag:'有氧', title:'快走/慢跑20分钟', body:'晚饭后楼下快走20分钟，微微出汗即可。提升心肺，助眠效果一流。'},
-    {tag:'嗓音', title:'腹式呼吸+唇颤音', body:'手放腹部感受起伏呼吸10次，再做唇颤音（打嘟噜）1分钟。保护嗓子，教师嗓音保养必修课。'},
+    {tag:'1-2年级', title:'第一学段 · 趣味启蒙', body:'以造型游戏为主，引导学生用多种材料和工具大胆表达所见所闻、所感所想。重点：激发兴趣、保护想象力，让学生在快乐中爱上美术。'},
+    {tag:'3-5年级', title:'第二学段 · 感受与表达', body:'感受中外美术作品的魅力，学习造型元素与形式原理（色彩、线条、形状、肌理），尝试用美术语言表达自己的想法，关注设计与生活的联系。'},
+    {tag:'6年级', title:'第三学段 · 理解与创造', body:'领略世界美术的多样性，运用传统与现代媒材进行有目的的创意表达，理解美术对个人成长、社会生活和文化建设的贡献。'},
+    {tag:'四大实践', title:'四类艺术实践活动', body:'欣赏·评述（看作品说感受）、造型·表现（画画捏捏做手工）、设计·应用（美化生活小设计）、综合·探索（跨学科主题创作）。备课时对标领域目标更清晰。'},
+    {tag:'新教材', title:'新教材三大特点', body:'① 大单元主题式编排，围绕真实情境组织学习；② 跨学科融合（美术+语文/科学/音乐）；③ 突出中华优秀传统文化（龙文化、中秋、国画等），备课时可多挖文化素材。'},
+    {tag:'备课技巧', title:'美术课万能导入法', body:'实物导入（带一片树叶/一个瓷器进教室）、故事导入（讲作品背后的人和事）、游戏导入（猜一猜/摸一摸）、视频导入（30秒短片点燃兴趣）。低年级首选游戏+实物。'},
   ],
 });
-
-JOURNAL_CFGS.body_rec = {
-  icon:'📊', title:'身体记录', desc:'记录体重、睡眠和身体感受，见证暑期状态回升。',
-  fields:[{name:'weight',label:'体重（kg，可选）'},{name:'sleep',label:'睡眠时长（小时，可选）'},{name:'note',label:'今天的身体感受',multi:true}],
-  render:e=>{
-    let s = '';
-    if(e.v.weight) s += `<span class="field-label">⚖️ 体重</span>${escapeHtml(e.v.weight)}kg　`;
-    if(e.v.sleep) s += `<span class="field-label">😴 睡眠</span>${escapeHtml(e.v.sleep)}小时`;
-    if(e.v.note) s += `${s?'<br>':''}${escapeHtml(e.v.note)}`;
-    return s || '—';
-  },
-};
-RENDERS.body_rec = journalRenderer('body_rec', JOURNAL_CFGS.body_rec);
 
 /* ---------- 3. AI教学赋能 ---------- */
 RENDERS.ai_tools = cardsRenderer('ai_tools', {
@@ -1177,7 +1288,7 @@ CHECK_CFGS.plan_todo = {
   icon:'📋', title:'今日计划', persist:false, hasMins:false,
   desc:'每天早上列3-5件最重要的事，做完就勾掉。',
   presets:[],
-  addPh:'今天要做什么？（如：备课1节/运动30分钟）',
+  addPh:'今天要做什么？（如：备《我的名字》1课/范画练习30分钟）',
 };
 RENDERS.plan_todo = checklistRenderer('plan_todo', CHECK_CFGS.plan_todo);
 
