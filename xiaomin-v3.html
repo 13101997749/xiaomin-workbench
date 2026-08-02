@@ -1,0 +1,2610 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>晓敏的工作台 · 蓝色少女风</title>
+<style>
+/* ========== 全局变量与基础 ========== */
+:root{
+  --bg-blue:#dcefff;
+  --bg-blue-soft:#eaf6ff;
+  --card-bg:#ffffff;
+  --title-red:#ff6b6b;
+  --title-red-deep:#e85555;
+  --accent-blue:#7ec5e8;
+  --accent-blue-deep:#5bb0d8;
+  --text-main:#4a5568;
+  --text-soft:#8a9bb0;
+  --shadow:0 6px 18px rgba(126,197,232,0.18);
+  --shadow-soft:0 3px 10px rgba(126,197,232,0.12);
+  --radius:16px;
+  --radius-sm:10px;
+  --sidebar-w:210px;
+  --sidebar-w-collapsed:64px;
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+html,body{height:100%;}
+body{
+  font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Helvetica Neue","Microsoft YaHei",sans-serif;
+  color:var(--text-main);
+  background-color:var(--bg-blue);
+  background-image:
+    radial-gradient(circle, rgba(255,255,255,0.95) 1.5px, transparent 1.6px),
+    radial-gradient(circle, rgba(255,255,255,0.6) 1px, transparent 1.2px);
+  background-size:24px 24px, 16px 16px;
+  background-position:0 0, 12px 12px;
+  overflow:hidden;
+}
+button{font-family:inherit;cursor:pointer;border:none;outline:none;}
+input,textarea,select{font-family:inherit;outline:none;}
+ul{list-style:none;}
+
+/* ========== 应用容器 ========== */
+.app{
+  display:flex;
+  height:100vh;
+  height:100dvh;
+  width:100%;
+  max-width:480px;
+  margin:0 auto;
+  position:relative;
+  overflow:hidden;
+  box-shadow:0 0 40px rgba(126,197,232,0.25);
+}
+
+/* ========== 侧边导航栏 ========== */
+.sidebar{
+  width:var(--sidebar-w);
+  flex-shrink:0;
+  background:linear-gradient(180deg,#cfeaff 0%,#e3f1fd 100%);
+  border-right:2px solid rgba(255,255,255,0.6);
+  display:flex;
+  flex-direction:column;
+  transition:width .32s cubic-bezier(.4,0,.2,1);
+  overflow:hidden;
+  z-index:30;
+}
+.sidebar.collapsed{width:var(--sidebar-w-collapsed);}
+.sidebar-header{
+  padding:18px 12px 14px;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  border-bottom:1px dashed rgba(126,197,232,0.5);
+}
+.avatar{
+  width:62px;height:62px;border-radius:50%;
+  background:linear-gradient(135deg,#a8e0ff,#7ec5e8);
+  display:flex;align-items:center;justify-content:center;
+  font-size:30px;
+  border:3px solid #fff;
+  box-shadow:0 4px 12px rgba(126,197,232,0.4);
+  flex-shrink:0;
+}
+.nickname{
+  margin-top:8px;
+  font-size:13px;
+  color:var(--title-red);
+  font-weight:600;
+  white-space:nowrap;
+  text-align:center;
+}
+.sidebar.collapsed .nickname{display:none;}
+.collapse-btn{
+  position:absolute;
+  top:14px;
+  right:-14px;
+  width:28px;height:28px;
+  border-radius:50%;
+  background:#fff;
+  color:var(--accent-blue-deep);
+  display:flex;align-items:center;justify-content:center;
+  font-size:14px;
+  box-shadow:0 2px 8px rgba(126,197,232,0.4);
+  z-index:31;
+  transition:transform .32s;
+}
+.sidebar.collapsed .collapse-btn{transform:rotate(180deg);}
+.nav-list{
+  flex:1;
+  overflow-y:auto;
+  padding:10px 0;
+}
+.nav-list::-webkit-scrollbar{width:0;}
+.nav-item{
+  display:flex;
+  align-items:center;
+  padding:12px 16px;
+  margin:2px 8px;
+  border-radius:var(--radius-sm);
+  cursor:pointer;
+  color:var(--text-main);
+  font-size:14px;
+  transition:all .2s;
+  white-space:nowrap;
+  position:relative;
+}
+.nav-item:hover{background:rgba(255,255,255,0.55);}
+.nav-item.active{
+  background:#fff;
+  color:var(--title-red);
+  font-weight:600;
+  box-shadow:var(--shadow-soft);
+}
+.nav-item.active::before{
+  content:"";
+  position:absolute;left:0;top:50%;transform:translateY(-50%);
+  width:4px;height:60%;
+  background:var(--title-red);
+  border-radius:0 4px 4px 0;
+}
+.nav-icon{font-size:18px;margin-right:10px;flex-shrink:0;}
+.sidebar.collapsed .nav-icon{margin-right:0;}
+.nav-text{transition:opacity .2s;}
+.sidebar.collapsed .nav-text{display:none;}
+.sidebar-footer{
+  padding:10px;
+  text-align:center;
+  font-size:11px;
+  color:var(--text-soft);
+  border-top:1px dashed rgba(126,197,232,0.5);
+}
+.sidebar.collapsed .sidebar-footer{display:none;}
+
+/* ========== 主面板 ========== */
+.main{
+  flex:1;
+  display:flex;
+  flex-direction:column;
+  overflow:hidden;
+  position:relative;
+}
+.main-header{
+  padding:14px 16px 8px;
+  flex-shrink:0;
+}
+.page-title{
+  font-size:20px;
+  color:var(--title-red);
+  font-weight:700;
+  display:flex;
+  align-items:center;
+  gap:8px;
+}
+.page-subtitle{
+  font-size:12px;
+  color:var(--text-soft);
+  margin-top:2px;
+}
+
+/* 标签栏 */
+.tabs-wrap{
+  padding:0 12px 8px;
+  flex-shrink:0;
+  overflow-x:auto;
+  scrollbar-width:none;
+}
+.tabs-wrap::-webkit-scrollbar{display:none;}
+.tabs{
+  display:flex;
+  gap:8px;
+}
+.tab{
+  flex-shrink:0;
+  padding:7px 14px;
+  border-radius:20px;
+  background:rgba(255,255,255,0.7);
+  font-size:13px;
+  color:var(--text-main);
+  white-space:nowrap;
+  transition:all .2s;
+  border:1.5px solid transparent;
+}
+.tab:hover{background:#fff;}
+.tab.active{
+  background:#fff;
+  color:var(--title-red);
+  border-color:var(--accent-blue);
+  font-weight:600;
+  box-shadow:var(--shadow-soft);
+}
+
+/* 内容区 */
+.content{
+  flex:1;
+  overflow-y:auto;
+  padding:4px 14px 90px;
+  scrollbar-width:thin;
+}
+.content::-webkit-scrollbar{width:4px;}
+.content::-webkit-scrollbar-thumb{background:var(--accent-blue);border-radius:4px;}
+
+/* 卡片 */
+.card{
+  background:var(--card-bg);
+  border-radius:var(--radius);
+  padding:14px;
+  margin-bottom:12px;
+  box-shadow:var(--shadow-soft);
+}
+.card-title{
+  font-size:15px;
+  font-weight:700;
+  color:var(--title-red);
+  margin-bottom:10px;
+  display:flex;
+  align-items:center;
+  gap:6px;
+}
+.card-title .edit-btn{
+  margin-left:auto;
+  font-size:12px;
+  color:var(--accent-blue-deep);
+  background:var(--bg-blue-soft);
+  padding:3px 10px;
+  border-radius:12px;
+}
+
+/* 输入与按钮 */
+.input,.textarea,select.input{
+  width:100%;
+  padding:9px 12px;
+  border:1.5px solid #d6eaf7;
+  border-radius:var(--radius-sm);
+  font-size:13px;
+  background:#f8fcff;
+  color:var(--text-main);
+  transition:border-color .2s;
+}
+.input:focus,.textarea:focus{border-color:var(--accent-blue);}
+.textarea{resize:vertical;min-height:60px;}
+.btn{
+  padding:8px 16px;
+  border-radius:20px;
+  font-size:13px;
+  font-weight:600;
+  transition:all .2s;
+}
+.btn-primary{
+  background:linear-gradient(135deg,#a8e0ff,#7ec5e8);
+  color:#fff;
+  box-shadow:0 3px 8px rgba(126,197,232,0.4);
+}
+.btn-primary:active{transform:scale(0.96);}
+.btn-add{
+  background:linear-gradient(135deg,#ffd1d1,#ff9b9b);
+  color:#fff;
+  box-shadow:0 3px 8px rgba(255,107,107,0.3);
+}
+.btn-add:active{transform:scale(0.96);}
+.btn-mini{
+  padding:4px 10px;
+  font-size:11px;
+  border-radius:10px;
+  background:var(--bg-blue-soft);
+  color:var(--accent-blue-deep);
+}
+.btn-del{
+  color:var(--title-red);
+  background:#fff0f0;
+  padding:4px 8px;
+  font-size:12px;
+  border-radius:8px;
+}
+
+/* checkbox 自定义 */
+.chk-wrap{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  padding:9px 10px;
+  background:#f8fcff;
+  border-radius:var(--radius-sm);
+  margin-bottom:6px;
+  border:1px solid #e8f3fb;
+  transition:all .2s;
+}
+.chk-wrap.done{
+  background:#f0f9ff;
+  opacity:.65;
+}
+.chk-wrap.done .chk-text{text-decoration:line-through;color:var(--text-soft);}
+.chk{
+  width:20px;height:20px;
+  border:2px solid var(--accent-blue);
+  border-radius:6px;
+  display:flex;align-items:center;justify-content:center;
+  flex-shrink:0;
+  cursor:pointer;
+  background:#fff;
+  transition:all .2s;
+}
+.chk.checked{background:var(--accent-blue);}
+.chk.checked::after{content:"✓";color:#fff;font-size:13px;font-weight:bold;}
+.chk-text{flex:1;font-size:13px;word-break:break-all;}
+.chk-actions{display:flex;gap:6px;}
+
+/* 标签行 */
+.row{display:flex;gap:8px;align-items:center;margin-bottom:8px;flex-wrap:wrap;}
+.row > *{flex:1;min-width:0;}
+.row .btn{flex:0 0 auto;}
+
+/* 标签徽章 */
+.badge{
+  display:inline-block;
+  padding:2px 10px;
+  border-radius:12px;
+  font-size:11px;
+  font-weight:600;
+}
+.badge-blue{background:#e3f1fd;color:var(--accent-blue-deep);}
+.badge-red{background:#ffe8e8;color:var(--title-red);}
+.badge-green{background:#e3fce8;color:#3aa855;}
+
+/* ========== 运动打卡竖版 ========== */
+.sport-card{
+  background:var(--card-bg);
+  border-radius:var(--radius);
+  padding:14px;
+  margin-bottom:12px;
+  box-shadow:var(--shadow-soft);
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+}
+.sport-item{
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+  padding:12px;
+  background:linear-gradient(135deg,#f6fbff,#eef7fd);
+  border-radius:var(--radius-sm);
+  border-left:3px solid var(--accent-blue);
+}
+.sport-item-head{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+}
+.sport-item-name{font-size:14px;font-weight:600;color:var(--text-main);}
+.sport-item-meta{font-size:12px;color:var(--text-soft);}
+.sport-stat{
+  display:flex;
+  flex-direction:column;
+  gap:4px;
+  font-size:12px;
+}
+.sport-stat-row{
+  display:flex;
+  justify-content:space-between;
+  padding:4px 0;
+  border-bottom:1px dashed #e0eef9;
+}
+.sport-stat-row:last-child{border-bottom:none;}
+
+/* ========== 经期日历 ========== */
+.cal-grid{
+  display:grid;
+  grid-template-columns:repeat(7,1fr);
+  gap:4px;
+}
+.cal-head{
+  text-align:center;
+  font-size:11px;
+  color:var(--text-soft);
+  font-weight:600;
+  padding:4px 0;
+}
+.cal-cell{
+  aspect-ratio:1;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:12px;
+  border-radius:8px;
+  cursor:pointer;
+  background:#f8fcff;
+  border:1px solid transparent;
+  transition:all .15s;
+  position:relative;
+}
+.cal-cell:hover{border-color:var(--accent-blue);}
+.cal-cell.empty{background:transparent;cursor:default;}
+.cal-cell.today{border-color:var(--accent-blue);font-weight:700;}
+.cal-cell.period{
+  background:linear-gradient(135deg,#ffb3b3,#ff8a8a);
+  color:#fff;
+  font-weight:600;
+}
+.cal-cell.predicted{
+  background:#ffe0e0;
+  color:var(--title-red);
+}
+.cal-nav{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:10px;
+}
+.cal-nav button{
+  background:#fff;
+  width:30px;height:30px;
+  border-radius:50%;
+  font-size:14px;
+  color:var(--accent-blue-deep);
+  box-shadow:var(--shadow-soft);
+}
+.cal-month{font-size:15px;font-weight:700;color:var(--title-red);}
+
+/* ========== 记账图表 ========== */
+.chart-bar-wrap{
+  display:flex;
+  align-items:flex-end;
+  gap:6px;
+  height:120px;
+  padding:10px 4px 0;
+}
+.chart-bar{
+  flex:1;
+  background:linear-gradient(180deg,#a8e0ff,#7ec5e8);
+  border-radius:6px 6px 0 0;
+  min-height:4px;
+  position:relative;
+  transition:height .4s;
+}
+.chart-bar.expense{background:linear-gradient(180deg,#ffb3b3,#ff8a8a);}
+.chart-bar-label{
+  position:absolute;
+  bottom:-20px;
+  left:0;right:0;
+  text-align:center;
+  font-size:10px;
+  color:var(--text-soft);
+}
+.chart-bar-val{
+  position:absolute;
+  top:-16px;
+  left:0;right:0;
+  text-align:center;
+  font-size:9px;
+  color:var(--text-soft);
+}
+.pie-legend{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px;}
+.legend-item{display:flex;align-items:center;gap:4px;font-size:11px;}
+.legend-dot{width:10px;height:10px;border-radius:3px;}
+
+/* 消费分类条 */
+.cat-bar-wrap{margin-bottom:10px;}
+.cat-bar-head{
+  display:flex;
+  justify-content:space-between;
+  font-size:12px;
+  margin-bottom:4px;
+}
+.cat-bar-track{
+  height:8px;
+  background:#eef7fd;
+  border-radius:4px;
+  overflow:hidden;
+}
+.cat-bar-fill{
+  height:100%;
+  border-radius:4px;
+  transition:width .5s;
+}
+
+/* ========== 小树洞情绪 ========== */
+.mood-row{display:flex;gap:8px;flex-wrap:wrap;}
+.mood-btn{
+  padding:8px 14px;
+  border-radius:20px;
+  background:#f8fcff;
+  font-size:13px;
+  border:1.5px solid #e0eef9;
+}
+.mood-btn.selected{
+  background:linear-gradient(135deg,#ffd1d1,#ff9b9b);
+  color:#fff;
+  border-color:transparent;
+}
+
+/* ========== 空状态 ========== */
+.empty-state{
+  text-align:center;
+  padding:30px 16px;
+  color:var(--text-soft);
+  font-size:13px;
+}
+.empty-state .emoji{font-size:36px;display:block;margin-bottom:8px;}
+
+/* ========== 浮动添加按钮 ========== */
+.fab{
+  position:fixed;
+  bottom:20px;
+  right:20px;
+  width:50px;height:50px;
+  border-radius:50%;
+  background:linear-gradient(135deg,#ffd1d1,#ff8a8a);
+  color:#fff;
+  font-size:24px;
+  display:flex;align-items:center;justify-content:center;
+  box-shadow:0 6px 16px rgba(255,107,107,0.4);
+  z-index:20;
+  transition:transform .2s;
+}
+.fab:active{transform:scale(0.92);}
+
+/* ========== Toast ========== */
+.toast{
+  position:fixed;
+  top:50%;left:50%;
+  transform:translate(-50%,-50%) scale(0.8);
+  background:rgba(0,0,0,0.7);
+  color:#fff;
+  padding:10px 20px;
+  border-radius:20px;
+  font-size:13px;
+  z-index:100;
+  opacity:0;
+  pointer-events:none;
+  transition:all .25s;
+}
+.toast.show{opacity:1;transform:translate(-50%,-50%) scale(1);}
+
+/* ========== 打卡卡片 ========== */
+.checkin-card{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  padding:12px;
+  background:linear-gradient(135deg,#f6fbff,#eef7fd);
+  border-radius:var(--radius-sm);
+  margin-bottom:8px;
+}
+.checkin-icon{font-size:24px;}
+.checkin-info{flex:1;}
+.checkin-title{font-size:14px;font-weight:600;}
+.checkin-desc{font-size:11px;color:var(--text-soft);}
+.checkin-status{
+  font-size:12px;
+  font-weight:600;
+  padding:4px 10px;
+  border-radius:10px;
+}
+.checkin-status.done{background:#e3fce8;color:#3aa855;}
+.checkin-status.undone{background:#fff0f0;color:var(--title-red);}
+
+/* 列表项 */
+.list-item{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  padding:10px 12px;
+  background:#f8fcff;
+  border-radius:var(--radius-sm);
+  margin-bottom:6px;
+  border:1px solid #e8f3fb;
+}
+.list-item-text{flex:1;font-size:13px;word-break:break-all;}
+.list-item-actions{display:flex;gap:6px;}
+
+/* 统计行 */
+.stat-row{
+  display:flex;
+  justify-content:space-between;
+  padding:8px 0;
+  border-bottom:1px dashed #e0eef9;
+  font-size:13px;
+}
+.stat-row:last-child{border-bottom:none;}
+.stat-label{color:var(--text-soft);}
+.stat-val{font-weight:600;color:var(--text-main);}
+.stat-val.expense{color:var(--title-red);}
+.stat-val.income{color:#3aa855;}
+
+/* 食物清单 */
+.food-list{display:flex;flex-wrap:wrap;gap:6px;}
+.food-tag{
+  padding:5px 12px;
+  border-radius:14px;
+  font-size:12px;
+  font-weight:600;
+}
+.food-tag.good{background:#e3fce8;color:#3aa855;}
+.food-tag.bad{background:#ffe8e8;color:var(--title-red);}
+
+/* 弹出编辑 */
+.modal-mask{
+  position:fixed;inset:0;
+  background:rgba(74,85,104,0.4);
+  z-index:50;
+  display:none;
+  align-items:flex-end;
+  justify-content:center;
+}
+.modal-mask.show{display:flex;}
+.modal{
+  background:#fff;
+  border-radius:20px 20px 0 0;
+  width:100%;max-width:480px;
+  padding:18px;
+  max-height:80vh;
+  overflow-y:auto;
+  animation:slideUp .3s;
+}
+@keyframes slideUp{from{transform:translateY(100%);}to{transform:translateY(0);}}
+.modal-title{
+  font-size:16px;font-weight:700;color:var(--title-red);
+  margin-bottom:14px;display:flex;align-items:center;gap:6px;
+}
+.modal-title .close{margin-left:auto;font-size:18px;color:var(--text-soft);background:none;}
+
+.hidden{display:none!important;}
+
+.date-display{
+  font-size:12px;
+  color:var(--text-soft);
+  text-align:center;
+  margin-bottom:8px;
+}
+.date-display span{color:var(--title-red);font-weight:600;}
+
+/* 新闻卡片 */
+.news-card{
+  background:#fff;
+  border-radius:var(--radius-sm);
+  padding:12px;
+  margin-bottom:8px;
+  border-left:3px solid var(--accent-blue);
+  box-shadow:var(--shadow-soft);
+}
+.news-title{font-size:14px;font-weight:600;margin-bottom:4px;}
+.news-desc{font-size:12px;color:var(--text-soft);line-height:1.5;}
+.news-source{font-size:10px;color:var(--accent-blue-deep);margin-top:4px;}
+
+/* 进度环 */
+.progress-ring-wrap{
+  display:flex;
+  align-items:center;
+  gap:14px;
+}
+.progress-ring{
+  width:70px;height:70px;
+  position:relative;
+}
+.progress-ring svg{transform:rotate(-90deg);}
+.progress-ring-bg{stroke:#eef7fd;}
+.progress-ring-fg{stroke:var(--accent-blue);stroke-linecap:round;transition:stroke-dashoffset .5s;}
+.progress-ring-text{
+  position:absolute;inset:0;
+  display:flex;align-items:center;justify-content:center;
+  font-size:14px;font-weight:700;color:var(--title-red);
+}
+</style>
+</head>
+<body>
+<div class="app" id="app">
+
+  <!-- 侧边导航栏 -->
+  <aside class="sidebar" id="sidebar">
+    <button class="collapse-btn" id="collapseBtn">‹</button>
+    <div class="sidebar-header">
+      <div class="avatar">🐰</div>
+      <div class="nickname">晓敏的工作台</div>
+    </div>
+    <ul class="nav-list" id="navList"></ul>
+    <div class="sidebar-footer">💙 用心记录每一天</div>
+  </aside>
+
+  <!-- 主面板 -->
+  <main class="main">
+    <div class="main-header">
+      <div class="page-title" id="pageTitle">🌸 每日计划</div>
+      <div class="page-subtitle" id="pageSubtitle">今日饮食 · 待办 · 日程 · 作息</div>
+    </div>
+    <div class="tabs-wrap"><div class="tabs" id="tabs"></div></div>
+    <div class="content" id="content"></div>
+  </main>
+
+</div>
+
+<div class="toast" id="toast"></div>
+<div class="modal-mask" id="modalMask"><div class="modal" id="modal"></div></div>
+
+<script>
+/* ============================================================
+   数据层：localStorage 持久化
+============================================================ */
+const STORE_KEY = 'xiaomin_workbench_v3';
+let DB = {};
+function loadDB(){
+  try{ DB = JSON.parse(localStorage.getItem(STORE_KEY)) || {}; }catch(e){ DB = {}; }
+}
+function saveDB(){
+  localStorage.setItem(STORE_KEY, JSON.stringify(DB));
+}
+function getDB(key, def){
+  if(!(key in DB)){ DB[key] = def; }
+  return DB[key];
+}
+function setDB(key, val){
+  DB[key] = val;
+  saveDB();
+}
+loadDB();
+
+/* ============================================================
+   工具函数
+============================================================ */
+const today = ()=> new Date().toISOString().slice(0,10);
+const todayCN = ()=>{ const d=new Date(); return `${d.getMonth()+1}月${d.getDate()}日`; };
+const nowMonth = ()=> new Date().toISOString().slice(0,7);
+
+function toast(msg){
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'), 1400);
+}
+function uid(){ return Date.now().toString(36)+Math.random().toString(36).slice(2,7); }
+function escapeHtml(s){ return String(s||'').replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+
+/* ============================================================
+   菜单结构
+============================================================ */
+const MENUS = [
+  { id:'plan', icon:'📋', name:'每日背诵计划', sub:'饮食 · 待办 · 日程 · 作息',
+    tabs:[
+      {id:'food', name:'✅饮食'},
+      {id:'todo', name:'✅待办清单'},
+      {id:'schedule', name:'✅日程规划'},
+      {id:'sleep', name:'✅作息打卡'},
+    ]
+  },
+  { id:'news', icon:'📰', name:'每日新闻', sub:'热点 · 财经 · 科普',
+    tabs:[
+      {id:'hot', name:'✅热点资讯'},
+      {id:'finance', name:'✅财经简讯'},
+      {id:'science', name:'✅科普见闻'},
+    ]
+  },
+  { id:'period', icon:'🌸', name:'经期记录', sub:'周期 · 感受 · 饮食提醒',
+    tabs:[
+      {id:'calendar', name:'✅周期日历'},
+      {id:'feeling', name:'✅身体感受'},
+      {id:'foodremind', name:'✅饮食提醒'},
+    ]
+  },
+  { id:'policy', icon:'📜', name:'每日时政', sub:'时政热点 · 政策解读',
+    tabs:[
+      {id:'policy_hot', name:'✅时政热点'},
+      {id:'policy_read', name:'✅政策解读'},
+    ]
+  },
+  { id:'douyin', icon:'🎵', name:'每日抖音热点', sub:'爆款视频 · 热门话题',
+    tabs:[
+      {id:'dy_video', name:'✅爆款视频'},
+      {id:'dy_topic', name:'✅热门话题'},
+    ]
+  },
+];
+
+let currentMenu = 'plan';
+let currentTab = 'food';
+
+/* ============================================================
+   渲染：侧边栏
+============================================================ */
+function renderNav(){
+  const nav = document.getElementById('navList');
+  nav.innerHTML = MENUS.map(m=>`
+    <li class="nav-item ${m.id===currentMenu?'active':''}" data-menu="${m.id}">
+      <span class="nav-icon">${m.icon}</span>
+      <span class="nav-text">${m.name}</span>
+    </li>
+  `).join('');
+  nav.querySelectorAll('.nav-item').forEach(el=>{
+    el.onclick = ()=>{
+      currentMenu = el.dataset.menu;
+      currentTab = MENUS.find(m=>m.id===currentMenu).tabs[0].id;
+      renderAll();
+    };
+  });
+}
+
+/* ============================================================
+   渲染：标签栏
+============================================================ */
+function renderTabs(){
+  const menu = MENUS.find(m=>m.id===currentMenu);
+  document.getElementById('pageTitle').innerHTML = `${menu.icon} ${menu.name}`;
+  document.getElementById('pageSubtitle').textContent = menu.sub;
+  const tabs = document.getElementById('tabs');
+  tabs.innerHTML = menu.tabs.map(t=>`
+    <div class="tab ${t.id===currentTab?'active':''}" data-tab="${t.id}">${t.name}</div>
+  `).join('');
+  tabs.querySelectorAll('.tab').forEach(el=>{
+    el.onclick = ()=>{
+      currentTab = el.dataset.tab;
+      renderTabs();
+      renderContent();
+    };
+  });
+}
+
+/* ============================================================
+   渲染：内容区（路由）
+============================================================ */
+function renderContent(){
+  const c = document.getElementById('content');
+  c.scrollTop = 0;
+  const fn = RENDERS[currentTab];
+  c.innerHTML = fn ? fn() : '<div class="empty-state"><span class="emoji">🚧</span>建设中...</div>';
+  bindContent();
+}
+
+function renderAll(){
+  renderNav();
+  renderTabs();
+  renderContent();
+}
+
+/* ============================================================
+   各页面渲染器
+============================================================ */
+const RENDERS = {};
+
+/* ---------- 1. 每日计划 ---------- */
+// 饮食
+RENDERS.food = function(){
+  const key = `food_${today()}`;
+  const data = getDB(key, {breakfast:'',lunch:'',dinner:'',snack:''});
+  const mealItem = (label,field,emoji)=>`
+    <div class="list-item" style="flex-direction:column;align-items:stretch;gap:6px;">
+      <div style="display:flex;justify-content:space-between;align-items:center;">
+        <span style="font-size:13px;font-weight:600;">${emoji} ${label}</span>
+        <button class="btn-mini" onclick="editField('${key}','${field}','${escapeHtml(data[field])}')">✏️ 编辑</button>
+      </div>
+      <div style="font-size:13px;color:${data[field]?'var(--text-main)':'var(--text-soft)'};min-height:18px;">
+        ${data[field] ? escapeHtml(data[field]) : '还没记录哦～点击编辑'}
+      </div>
+    </div>`;
+  return `
+    <div class="date-display">📅 今天是 <span>${todayCN()}</span></div>
+    <div class="card">
+      <div class="card-title">🥗 今日饮食记录</div>
+      ${mealItem('早餐','breakfast','☀️')}
+      ${mealItem('午餐','lunch','🍱')}
+      ${mealItem('晚餐','dinner','🌙')}
+      ${mealItem('加餐','snack','🍪')}
+    </div>
+  `;
+};
+
+// 待办清单
+RENDERS.todo = function(){
+  const key = `todo_${today()}`;
+  const groups = [
+    {id:'today', name:'今日任务', emoji:'📌'},
+    {id:'urgent', name:'紧急事项', emoji:'🔥'},
+    {id:'long', name:'长期规划', emoji:'🌱'},
+  ];
+  let html = `<div class="date-display">📅 <span>${todayCN()}</span> 待办清单</div>`;
+  groups.forEach(g=>{
+    const list = getDB(`todo_${g.id}_${today()}`, []);
+    html += `<div class="card">
+      <div class="card-title">${g.emoji} ${g.name}
+        <button class="edit-btn" onclick="addTodoItem('${g.id}')">➕ 添加</button>
+      </div>
+      <div id="todoList_${g.id}">`;
+    if(list.length===0){ html += `<div class="empty-state" style="padding:16px;"><span class="emoji">📝</span>暂无任务，添加一个吧～</div>`; }
+    list.forEach((item,i)=>{
+      html += `<div class="chk-wrap ${item.done?'done':''}">
+        <div class="chk ${item.done?'checked':''}" onclick="toggleTodo('${g.id}',${i})"></div>
+        <div class="chk-text">${escapeHtml(item.text)}</div>
+        <div class="chk-actions">
+          <button class="btn-mini" onclick="editTodoItem('${g.id}',${i})">✏️</button>
+          <button class="btn-del" onclick="delTodoItem('${g.id}',${i})">🗑</button>
+        </div>
+      </div>`;
+    });
+    html += `</div></div>`;
+  });
+  return html;
+};
+
+// 日程规划
+RENDERS.schedule = function(){
+  const list = getDB(`schedule_${today()}`, []);
+  let html = `<div class="date-display">📅 <span>${todayCN()}</span> 日程规划</div>`;
+  html += `<div class="card">
+    <div class="card-title">⏰ 重要日程与截止日
+      <button class="edit-btn" onclick="addSchedule()">➕ 添加</button>
+    </div>`;
+  if(list.length===0){ html += `<div class="empty-state"><span class="emoji">🗓️</span>今天还没有日程安排～</div>`; }
+  list.forEach((item,i)=>{
+    const urgency = item.urgent ? '<span class="badge badge-red">紧急</span>' : '<span class="badge badge-blue">普通</span>';
+    html += `<div class="list-item" style="flex-direction:column;align-items:stretch;gap:4px;">
+      <div style="display:flex;justify-content:space-between;align-items:center;">
+        <span style="font-size:13px;font-weight:600;">${escapeHtml(item.title)}</span>
+        <div style="display:flex;gap:6px;align-items:center;">${urgency}
+          <button class="btn-mini" onclick="editSchedule(${i})">✏️</button>
+          <button class="btn-del" onclick="delSchedule(${i})">🗑</button>
+        </div>
+      </div>
+      <div style="font-size:12px;color:var(--text-soft);">${escapeHtml(item.time||'')} ${item.desc? '· '+escapeHtml(item.desc):''}</div>
+    </div>`;
+  });
+  html += `</div>`;
+  return html;
+};
+
+// 作息打卡
+RENDERS.sleep = function(){
+  const key = `sleep_${today()}`;
+  const data = getDB(key, {earlySleep:false,earlyWake:false,bedtime:'',waketime:'',quality:''});
+  const checkin = (field,label,emoji,desc)=>{
+    const done = data[field];
+    return `<div class="checkin-card">
+      <div class="checkin-icon">${emoji}</div>
+      <div class="checkin-info">
+        <div class="checkin-title">${label}</div>
+        <div class="checkin-desc">${desc}</div>
+      </div>
+      <div class="checkin-status ${done?'done':'undone'}" onclick="toggleSleep('${field}')">${done?'已打卡 ✓':'打卡'}</div>
+    </div>`;
+  };
+  return `
+    <div class="date-display">📅 <span>${todayCN()}</span> 作息打卡</div>
+    <div class="card">
+      <div class="card-title">😴 作息打卡</div>
+      ${checkin('earlySleep','早睡打卡','🌙','22:30 前入睡')}
+      ${checkin('earlyWake','早起打卡','☀️','07:00 前起床')}
+    </div>
+    <div class="card">
+      <div class="card-title">📖 睡眠记录
+        <button class="edit-btn" onclick="editSleepRecord()">✏️ 编辑</button>
+      </div>
+      <div class="stat-row"><span class="stat-label">入睡时间</span><span class="stat-val">${data.bedtime||'未记录'}</span></div>
+      <div class="stat-row"><span class="stat-label">起床时间</span><span class="stat-val">${data.waketime||'未记录'}</span></div>
+      <div class="stat-row"><span class="stat-label">睡眠质量</span><span class="stat-val">${data.quality||'未记录'}</span></div>
+    </div>
+  `;
+};
+
+/* ---------- 2. 每日新闻 ---------- */
+const NEWS_DATA = {
+  hot:[
+    {title:'🌍 全国多地迎来高温天气',desc:'气象部门发布高温预警，提醒市民注意防暑降温，减少户外活动。',source:'综合报道'},
+    {title:'🔬 我国科技新突破',desc:'科研团队在新材料领域取得重要进展，相关成果发表于国际期刊。',source:'科技日报'},
+    {title:'🎓 高校毕业生就业新政策',desc:'多地出台就业扶持措施，为毕业生提供更多岗位选择与补贴。',source:'新华社'},
+  ],
+  finance:[
+    {title:'📈 A股市场行情简析',desc:'今日大盘震荡上行，新能源与消费板块表现活跃，成交额有所放大。',source:'财经简讯'},
+    {title:'💰 理财小贴士：定投策略',desc:'坚持定期定额投资，分散时间风险，适合长期稳健理财。',source:'理财周刊'},
+    {title:'🏭 新能源行业资讯',desc:'光伏产业链需求旺盛，相关企业订单增长明显，行业景气度提升。',source:'行业观察'},
+  ],
+  science:[
+    {title:'🌿 植物的昼夜节律',desc:'植物也有"生物钟"，通过感光色素感知光照变化，调节生长与代谢。',source:'自然科普'},
+    {title:'🌊 海洋的蓝色之谜',desc:'海水呈现蓝色是因为水分子吸收红光波长，散射蓝光，深海尤为明显。',source:'生活科普'},
+    {title:'🏛️ 古建筑中的榫卯智慧',desc:'中国传统木构建筑不用一钉一铆，靠榫卯结构实现抗震稳固。',source:'人文科普'},
+  ],
+};
+RENDERS.hot = function(){
+  let html = `<div class="date-display">📰 当日综合热点 · <span>${todayCN()}</span></div>`;
+  NEWS_DATA.hot.forEach(n=>{
+    html += `<div class="news-card"><div class="news-title">${n.title}</div><div class="news-desc">${n.desc}</div><div class="news-source">来源：${n.source}</div></div>`;
+  });
+  return html;
+};
+RENDERS.finance = function(){
+  let html = `<div class="date-display">💼 财经简讯 · <span>${todayCN()}</span></div>`;
+  NEWS_DATA.finance.forEach(n=>{
+    html += `<div class="news-card"><div class="news-title">${n.title}</div><div class="news-desc">${n.desc}</div><div class="news-source">来源：${n.source}</div></div>`;
+  });
+  html += `<div class="card"><div class="card-title">💡 轻量化理财提示</div><div style="font-size:13px;line-height:1.7;color:var(--text-main);">理财有风险，投资需谨慎。建议根据自身风险承受能力合理配置资产，不要把鸡蛋放在一个篮子里哦～🥚</div></div>`;
+  return html;
+};
+RENDERS.science = function(){
+  let html = `<div class="date-display">🔭 科普见闻 · <span>${todayCN()}</span></div>`;
+  NEWS_DATA.science.forEach(n=>{
+    html += `<div class="news-card"><div class="news-title">${n.title}</div><div class="news-desc">${n.desc}</div><div class="news-source">来源：${n.source}</div></div>`;
+  });
+  return html;
+};
+
+/* ---------- 3. 英语学习 ---------- */
+RENDERS.word = function(){
+  const key = `word_checkin_${today()}`;
+  const done = getDB(key, false);
+  const reviewKey = `word_review_${today()}`;
+  const reviewDone = getDB(reviewKey, false);
+  const stats = getDB('word_stats', {total:0, days:0});
+  const checkin = (k,label,emoji,desc)=>{
+    const d = getDB(k,false);
+    return `<div class="checkin-card">
+      <div class="checkin-icon">${emoji}</div>
+      <div class="checkin-info"><div class="checkin-title">${label}</div><div class="checkin-desc">${desc}</div></div>
+      <div class="checkin-status ${d?'done':'undone'}" onclick="toggleWordCheckin('${k}')">${d?'已打卡 ✓':'打卡'}</div>
+    </div>`;
+  };
+  return `
+    <div class="date-display">📚 单词打卡 · <span>${todayCN()}</span></div>
+    <div class="card">
+      <div class="card-title">📖 每日单词打卡</div>
+      ${checkin(key,'今日背诵打卡','✍️','完成今日单词背诵')}
+      ${checkin(reviewKey,'复习打卡','🔄','复习已学单词')}
+    </div>
+    <div class="card">
+      <div class="card-title">📊 打卡统计</div>
+      <div class="stat-row"><span class="stat-label">累计打卡天数</span><span class="stat-val">${stats.days} 天</span></div>
+      <div class="stat-row"><span class="stat-label">今日状态</span><span class="stat-val">${done&&reviewDone?'全部完成 ✨':'进行中'}</span></div>
+    </div>
+  `;
+};
+RENDERS.reading = function(){
+  const articles = [
+    {title:'The Magic of Morning Light',text:'Morning light does more than wake us up. It signals our brain to stop producing melatonin, the sleep hormone, and helps set our biological clock for the day. Researchers suggest getting 15 minutes of sunlight each morning to improve mood and sleep quality.',notes:'melatonin 褪黑素；biological clock 生物钟'},
+    {title:'Why We Love Music',text:'Music affects the brain in powerful ways. When we listen to music we enjoy, our brain releases dopamine, a chemical associated with pleasure and reward. This explains why a favorite song can instantly lift our mood.',notes:'dopamine 多巴胺；pleasure 快乐'},
+    {title:'The Art of Slow Living',text:'Slow living is about doing things at the right pace. Instead of rushing through tasks, it encourages mindfulness — being fully present in each moment. This lifestyle reduces stress and helps us appreciate the little things in life.',notes:'mindfulness 正念；appreciate 欣赏'},
+  ];
+  const dayIdx = new Date().getDate() % articles.length;
+  const a = articles[dayIdx];
+  const noteKey = `reading_note_${today()}`;
+  const note = getDB(noteKey, '');
+  return `
+    <div class="date-display">📖 今日外刊 · <span>${todayCN()}</span>（每日自动更新）</div>
+    <div class="card">
+      <div class="card-title">📝 ${a.title}</div>
+      <div style="font-size:13px;line-height:1.8;color:var(--text-main);margin-bottom:10px;">${a.text}</div>
+      <div style="background:#f6fbff;padding:8px 10px;border-radius:8px;font-size:12px;color:var(--accent-blue-deep);">💡 生词笔记：${a.notes}</div>
+    </div>
+    <div class="card">
+      <div class="card-title">✍️ 我的笔记
+        <button class="edit-btn" onclick="editNote('${noteKey}','${escapeHtml(note)}')">✏️ 编辑</button>
+      </div>
+      <div style="font-size:13px;color:${note?'var(--text-main)':'var(--text-soft)'};min-height:20px;line-height:1.6;">${note?escapeHtml(note).replace(/\n/g,'<br>'):'记录你的阅读心得～'}</div>
+    </div>
+  `;
+};
+RENDERS.speaking = function(){
+  const key = `speaking_checkin_${today()}`;
+  const done = getDB(key, false);
+  return `
+    <div class="date-display">🎤 口语练习 · <span>${todayCN()}</span></div>
+    <div class="card">
+      <div class="card-title">🗣️ 今日口语打卡</div>
+      <div class="checkin-card">
+        <div class="checkin-icon">🎤</div>
+        <div class="checkin-info"><div class="checkin-title">口语练习打卡</div><div class="checkin-desc">完成今日口语跟读练习</div></div>
+        <div class="checkin-status ${done?'done':'undone'}" onclick="toggleSimpleCheckin('${key}')">${done?'已打卡 ✓':'打卡'}</div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">💡 练习小建议</div>
+      <div style="font-size:13px;line-height:1.7;">每天跟读3-5分钟英文素材，模仿语音语调，坚持就会有进步哦～🌟</div>
+    </div>
+  `;
+};
+RENDERS.wrong = function(){
+  const list = getDB('wrong_book', []);
+  let html = `<div class="card">
+    <div class="card-title">📒 错题本
+      <button class="edit-btn" onclick="addWrongItem()">➕ 添加</button>
+    </div>`;
+  if(list.length===0){ html += `<div class="empty-state"><span class="emoji">📒</span>还没有错题，继续加油～</div>`; }
+  list.forEach((item,i)=>{
+    html += `<div class="list-item" style="flex-direction:column;align-items:stretch;gap:4px;">
+      <div style="display:flex;justify-content:space-between;align-items:center;">
+        <span class="badge ${item.type==='word'?'badge-blue':'badge-green'}">${item.type==='word'?'单词':'阅读'}</span>
+        <div style="display:flex;gap:6px;">
+          <button class="btn-mini" onclick="editWrongItem(${i})">✏️</button>
+          <button class="btn-del" onclick="delWrongItem(${i})">🗑</button>
+        </div>
+      </div>
+      <div style="font-size:13px;font-weight:600;">${escapeHtml(item.q)}</div>
+      <div style="font-size:12px;color:var(--text-soft);">✅ ${escapeHtml(item.a)}</div>
+    </div>`;
+  });
+  html += `</div>`;
+  return html;
+};
+
+/* ---------- 4. 运动打卡（竖版） ---------- */
+RENDERS.today_sport = function(){
+  const key = `sport_${today()}`;
+  const list = getDB(key, []);
+  let html = `<div class="date-display">🏃 当日运动 · <span>${todayCN()}</span></div>`;
+  html += `<div class="card">
+    <div class="card-title">🏋️ 今日训练记录
+      <button class="edit-btn" onclick="addSportItem()">➕ 添加</button>
+    </div>`;
+  if(list.length===0){ html += `<div class="empty-state"><span class="emoji">🏃‍♀️</span>今天还没开始运动哦～</div>`; }
+  list.forEach((item,i)=>{
+    html += `<div class="sport-item">
+      <div class="sport-item-head">
+        <span class="sport-item-name">${escapeHtml(item.name)}</span>
+        <div style="display:flex;gap:6px;">
+          <button class="btn-mini" onclick="editSportItem(${i})">✏️</button>
+          <button class="btn-del" onclick="delSportItem(${i})">🗑</button>
+        </div>
+      </div>
+      <div class="sport-stat">
+        <div class="sport-stat-row"><span>⏱️ 时长</span><span>${escapeHtml(item.duration||'0')} 分钟</span></div>
+        <div class="sport-stat-row"><span>🔥 消耗</span><span>${escapeHtml(item.calorie||'0')} 大卡</span></div>
+        ${item.note?`<div class="sport-stat-row"><span>📝 备注</span><span>${escapeHtml(item.note)}</span></div>`:''}
+      </div>
+    </div>`;
+  });
+  html += `</div>`;
+  // 今日汇总
+  const totalMin = list.reduce((s,x)=>s+(parseInt(x.duration)||0),0);
+  const totalCal = list.reduce((s,x)=>s+(parseInt(x.calorie)||0),0);
+  html += `<div class="card">
+    <div class="card-title">📊 今日汇总</div>
+    <div class="stat-row"><span class="stat-label">运动项目</span><span class="stat-val">${list.length} 项</span></div>
+    <div class="stat-row"><span class="stat-label">总时长</span><span class="stat-val">${totalMin} 分钟</span></div>
+    <div class="stat-row"><span class="stat-label">总消耗</span><span class="stat-val">${totalCal} 大卡</span></div>
+  </div>`;
+  return html;
+};
+RENDERS.body = function(){
+  const records = getDB('body_records', []);
+  let html = `<div class="date-display">📏 身体数据 · <span>${todayCN()}</span></div>`;
+  // 最新数据
+  const latest = records[records.length-1];
+  if(latest){
+    html += `<div class="card">
+      <div class="card-title">📊 最新数据</div>
+      <div class="sport-stat">
+        <div class="sport-stat-row"><span>⚖️ 体重</span><span>${escapeHtml(latest.weight||'-')} kg</span></div>
+        <div class="sport-stat-row"><span>📐 腰围</span><span>${escapeHtml(latest.waist||'-')} cm</span></div>
+        <div class="sport-stat-row"><span>📐 臀围</span><span>${escapeHtml(latest.hip||'-')} cm</span></div>
+        <div class="sport-stat-row"><span>📐 大腿围</span><span>${escapeHtml(latest.thigh||'-')} cm</span></div>
+      </div>
+    </div>`;
+  }
+  html += `<div class="card">
+    <div class="card-title">✏️ 记录身体数据
+      <button class="edit-btn" onclick="addBodyRecord()">➕ 添加记录</button>
+    </div>`;
+  if(records.length===0){ html += `<div class="empty-state"><span class="emoji">📏</span>暂无记录，开始记录你的数据吧～</div>`; }
+  records.slice().reverse().forEach((r,idx)=>{
+    const i = records.length-1-idx;
+    html += `<div class="sport-item">
+      <div class="sport-item-head">
+        <span class="sport-item-name">📅 ${escapeHtml(r.date)}</span>
+        <div style="display:flex;gap:6px;">
+          <button class="btn-mini" onclick="editBodyRecord(${i})">✏️</button>
+          <button class="btn-del" onclick="delBodyRecord(${i})">🗑</button>
+        </div>
+      </div>
+      <div class="sport-stat">
+        <div class="sport-stat-row"><span>⚖️ 体重</span><span>${escapeHtml(r.weight||'-')} kg</span></div>
+        <div class="sport-stat-row"><span>📐 腰围</span><span>${escapeHtml(r.waist||'-')} cm</span></div>
+        <div class="sport-stat-row"><span>📐 臀围</span><span>${escapeHtml(r.hip||'-')} cm</span></div>
+        <div class="sport-stat-row"><span>📐 大腿围</span><span>${escapeHtml(r.thigh||'-')} cm</span></div>
+      </div>
+    </div>`;
+  });
+  html += `</div>`;
+  return html;
+};
+
+/* ---------- 5. 记账 ---------- */
+const EXPENSE_CATS = ['🍔 餐饮','🛒 购物','🚗 交通','🏠 居家','🎭 娱乐','💊 医疗','🎁 礼物','📌 其他'];
+const INCOME_CATS = ['💰 工资','🧧 红包','📈 理财','📌 其他'];
+RENDERS.today_account = function(){
+  const key = `account_${today()}`;
+  const list = getDB(key, []);
+  let expense = 0, income = 0;
+  list.forEach(r=>{ if(r.type==='expense') expense+=parseFloat(r.amount)||0; else income+=parseFloat(r.amount)||0; });
+  let html = `<div class="date-display">💰 今日收支 · <span>${todayCN()}</span></div>`;
+  html += `<div class="card">
+    <div class="card-title">📊 今日概览</div>
+    <div class="stat-row"><span class="stat-label">💰 收入</span><span class="stat-val income">+¥${income.toFixed(2)}</span></div>
+    <div class="stat-row"><span class="stat-label">💸 支出</span><span class="stat-val expense">-¥${expense.toFixed(2)}</span></div>
+    <div class="stat-row"><span class="stat-label">💎 结余</span><span class="stat-val">¥${(income-expense).toFixed(2)}</span></div>
+  </div>`;
+  html += `<div class="card">
+    <div class="card-title">✏️ 快速录入
+      <button class="edit-btn" onclick="addAccountRecord()">➕ 添加</button>
+    </div>`;
+  if(list.length===0){ html += `<div class="empty-state"><span class="emoji">💰</span>今天还没有记录哦～</div>`; }
+  list.slice().reverse().forEach((r,idx)=>{
+    const i = list.length-1-idx;
+    html += `<div class="list-item">
+      <span style="font-size:18px;">${r.type==='expense'?'💸':'💰'}</span>
+      <div class="list-item-text">
+        <div style="font-size:13px;">${escapeHtml(r.cat)} · ${escapeHtml(r.note||'')}</div>
+        <div style="font-size:11px;color:var(--text-soft);">${escapeHtml(r.time||'')}</div>
+      </div>
+      <span style="font-size:13px;font-weight:600;color:${r.type==='expense'?'var(--title-red)':'#3aa855'};">${r.type==='expense'?'-':'+'}¥${parseFloat(r.amount).toFixed(2)}</span>
+      <button class="btn-del" onclick="delAccountRecord(${i})">🗑</button>
+    </div>`;
+  });
+  html += `</div>`;
+  return html;
+};
+RENDERS.monthly = function(){
+  const month = nowMonth();
+  let allRecords = [];
+  Object.keys(DB).forEach(k=>{
+    if(k.startsWith('account_') && k.slice(8,15)===month){
+      allRecords = allRecords.concat(DB[k].map(r=>({...r})));
+    }
+  });
+  let expense = 0, income = 0;
+  const catMap = {};
+  const dayMap = {};
+  allRecords.forEach(r=>{
+    const amt = parseFloat(r.amount)||0;
+    if(r.type==='expense'){
+      expense += amt;
+      catMap[r.cat] = (catMap[r.cat]||0) + amt;
+      const d = r.date || '';
+      dayMap[d] = (dayMap[d]||0) + amt;
+    } else {
+      income += amt;
+    }
+  });
+  const colors = ['#7ec5e8','#ff9b9b','#a8e0a8','#ffd699','#c9a8e8','#ffc1cc','#a8d8e8','#cccccc'];
+  let html = `<div class="date-display">📊 月度账单 · <span>${month}</span>（根据每日收支自动更新）</div>`;
+  html += `<div class="card">
+    <div class="card-title">📈 月度总览</div>
+    <div class="stat-row"><span class="stat-label">💰 总收入</span><span class="stat-val income">+¥${income.toFixed(2)}</span></div>
+    <div class="stat-row"><span class="stat-label">💸 总支出</span><span class="stat-val expense">-¥${expense.toFixed(2)}</span></div>
+    <div class="stat-row"><span class="stat-label">💎 月结余</span><span class="stat-val">¥${(income-expense).toFixed(2)}</span></div>
+  </div>`;
+  // 分类饼图（用条形图代替）
+  html += `<div class="card">
+    <div class="card-title">🍩 支出分类占比</div>`;
+  const sortedCats = Object.entries(catMap).sort((a,b)=>b[1]-a[1]);
+  if(sortedCats.length===0){ html += `<div class="empty-state" style="padding:20px;"><span class="emoji">📊</span>本月暂无支出数据</div>`; }
+  sortedCats.forEach((c,idx)=>{
+    const pct = expense>0 ? (c[1]/expense*100) : 0;
+    html += `<div class="cat-bar-wrap">
+      <div class="cat-bar-head"><span>${c[0]}</span><span>¥${c[1].toFixed(2)} (${pct.toFixed(1)}%)</span></div>
+      <div class="cat-bar-track"><div class="cat-bar-fill" style="width:${pct}%;background:${colors[idx%colors.length]};"></div></div>
+    </div>`;
+  });
+  html += `</div>`;
+  // 每日支出柱状图
+  html += `<div class="card">
+    <div class="card-title">📊 每日支出趋势</div>
+    <div class="chart-bar-wrap">`;
+  const daysInMonth = new Date(new Date().getFullYear(), new Date().getMonth()+1, 0).getDate();
+  const maxVal = Math.max(...Object.values(dayMap), 1);
+  for(let d=1; d<=daysInMonth; d++){
+    const dateStr = `${month}-${String(d).padStart(2,'0')}`;
+    const val = dayMap[dateStr]||0;
+    const h = val/maxVal*100;
+    if(d%1===0){
+      html += `<div class="chart-bar expense" style="height:${h}%;">
+        ${val>0?`<div class="chart-bar-val">${val.toFixed(0)}</div>`:''}
+        <div class="chart-bar-label">${d}</div>
+      </div>`;
+    }
+  }
+  html += `</div><div style="height:24px;"></div></div>`;
+  return html;
+};
+RENDERS.budget = function(){
+  const budgets = getDB('budget_'+nowMonth(), {});
+  let html = `<div class="date-display">🎯 预算规划 · <span>${nowMonth()}</span></div>`;
+  html += `<div class="card">
+    <div class="card-title">💰 各类目预算上限
+      <button class="edit-btn" onclick="editBudget()">✏️ 设置</button>
+    </div>`;
+  // 计算本月实际支出
+  const month = nowMonth();
+  const catMap = {};
+  Object.keys(DB).forEach(k=>{
+    if(k.startsWith('account_') && k.slice(8,15)===month){
+      DB[k].forEach(r=>{
+        if(r.type==='expense'){
+          catMap[r.cat] = (catMap[r.cat]||0) + (parseFloat(r.amount)||0);
+        }
+      });
+    }
+  });
+  EXPENSE_CATS.forEach(cat=>{
+    const budget = budgets[cat]||0;
+    const actual = catMap[cat]||0;
+    const pct = budget>0 ? Math.min(actual/budget*100,100) : 0;
+    const over = budget>0 && actual>budget;
+    html += `<div class="cat-bar-wrap">
+      <div class="cat-bar-head"><span>${cat}</span><span style="color:${over?'var(--title-red)':'var(--text-soft)'};">¥${actual.toFixed(0)} / ${budget||'未设'}</span></div>
+      <div class="cat-bar-track"><div class="cat-bar-fill" style="width:${pct}%;background:${over?'#ff8a8a':'#7ec5e8'};"></div></div>
+    </div>`;
+  });
+  html += `</div>`;
+  return html;
+};
+RENDERS.review = function(){
+  const month = nowMonth();
+  // 统计本月
+  let expense = 0, income = 0;
+  const catMap = {};
+  Object.keys(DB).forEach(k=>{
+    if(k.startsWith('account_') && k.slice(8,15)===month){
+      DB[k].forEach(r=>{
+        const amt = parseFloat(r.amount)||0;
+        if(r.type==='expense'){ expense+=amt; catMap[r.cat]=(catMap[r.cat]||0)+amt; }
+        else{ income+=amt; }
+      });
+    }
+  });
+  const saveRate = income>0 ? ((income-expense)/income*100) : 0;
+  // 找出最大支出类目
+  const sortedCats = Object.entries(catMap).sort((a,b)=>b[1]-a[1]);
+  const topCat = sortedCats[0];
+  // 不必要消费（娱乐、购物中的部分）
+  const unnecessary = (catMap['🎭 娱乐']||0) + (catMap['🛒 购物']||0);
+  const summary = getDB(`review_${month}`, '');
+  let html = `<div class="date-display">📝 消费复盘 · <span>${month}</span>（根据消费记录自动更新）</div>`;
+  html += `<div class="card">
+    <div class="card-title">💾 存钱情况</div>
+    <div class="stat-row"><span class="stat-label">本月收入</span><span class="stat-val income">¥${income.toFixed(2)}</span></div>
+    <div class="stat-row"><span class="stat-label">本月支出</span><span class="stat-val expense">¥${expense.toFixed(2)}</span></div>
+    <div class="stat-row"><span class="stat-label">本月结余</span><span class="stat-val">¥${(income-expense).toFixed(2)}</span></div>
+    <div class="stat-row"><span class="stat-label">储蓄率</span><span class="stat-val ${saveRate>=20?'':'expense'}">${saveRate.toFixed(1)}% ${saveRate>=20?'👍':'💪加油'}</span></div>
+  </div>`;
+  html += `<div class="card">
+    <div class="card-title">🔍 消费分析</div>`;
+  if(topCat){
+    html += `<div class="stat-row"><span class="stat-label">最大支出类目</span><span class="stat-val">${topCat[0]} ¥${topCat[1].toFixed(2)}</span></div>`;
+  }
+  html += `<div class="stat-row"><span class="stat-label">非必要消费</span><span class="stat-val expense">¥${unnecessary.toFixed(2)}</span></div>
+    <div class="stat-row"><span class="stat-label">非必要占比</span><span class="stat-val">${expense>0?(unnecessary/expense*100).toFixed(1):0}%</span></div>
+  </div>`;
+  html += `<div class="card">
+    <div class="card-title">✍️ 月度总结
+      <button class="edit-btn" onclick="editReview()">✏️ 编辑</button>
+    </div>
+    <div style="font-size:13px;line-height:1.7;color:${summary?'var(--text-main)':'var(--text-soft)'};min-height:40px;">${summary?escapeHtml(summary).replace(/\n/g,'<br>'):'写下你的消费反思与下月计划吧～'}</div>
+  </div>`;
+  // 自动建议
+  html += `<div class="card">
+    <div class="card-title">💡 自动建议</div>
+    <div style="font-size:13px;line-height:1.7;">`;
+  if(saveRate < 20){ html += `⚠️ 储蓄率偏低，建议控制非必要消费，每月至少存下收入的20%。<br>`; }
+  else{ html += `✅ 储蓄率不错，继续保持！<br>`; }
+  if(topCat && topCat[1] > expense*0.4){ html += `📌 「${topCat[0]}」占比偏高，可适当优化。<br>`; }
+  if(unnecessary > expense*0.3){ html += `💭 非必要消费占比偏高，购物娱乐可适度节制。<br>`; }
+  html += `</div></div>`;
+  return html;
+};
+
+/* ---------- 6. 经期记录 ---------- */
+let calDate = new Date();
+RENDERS.calendar = function(){
+  const periodDays = getDB('period_days', {}); // {dateStr: true}
+  const year = calDate.getFullYear();
+  const month = calDate.getMonth();
+  const firstDay = new Date(year, month, 1).getDay();
+  const daysInMonth = new Date(year, month+1, 0).getDate();
+  // 预测：根据最近3次经期平均周期预测下次
+  const sortedPeriods = Object.keys(periodDays).filter(d=>d.startsWith(`${year}-${String(month+1).padStart(2,'0')}`)||true).sort();
+  // 简单预测：如果本月有打卡，标注；若上月有，预测本月相应日期
+  const lastMonthKey = `${year}-${String(month).padStart(2,'0')}`;
+  const lastMonthDays = Object.keys(periodDays).filter(d=>d.startsWith(lastMonthKey)).sort();
+  const thisMonthKey = `${year}-${String(month+1).padStart(2,'0')}`;
+  const thisMonthDays = Object.keys(periodDays).filter(d=>d.startsWith(thisMonthKey)).sort();
+  let predictedSet = new Set();
+  if(lastMonthDays.length>0 && thisMonthDays.length===0){
+    const cycle = 28;
+    lastMonthDays.forEach(d=>{
+      const dd = new Date(d);
+      dd.setDate(dd.getDate()+cycle);
+      if(dd.getFullYear()===year && dd.getMonth()===month){
+        predictedSet.add(dd.getDate());
+      }
+    });
+  }
+  let html = `<div class="card">
+    <div class="card-title">🌸 周期日历</div>
+    <div class="cal-nav">
+      <button onclick="calPrev()">‹</button>
+      <span class="cal-month">${year}年${month+1}月</span>
+      <button onclick="calNext()">›</button>
+    </div>
+    <div class="cal-grid">
+      ${['日','一','二','三','四','五','六'].map(w=>`<div class="cal-head">${w}</div>`).join('')}
+      ${Array(firstDay).fill('<div class="cal-cell empty"></div>').join('')}
+      ${Array.from({length:daysInMonth},(_,i)=>{
+        const d = i+1;
+        const dateStr = `${year}-${String(month+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+        const isToday = dateStr===today();
+        const isPeriod = periodDays[dateStr];
+        const isPredicted = predictedSet.has(d);
+        const cls = `cal-cell ${isToday?'today':''} ${isPeriod?'period':''} ${isPredicted&&!isPeriod?'predicted':''}`;
+        return `<div class="${cls}" onclick="togglePeriod('${dateStr}')">${d}</div>`;
+      }).join('')}
+    </div>
+    <div style="display:flex;gap:12px;margin-top:12px;font-size:11px;color:var(--text-soft);">
+      <span>🟥 来潮打卡</span>
+      <span>🟪 预测日期</span>
+      <span>🔵 今天</span>
+    </div>
+  </div>`;
+  // 来潮打卡
+  const todayPeriod = periodDays[today()];
+  html += `<div class="card">
+    <div class="card-title">💧 来潮打卡</div>
+    <div class="checkin-card">
+      <div class="checkin-icon">🌸</div>
+      <div class="checkin-info"><div class="checkin-title">今日来潮</div><div class="checkin-desc">${todayCN()}</div></div>
+      <div class="checkin-status ${todayPeriod?'done':'undone'}" onclick="togglePeriod('${today()}')">${todayPeriod?'已记录 ✓':'打卡'}</div>
+    </div>
+  </div>`;
+  return html;
+};
+RENDERS.feeling = function(){
+  const key = `period_feeling_${today()}`;
+  const data = getDB(key, {pain:'',tired:'',mood:''});
+  const opt = (field, label, emoji, opts)=>`
+    <div style="margin-bottom:12px;">
+      <div style="font-size:13px;font-weight:600;margin-bottom:6px;">${emoji} ${label}</div>
+      <div class="mood-row">
+        ${opts.map(o=>`<div class="mood-btn ${data[field]===o?'selected':''}" onclick="setFeeling('${field}','${o}')">${o}</div>`).join('')}
+      </div>
+    </div>`;
+  return `
+    <div class="date-display">🌸 身体感受 · <span>${todayCN()}</span></div>
+    <div class="card">
+      <div class="card-title">😣 痛经程度</div>
+      ${opt('pain','痛经程度','😣',['无痛','轻微','中度','严重'])}
+    </div>
+    <div class="card">
+      <div class="card-title">😴 乏力程度</div>
+      ${opt('tired','乏力程度','😴',['精神充沛','轻微疲劳','比较疲惫','非常疲惫'])}
+    </div>
+    <div class="card">
+      <div class="card-title">💭 情绪状态</div>
+      ${opt('mood','情绪状态','💭',['😊 平静','😄 开心','😢 低落','😡 烦躁','😭 想哭'])}
+    </div>
+  `;
+};
+RENDERS.foodremind = function(){
+  // 根据经期状态和天气（模拟）更新适宜食物
+  const periodDays = getDB('period_days', {});
+  const isPeriod = !!periodDays[today()];
+  const weathers = ['晴天☀️','多云⛅','阴天☁️','雨天🌧️'];
+  const wIdx = new Date().getDate() % weathers.length;
+  const weather = weathers[wIdx];
+  let goodFoods, badFoods;
+  if(isPeriod){
+    goodFoods = ['红糖姜茶','红枣','桂圆','热牛奶','瘦肉粥','香蕉','核桃','黑巧克力'];
+    badFoods = ['冰饮','生冷海鲜','辛辣火锅','冰淇淋','咖啡','浓茶','西瓜','冷饮'];
+  } else {
+    goodFoods = ['新鲜水果','蔬菜沙拉','全麦面包','鸡蛋','酸奶','坚果','粗粮','鱼肉'];
+    badFoods = ['油炸食品','过量甜食','加工零食','含糖饮料','方便面','高盐食品'];
+  }
+  let html = `<div class="date-display">🍎 饮食提醒 · <span>${todayCN()}</span> · ${weather}</div>`;
+  html += `<div class="card">
+    <div class="card-title">🩸 经期状态</div>
+    <div class="stat-row"><span class="stat-label">今日状态</span><span class="stat-val">${isPeriod?'经期中 🌸':'非经期'}</span></div>
+    <div class="stat-row"><span class="stat-label">今日天气</span><span class="stat-val">${weather}</span></div>
+    <div style="font-size:12px;color:var(--text-soft);margin-top:6px;">💡 清单会根据经期状态与天气自动更新</div>
+  </div>`;
+  html += `<div class="card">
+    <div class="card-title">✅ 适宜食物</div>
+    <div class="food-list">${goodFoods.map(f=>`<span class="food-tag good">${f}</span>`).join('')}</div>
+  </div>`;
+  html += `<div class="card">
+    <div class="card-title">❌ 忌口食物</div>
+    <div class="food-list">${badFoods.map(f=>`<span class="food-tag bad">${f}</span>`).join('')}</div>
+  </div>`;
+  return html;
+};
+
+/* ---------- 7. 小树洞 ---------- */
+RENDERS.essay = function(){
+  const list = getDB('essay_list', []);
+  let html = `<div class="card">
+    <div class="card-title">✍️ 日常随笔
+      <button class="edit-btn" onclick="addEssay()">➕ 写一条</button>
+    </div>`;
+  if(list.length===0){ html += `<div class="empty-state"><span class="emoji">💭</span>还没有随笔，记录你的碎碎念～</div>`; }
+  list.slice().reverse().forEach((item,idx)=>{
+    const i = list.length-1-idx;
+    html += `<div class="list-item" style="flex-direction:column;align-items:stretch;gap:4px;">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;">
+        <div style="flex:1;font-size:13px;line-height:1.6;white-space:pre-wrap;">${escapeHtml(item.text)}</div>
+        <div style="display:flex;gap:6px;flex-shrink:0;">
+          <button class="btn-mini" onclick="editEssay(${i})">✏️</button>
+          <button class="btn-del" onclick="delEssay(${i})">🗑</button>
+        </div>
+      </div>
+      <div style="font-size:11px;color:var(--text-soft);">📅 ${escapeHtml(item.date||'')}</div>
+    </div>`;
+  });
+  html += `</div>`;
+  return html;
+};
+RENDERS.mood = function(){
+  const list = getDB('mood_list', []);
+  let html = `<div class="card">
+    <div class="card-title">💭 心情日记
+      <button class="edit-btn" onclick="addMood()">➕ 记录心情</button>
+    </div>`;
+  if(list.length===0){ html += `<div class="empty-state"><span class="emoji">🌈</span>记录你今天的心情吧～</div>`; }
+  list.slice().reverse().forEach((item,idx)=>{
+    const i = list.length-1-idx;
+    html += `<div class="list-item" style="flex-direction:column;align-items:stretch;gap:4px;">
+      <div style="display:flex;justify-content:space-between;align-items:center;">
+        <span style="font-size:16px;">${item.mood||'😊'}</span>
+        <div style="display:flex;gap:6px;">
+          <button class="btn-mini" onclick="editMood(${i})">✏️</button>
+          <button class="btn-del" onclick="delMood(${i})">🗑</button>
+        </div>
+      </div>
+      ${item.text?`<div style="font-size:13px;line-height:1.6;white-space:pre-wrap;">${escapeHtml(item.text)}</div>`:''}
+      <div style="font-size:11px;color:var(--text-soft);">📅 ${escapeHtml(item.date||'')}</div>
+    </div>`;
+  });
+  html += `</div>`;
+  return html;
+};
+RENDERS.wish = function(){
+  const list = getDB('wish_list', []);
+  let html = `<div class="card">
+    <div class="card-title">🌟 愿望清单
+      <button class="edit-btn" onclick="addWish()">➕ 添加愿望</button>
+    </div>`;
+  if(list.length===0){ html += `<div class="empty-state"><span class="emoji">🌟</span>写下你的心愿吧～</div>`; }
+  list.slice().reverse().forEach((item,idx)=>{
+    const i = list.length-1-idx;
+    const typeBadge = item.type==='long'?'<span class="badge badge-blue">长期</span>':'<span class="badge badge-red">短期</span>';
+    html += `<div class="chk-wrap ${item.done?'done':''}">
+      <div class="chk ${item.done?'checked':''}" onclick="toggleWish(${i})"></div>
+      <div class="chk-text">
+        <div>${escapeHtml(item.text)}</div>
+        <div style="margin-top:2px;">${typeBadge}</div>
+      </div>
+      <div class="chk-actions">
+        <button class="btn-mini" onclick="editWish(${i})">✏️</button>
+        <button class="btn-del" onclick="delWish(${i})">🗑</button>
+      </div>
+    </div>`;
+  });
+  html += `</div>`;
+  return html;
+};
+RENDERS.inspire = function(){
+  const list = getDB('inspire_list', []);
+  let html = `<div class="card">
+    <div class="card-title">💡 灵感收集
+      <button class="edit-btn" onclick="addInspire()">➕ 记录灵感</button>
+    </div>`;
+  if(list.length===0){ html += `<div class="empty-state"><span class="emoji">💡</span>抓住你的每一个灵感瞬间～</div>`; }
+  list.slice().reverse().forEach((item,idx)=>{
+    const i = list.length-1-idx;
+    const tags = ['💭想法','✍️文案','🎨创意','📌素材'];
+    const tagBadge = tags[item.tag] ? `<span class="badge badge-blue">${tags[item.tag]}</span>` : '';
+    html += `<div class="list-item" style="flex-direction:column;align-items:stretch;gap:4px;">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;">
+        <div style="flex:1;font-size:13px;line-height:1.6;white-space:pre-wrap;">${escapeHtml(item.text)}</div>
+        <div style="display:flex;gap:6px;flex-shrink:0;">
+          <button class="btn-mini" onclick="editInspire(${i})">✏️</button>
+          <button class="btn-del" onclick="delInspire(${i})">🗑</button>
+        </div>
+      </div>
+      <div style="display:flex;justify-content:space-between;align-items:center;">
+        <div>${tagBadge}</div>
+        <span style="font-size:11px;color:var(--text-soft);">📅 ${escapeHtml(item.date||'')}</span>
+      </div>
+    </div>`;
+  });
+  html += `</div>`;
+  return html;
+};
+
+/* ---------- 8. 每日时政 ---------- */
+const POLICY_HOT_DATA = [
+  {title:'🏛️ 全国深化"放管服"改革持续推进',desc:'各地政府部门持续优化审批流程，简化办事手续，提升便民服务水平，群众办事更便捷。',source:'综合报道'},
+  {title:'🌍 多边外交助力国际合作新格局',desc:'我国积极参与多边框架下的国际合作机制，推动构建更加公正合理的国际秩序，赢得广泛共识。',source:'外交简讯'},
+  {title:'🏗️ 重大基础设施项目集中开工',desc:'多地交通、水利、能源等领域重大项目陆续开工，总投资规模超千亿，助力经济高质量发展。',source:'经济日报'},
+  {title:'🌾 夏季农业生产保障有力',desc:'各地农业农村部门加强田间管理指导，确保秋粮丰收，保障粮食安全供应。',source:'农业农村部'},
+  {title:'🔬 科技创新再添新成果',desc:'我国科研团队在量子计算与人工智能交叉领域取得突破性进展，相关技术达国际领先水平。',source:'科技日报'},
+];
+const POLICY_READ_DATA = [
+  {title:'📑 优化营商环境新举措解读',desc:'近日出台的优化营商环境系列政策，重点在减税降费、简化审批、加强监管透明度等方面发力。政策实施后，预计中小微企业年均减负超千亿元，市场主体活力将进一步释放。',source:'政策研究室'},
+  {title:'📊 数字经济发展规划要点',desc:'数字经济发展新规划明确，到2026年底数字经济核心产业增加值占GDP比重将进一步提升。重点推进数字产业化、产业数字化转型，加快建设数字中国。政策强调数据要素市场化配置和新型基础设施建设。',source:'发改委'},
+  {title:'🏥 医保异地结算政策详解',desc:'跨省异地就医直接结算政策进一步完善，覆盖范围扩大至所有统筹地区。参保人员可通过国家医保服务平台线上备案，实现异地就医医疗费用直接结算，大幅减轻垫资压力。',source:'医保局'},
+  {title:'🏠 保障性住房供给扩大',desc:'各地加大保障性租赁住房供给，面向新市民、青年人群体。政策明确土地、财税、金融等支持措施，计划新增筹集建设保障性住房百万套，有效解决住房困难问题。',source:'住建部'},
+];
+RENDERS.policy_hot = function(){
+  let html = `<div class="date-display">📜 时政热点 · <span>${todayCN()}</span></div>`;
+  POLICY_HOT_DATA.forEach(n=>{
+    html += `<div class="news-card"><div class="news-title">${n.title}</div><div class="news-desc">${n.desc}</div><div class="news-source">来源：${n.source}</div></div>`;
+  });
+  return html;
+};
+RENDERS.policy_read = function(){
+  let html = `<div class="date-display">📑 政策解读 · <span>${todayCN()}</span></div>`;
+  POLICY_READ_DATA.forEach(n=>{
+    html += `<div class="news-card" style="border-left-color:var(--title-red);">
+      <div class="news-title">${n.title}</div>
+      <div class="news-desc" style="line-height:1.8;">${n.desc}</div>
+      <div class="news-source">来源：${n.source}</div>
+    </div>`;
+  });
+  return html;
+};
+
+/* ---------- 9. 每日抖音热点 ---------- */
+RENDERS.dy_video = function(){
+  const list = getDB('dy_videos', [
+    {title:'夏日海边日落vlog｜治愈系风景',hot:'1280w',duration:'00:45',cat:'生活'},
+    {title:'三分钟学会一道家常菜｜糖醋排骨',hot:'960w',duration:'03:12',cat:'美食'},
+    {title:'2026最火舞蹈教程｜零基础也能跳',hot:'2100w',duration:'01:28',cat:'舞蹈'},
+    {title:'萌宠日常｜猫咪第一次见雪',hot:'1850w',duration:'00:30',cat:'萌宠'},
+    {title:'旅行vlog｜小众古镇两日游攻略',hot:'620w',duration:'05:20',cat:'旅行'},
+  ]);
+  let html = `<div class="date-display">🎵 抖音爆款视频 · <span>${todayCN()}</span></div>`;
+  html += `<div class="card">
+    <div class="card-title">🔥 爆款视频榜
+      <button class="edit-btn" onclick="addHotVideo()">➕ 添加</button>
+    </div>`;
+  if(list.length===0){ html += `<div class="empty-state"><span class="emoji">🎬</span>暂无视频，添加一个吧～</div>`; }
+  list.forEach((v,i)=>{
+    html += `<div class="news-card" style="display:flex;flex-direction:column;gap:6px;">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;">
+        <div style="flex:1;">
+          <div class="news-title">${escapeHtml(v.title)}</div>
+          <div style="display:flex;gap:6px;margin-top:4px;flex-wrap:wrap;">
+            <span class="badge badge-blue">🎬 ${escapeHtml(v.cat)}</span>
+            <span class="badge badge-red">🔥 ${escapeHtml(v.hot)}</span>
+            <span class="badge badge-green">⏱️ ${escapeHtml(v.duration)}</span>
+          </div>
+        </div>
+        <button class="btn-del" onclick="delHotVideo(${i})">🗑</button>
+      </div>
+    </div>`;
+  });
+  html += `</div>`;
+  return html;
+};
+RENDERS.dy_topic = function(){
+  const list = getDB('dy_topics', [
+    {topic:'#夏日美食大赏',hot:'3200w'},
+    {topic:'#2026高考加油',hot:'5800w'},
+    {topic:'#毕业季的仪式感',hot:'2100w'},
+    {topic:'#我的旅行vlog',hot:'1800w'},
+    {topic:'#夏日穿搭灵感',hot:'950w'},
+    {topic:'#打工人的快乐瞬间',hot:'1500w'},
+  ]);
+  let html = `<div class="date-display">🔥 热门话题 · <span>${todayCN()}</span></div>`;
+  html += `<div class="card">
+    <div class="card-title">🏷️ 热门话题榜
+      <button class="edit-btn" onclick="addDyTopic()">➕ 添加</button>
+    </div>`;
+  if(list.length===0){ html += `<div class="empty-state"><span class="emoji">🏷️</span>暂无话题，添加一个吧～</div>`; }
+  list.forEach((t,i)=>{
+    const rank = i+1;
+    const rankEmoji = rank===1?'🥇':rank===2?'🥈':rank===3?'🥉':`${rank}`;
+    html += `<div class="list-item" style="display:flex;align-items:center;gap:10px;">
+      <span style="font-size:16px;font-weight:700;width:28px;text-align:center;flex-shrink:0;">${rankEmoji}</span>
+      <div class="list-item-text" style="font-weight:600;">${escapeHtml(t.topic)}</div>
+      <span class="badge badge-red">🔥 ${escapeHtml(t.hot)}</span>
+      <button class="btn-del" onclick="delDyTopic(${i})">🗑</button>
+    </div>`;
+  });
+  html += `</div>`;
+  return html;
+};
+
+/* ============================================================
+   绑定内容事件（预留扩展）
+============================================================ */
+function bindContent(){}
+
+/* ============================================================
+   侧边栏伸缩
+============================================================ */
+document.getElementById('collapseBtn').onclick = ()=>{
+  document.getElementById('sidebar').classList.toggle('collapsed');
+};
+
+/* ============================================================
+   弹窗系统
+============================================================ */
+function openModal(html){
+  document.getElementById('modal').innerHTML = html;
+  document.getElementById('modalMask').classList.add('show');
+}
+function closeModal(){
+  document.getElementById('modalMask').classList.remove('show');
+}
+document.getElementById('modalMask').onclick = (e)=>{
+  if(e.target.id==='modalMask') closeModal();
+};
+
+/* ============================================================
+   编辑/添加操作函数
+============================================================ */
+// 通用文本编辑
+function editField(key, field, val){
+  openModal(`
+    <div class="modal-title">✏️ 编辑内容<button class="close" onclick="closeModal()">✕</button></div>
+    <textarea class="textarea" id="modalInput" style="min-height:80px;">${escapeHtml(val)}</textarea>
+    <div style="display:flex;gap:8px;margin-top:12px;">
+      <button class="btn btn-primary" style="flex:1;" onclick="saveField('${key}','${field}')">💾 保存</button>
+      <button class="btn" style="background:#f0f0f0;" onclick="closeModal()">取消</button>
+    </div>
+  `);
+}
+function saveField(key, field){
+  const val = document.getElementById('modalInput').value.trim();
+  const data = getDB(key, {});
+  data[field] = val;
+  setDB(key, data);
+  closeModal();
+  toast('已保存 💾');
+  renderContent();
+}
+
+// 笔记编辑
+function editNote(key, val){
+  openModal(`
+    <div class="modal-title">✍️ 编辑笔记<button class="close" onclick="closeModal()">✕</button></div>
+    <textarea class="textarea" id="modalInput" style="min-height:100px;">${escapeHtml(val)}</textarea>
+    <div style="display:flex;gap:8px;margin-top:12px;">
+      <button class="btn btn-primary" style="flex:1;" onclick="saveNote('${key}')">💾 保存</button>
+      <button class="btn" style="background:#f0f0f0;" onclick="closeModal()">取消</button>
+    </div>
+  `);
+}
+function saveNote(key){
+  const val = document.getElementById('modalInput').value.trim();
+  setDB(key, val);
+  closeModal();
+  toast('笔记已保存 💾');
+  renderContent();
+}
+
+// 待办
+function addTodoItem(group){
+  openModal(`
+    <div class="modal-title">➕ 添加任务<button class="close" onclick="closeModal()">✕</button></div>
+    <input class="input" id="modalInput" placeholder="输入任务内容...">
+    <div style="display:flex;gap:8px;margin-top:12px;">
+      <button class="btn btn-primary" style="flex:1;" onclick="saveTodoAdd('${group}')">➕ 添加</button>
+      <button class="btn" style="background:#f0f0f0;" onclick="closeModal()">取消</button>
+    </div>
+  `);
+}
+function saveTodoAdd(group){
+  const val = document.getElementById('modalInput').value.trim();
+  if(!val){ toast('请输入内容'); return; }
+  const key = `todo_${group}_${today()}`;
+  const list = getDB(key, []);
+  list.push({text:val, done:false});
+  setDB(key, list);
+  closeModal();
+  toast('已添加 ➕');
+  renderContent();
+}
+function toggleTodo(group, i){
+  const key = `todo_${group}_${today()}`;
+  const list = getDB(key, []);
+  list[i].done = !list[i].done;
+  setDB(key, list);
+  renderContent();
+}
+function editTodoItem(group, i){
+  const key = `todo_${group}_${today()}`;
+  const list = getDB(key, []);
+  openModal(`
+    <div class="modal-title">✏️ 编辑任务<button class="close" onclick="closeModal()">✕</button></div>
+    <input class="input" id="modalInput" value="${escapeHtml(list[i].text)}">
+    <div style="display:flex;gap:8px;margin-top:12px;">
+      <button class="btn btn-primary" style="flex:1;" onclick="saveTodoEdit('${group}',${i})">💾 保存</button>
+      <button class="btn" style="background:#f0f0f0;" onclick="closeModal()">取消</button>
+    </div>
+  `);
+}
+function saveTodoEdit(group, i){
+  const val = document.getElementById('modalInput').value.trim();
+  if(!val){ toast('请输入内容'); return; }
+  const key = `todo_${group}_${today()}`;
+  const list = getDB(key, []);
+  list[i].text = val;
+  setDB(key, list);
+  closeModal();
+  toast('已更新 💾');
+  renderContent();
+}
+function delTodoItem(group, i){
+  const key = `todo_${group}_${today()}`;
+  const list = getDB(key, []);
+  list.splice(i,1);
+  setDB(key, list);
+  toast('已删除 🗑');
+  renderContent();
+}
+
+// 日程
+function addSchedule(){
+  openModal(`
+    <div class="modal-title">➕ 添加日程<button class="close" onclick="closeModal()">✕</button></div>
+    <input class="input" id="schTitle" placeholder="日程标题">
+    <input class="input" id="schTime" placeholder="时间（如 14:00）" style="margin-top:8px;">
+    <textarea class="textarea" id="schDesc" placeholder="备注描述（可选）" style="margin-top:8px;min-height:50px;"></textarea>
+    <div style="display:flex;align-items:center;gap:8px;margin-top:8px;">
+      <input type="checkbox" id="schUrgent"><label for="schUrgent" style="font-size:13px;">🔥 标记为紧急</label>
+    </div>
+    <div style="display:flex;gap:8px;margin-top:12px;">
+      <button class="btn btn-primary" style="flex:1;" onclick="saveScheduleAdd()">➕ 添加</button>
+      <button class="btn" style="background:#f0f0f0;" onclick="closeModal()">取消</button>
+    </div>
+  `);
+}
+function saveScheduleAdd(){
+  const title = document.getElementById('schTitle').value.trim();
+  if(!title){ toast('请输入标题'); return; }
+  const list = getDB(`schedule_${today()}`, []);
+  list.push({
+    title,
+    time: document.getElementById('schTime').value.trim(),
+    desc: document.getElementById('schDesc').value.trim(),
+    urgent: document.getElementById('schUrgent').checked
+  });
+  setDB(`schedule_${today()}`, list);
+  closeModal();
+  toast('日程已添加 ➕');
+  renderContent();
+}
+function editSchedule(i){
+  const list = getDB(`schedule_${today()}`, []);
+  const item = list[i];
+  openModal(`
+    <div class="modal-title">✏️ 编辑日程<button class="close" onclick="closeModal()">✕</button></div>
+    <input class="input" id="schTitle" value="${escapeHtml(item.title)}">
+    <input class="input" id="schTime" value="${escapeHtml(item.time)}" style="margin-top:8px;">
+    <textarea class="textarea" id="schDesc" style="margin-top:8px;min-height:50px;">${escapeHtml(item.desc)}</textarea>
+    <div style="display:flex;align-items:center;gap:8px;margin-top:8px;">
+      <input type="checkbox" id="schUrgent" ${item.urgent?'checked':''}><label for="schUrgent" style="font-size:13px;">🔥 标记为紧急</label>
+    </div>
+    <div style="display:flex;gap:8px;margin-top:12px;">
+      <button class="btn btn-primary" style="flex:1;" onclick="saveScheduleEdit(${i})">💾 保存</button>
+      <button class="btn" style="background:#f0f0f0;" onclick="closeModal()">取消</button>
+    </div>
+  `);
+}
+function saveScheduleEdit(i){
+  const list = getDB(`schedule_${today()}`, []);
+  list[i] = {
+    title: document.getElementById('schTitle').value.trim(),
+    time: document.getElementById('schTime').value.trim(),
+    desc: document.getElementById('schDesc').value.trim(),
+    urgent: document.getElementById('schUrgent').checked
+  };
+  setDB(`schedule_${today()}`, list);
+  closeModal();
+  toast('已更新 💾');
+  renderContent();
+}
+function delSchedule(i){
+  const list = getDB(`schedule_${today()}`, []);
+  list.splice(i,1);
+  setDB(`schedule_${today()}`, list);
+  toast('已删除 🗑');
+  renderContent();
+}
+
+// 作息
+function toggleSleep(field){
+  const key = `sleep_${today()}`;
+  const data = getDB(key, {});
+  data[field] = !data[field];
+  setDB(key, data);
+  renderContent();
+}
+function editSleepRecord(){
+  const key = `sleep_${today()}`;
+  const data = getDB(key, {});
+  openModal(`
+    <div class="modal-title">✏️ 睡眠记录<button class="close" onclick="closeModal()">✕</button></div>
+    <input class="input" id="bedtime" placeholder="入睡时间（如 23:30）" value="${escapeHtml(data.bedtime)}">
+    <input class="input" id="waketime" placeholder="起床时间（如 07:00）" value="${escapeHtml(data.waketime)}" style="margin-top:8px;">
+    <select class="input" id="quality" style="margin-top:8px;">
+      <option value="">选择睡眠质量</option>
+      <option value="😴 很好" ${data.quality==='😴 很好'?'selected':''}>😴 很好</option>
+      <option value="😊 较好" ${data.quality==='😊 较好'?'selected':''}>😊 较好</option>
+      <option value="😐 一般" ${data.quality==='😐 一般'?'selected':''}>😐 一般</option>
+      <option value="😫 较差" ${data.quality==='😫 较差'?'selected':''}>😫 较差</option>
+    </select>
+    <div style="display:flex;gap:8px;margin-top:12px;">
+      <button class="btn btn-primary" style="flex:1;" onclick="saveSleepRecord()">💾 保存</button>
+      <button class="btn" style="background:#f0f0f0;" onclick="closeModal()">取消</button>
+    </div>
+  `);
+}
+function saveSleepRecord(){
+  const key = `sleep_${today()}`;
+  const data = getDB(key, {});
+  data.bedtime = document.getElementById('bedtime').value.trim();
+  data.waketime = document.getElementById('waketime').value.trim();
+  data.quality = document.getElementById('quality').value;
+  setDB(key, data);
+  closeModal();
+  toast('已保存 💾');
+  renderContent();
+}
+
+// 单词打卡
+function toggleWordCheckin(key){
+  const wasDone = getDB(key, false);
+  setDB(key, !wasDone);
+  // 更新统计
+  if(!wasDone){
+    const stats = getDB('word_stats', {total:0,days:0});
+    stats.days += 1;
+    setDB('word_stats', stats);
+  }
+  renderContent();
+}
+function toggleSimpleCheckin(key){
+  setDB(key, !getDB(key, false));
+  renderContent();
+}
+
+// 错题本
+function addWrongItem(){
+  openModal(`
+    <div class="modal-title">➕ 添加错题<button class="close" onclick="closeModal()">✕</button></div>
+    <select class="input" id="wType">
+      <option value="word">单词</option>
+      <option value="reading">阅读</option>
+    </select>
+    <textarea class="textarea" id="wQ" placeholder="题目/单词" style="margin-top:8px;min-height:50px;"></textarea>
+    <textarea class="textarea" id="wA" placeholder="正确答案/释义" style="margin-top:8px;min-height:50px;"></textarea>
+    <div style="display:flex;gap:8px;margin-top:12px;">
+      <button class="btn btn-primary" style="flex:1;" onclick="saveWrongAdd()">➕ 添加</button>
+      <button class="btn" style="background:#f0f0f0;" onclick="closeModal()">取消</button>
+    </div>
+  `);
+}
+function saveWrongAdd(){
+  const list = getDB('wrong_book', []);
+  list.push({
+    type: document.getElementById('wType').value,
+    q: document.getElementById('wQ').value.trim(),
+    a: document.getElementById('wA').value.trim()
+  });
+  setDB('wrong_book', list);
+  closeModal();
+  toast('已添加 ➕');
+  renderContent();
+}
+function editWrongItem(i){
+  const list = getDB('wrong_book', []);
+  const item = list[i];
+  openModal(`
+    <div class="modal-title">✏️ 编辑错题<button class="close" onclick="closeModal()">✕</button></div>
+    <select class="input" id="wType">
+      <option value="word" ${item.type==='word'?'selected':''}>单词</option>
+      <option value="reading" ${item.type==='reading'?'selected':''}>阅读</option>
+    </select>
+    <textarea class="textarea" id="wQ" style="margin-top:8px;min-height:50px;">${escapeHtml(item.q)}</textarea>
+    <textarea class="textarea" id="wA" style="margin-top:8px;min-height:50px;">${escapeHtml(item.a)}</textarea>
+    <div style="display:flex;gap:8px;margin-top:12px;">
+      <button class="btn btn-primary" style="flex:1;" onclick="saveWrongEdit(${i})">💾 保存</button>
+      <button class="btn" style="background:#f0f0f0;" onclick="closeModal()">取消</button>
+    </div>
+  `);
+}
+function saveWrongEdit(i){
+  const list = getDB('wrong_book', []);
+  list[i] = {
+    type: document.getElementById('wType').value,
+    q: document.getElementById('wQ').value.trim(),
+    a: document.getElementById('wA').value.trim()
+  };
+  setDB('wrong_book', list);
+  closeModal();
+  toast('已更新 💾');
+  renderContent();
+}
+function delWrongItem(i){
+  const list = getDB('wrong_book', []);
+  list.splice(i,1);
+  setDB('wrong_book', list);
+  toast('已删除 🗑');
+  renderContent();
+}
+
+// 运动项
+function addSportItem(){
+  openModal(`
+    <div class="modal-title">➕ 添加运动<button class="close" onclick="closeModal()">✕</button></div>
+    <input class="input" id="spName" placeholder="训练项目（如 跑步）">
+    <div style="display:flex;gap:8px;margin-top:8px;">
+      <input class="input" id="spDur" placeholder="时长（分钟）" type="number">
+      <input class="input" id="spCal" placeholder="消耗（大卡）" type="number">
+    </div>
+    <input class="input" id="spNote" placeholder="备注（可选）" style="margin-top:8px;">
+    <div style="display:flex;gap:8px;margin-top:12px;">
+      <button class="btn btn-primary" style="flex:1;" onclick="saveSportAdd()">➕ 添加</button>
+      <button class="btn" style="background:#f0f0f0;" onclick="closeModal()">取消</button>
+    </div>
+  `);
+}
+function saveSportAdd(){
+  const key = `sport_${today()}`;
+  const list = getDB(key, []);
+  list.push({
+    name: document.getElementById('spName').value.trim(),
+    duration: document.getElementById('spDur').value.trim(),
+    calorie: document.getElementById('spCal').value.trim(),
+    note: document.getElementById('spNote').value.trim()
+  });
+  setDB(key, list);
+  closeModal();
+  toast('运动已记录 🏃');
+  renderContent();
+}
+function editSportItem(i){
+  const key = `sport_${today()}`;
+  const list = getDB(key, []);
+  const item = list[i];
+  openModal(`
+    <div class="modal-title">✏️ 编辑运动<button class="close" onclick="closeModal()">✕</button></div>
+    <input class="input" id="spName" value="${escapeHtml(item.name)}">
+    <div style="display:flex;gap:8px;margin-top:8px;">
+      <input class="input" id="spDur" value="${escapeHtml(item.duration)}" type="number">
+      <input class="input" id="spCal" value="${escapeHtml(item.calorie)}" type="number">
+    </div>
+    <input class="input" id="spNote" value="${escapeHtml(item.note)}" style="margin-top:8px;">
+    <div style="display:flex;gap:8px;margin-top:12px;">
+      <button class="btn btn-primary" style="flex:1;" onclick="saveSportEdit(${i})">💾 保存</button>
+      <button class="btn" style="background:#f0f0f0;" onclick="closeModal()">取消</button>
+    </div>
+  `);
+}
+function saveSportEdit(i){
+  const key = `sport_${today()}`;
+  const list = getDB(key, []);
+  list[i] = {
+    name: document.getElementById('spName').value.trim(),
+    duration: document.getElementById('spDur').value.trim(),
+    calorie: document.getElementById('spCal').value.trim(),
+    note: document.getElementById('spNote').value.trim()
+  };
+  setDB(key, list);
+  closeModal();
+  toast('已更新 💾');
+  renderContent();
+}
+function delSportItem(i){
+  const key = `sport_${today()}`;
+  const list = getDB(key, []);
+  list.splice(i,1);
+  setDB(key, list);
+  toast('已删除 🗑');
+  renderContent();
+}
+
+// 身体数据
+function addBodyRecord(){
+  openModal(`
+    <div class="modal-title">➕ 记录身体数据<button class="close" onclick="closeModal()">✕</button></div>
+    <input class="input" id="bdWeight" placeholder="体重（kg）" type="number" step="0.1">
+    <input class="input" id="bdWaist" placeholder="腰围（cm）" type="number" step="0.1" style="margin-top:8px;">
+    <input class="input" id="bdHip" placeholder="臀围（cm）" type="number" step="0.1" style="margin-top:8px;">
+    <input class="input" id="bdThigh" placeholder="大腿围（cm）" type="number" step="0.1" style="margin-top:8px;">
+    <div style="display:flex;gap:8px;margin-top:12px;">
+      <button class="btn btn-primary" style="flex:1;" onclick="saveBodyAdd()">➕ 添加</button>
+      <button class="btn" style="background:#f0f0f0;" onclick="closeModal()">取消</button>
+    </div>
+  `);
+}
+function saveBodyAdd(){
+  const list = getDB('body_records', []);
+  list.push({
+    date: today(),
+    weight: document.getElementById('bdWeight').value.trim(),
+    waist: document.getElementById('bdWaist').value.trim(),
+    hip: document.getElementById('bdHip').value.trim(),
+    thigh: document.getElementById('bdThigh').value.trim()
+  });
+  setDB('body_records', list);
+  closeModal();
+  toast('数据已记录 📏');
+  renderContent();
+}
+function editBodyRecord(i){
+  const list = getDB('body_records', []);
+  const item = list[i];
+  openModal(`
+    <div class="modal-title">✏️ 编辑身体数据<button class="close" onclick="closeModal()">✕</button></div>
+    <input class="input" id="bdWeight" value="${escapeHtml(item.weight)}" type="number" step="0.1" placeholder="体重（kg）">
+    <input class="input" id="bdWaist" value="${escapeHtml(item.waist)}" type="number" step="0.1" placeholder="腰围" style="margin-top:8px;">
+    <input class="input" id="bdHip" value="${escapeHtml(item.hip)}" type="number" step="0.1" placeholder="臀围" style="margin-top:8px;">
+    <input class="input" id="bdThigh" value="${escapeHtml(item.thigh)}" type="number" step="0.1" placeholder="大腿围" style="margin-top:8px;">
+    <div style="display:flex;gap:8px;margin-top:12px;">
+      <button class="btn btn-primary" style="flex:1;" onclick="saveBodyEdit(${i})">💾 保存</button>
+      <button class="btn" style="background:#f0f0f0;" onclick="closeModal()">取消</button>
+    </div>
+  `);
+}
+function saveBodyEdit(i){
+  const list = getDB('body_records', []);
+  list[i] = {
+    date: list[i].date,
+    weight: document.getElementById('bdWeight').value.trim(),
+    waist: document.getElementById('bdWaist').value.trim(),
+    hip: document.getElementById('bdHip').value.trim(),
+    thigh: document.getElementById('bdThigh').value.trim()
+  };
+  setDB('body_records', list);
+  closeModal();
+  toast('已更新 💾');
+  renderContent();
+}
+function delBodyRecord(i){
+  const list = getDB('body_records', []);
+  list.splice(i,1);
+  setDB('body_records', list);
+  toast('已删除 🗑');
+  renderContent();
+}
+
+// 记账
+function addAccountRecord(){
+  const now = new Date().toTimeString().slice(0,5);
+  openModal(`
+    <div class="modal-title">➕ 记一笔<button class="close" onclick="closeModal()">✕</button></div>
+    <div style="display:flex;gap:8px;margin-bottom:8px;">
+      <button class="btn" id="typeExpense" style="flex:1;background:linear-gradient(135deg,#ffb3b3,#ff8a8a);color:#fff;" onclick="switchAcctType('expense')">💸 支出</button>
+      <button class="btn" id="typeIncome" style="flex:1;background:#f0f0f0;" onclick="switchAcctType('income')">💰 收入</button>
+    </div>
+    <input type="hidden" id="acctType" value="expense">
+    <input class="input" id="acctAmount" placeholder="金额" type="number" step="0.01">
+    <select class="input" id="acctCat" style="margin-top:8px;"></select>
+    <input class="input" id="acctNote" placeholder="备注（可选）" style="margin-top:8px;">
+    <div style="display:flex;gap:8px;margin-top:12px;">
+      <button class="btn btn-primary" style="flex:1;" onclick="saveAccountAdd('${now}')">➕ 添加</button>
+      <button class="btn" style="background:#f0f0f0;" onclick="closeModal()">取消</button>
+    </div>
+  `);
+  switchAcctType('expense');
+}
+function switchAcctType(type){
+  document.getElementById('acctType').value = type;
+  const cats = type==='expense' ? EXPENSE_CATS : INCOME_CATS;
+  document.getElementById('acctCat').innerHTML = cats.map(c=>`<option value="${c}">${c}</option>`).join('');
+  document.getElementById('typeExpense').style.cssText = type==='expense' ? 'flex:1;background:linear-gradient(135deg,#ffb3b3,#ff8a8a);color:#fff;' : 'flex:1;background:#f0f0f0;';
+  document.getElementById('typeIncome').style.cssText = type==='income' ? 'flex:1;background:linear-gradient(135deg,#a8e0a8,#7ec57e);color:#fff;' : 'flex:1;background:#f0f0f0;';
+}
+function saveAccountAdd(time){
+  const amount = parseFloat(document.getElementById('acctAmount').value);
+  if(!amount || amount<=0){ toast('请输入有效金额'); return; }
+  const key = `account_${today()}`;
+  const list = getDB(key, []);
+  list.push({
+    type: document.getElementById('acctType').value,
+    amount: amount,
+    cat: document.getElementById('acctCat').value,
+    note: document.getElementById('acctNote').value.trim(),
+    time: time,
+    date: today()
+  });
+  setDB(key, list);
+  closeModal();
+  toast('已记录 💰');
+  renderContent();
+}
+function delAccountRecord(i){
+  const key = `account_${today()}`;
+  const list = getDB(key, []);
+  list.splice(i,1);
+  setDB(key, list);
+  toast('已删除 🗑');
+  renderContent();
+}
+
+// 预算
+function editBudget(){
+  const budgets = getDB('budget_'+nowMonth(), {});
+  openModal(`
+    <div class="modal-title">💰 设置月度预算<button class="close" onclick="closeModal()">✕</button></div>
+    ${EXPENSE_CATS.map(c=>`
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
+        <span style="font-size:13px;width:90px;flex-shrink:0;">${c}</span>
+        <input class="input" id="bud_${c}" type="number" placeholder="0" value="${budgets[c]||''}">
+      </div>
+    `).join('')}
+    <div style="display:flex;gap:8px;margin-top:12px;">
+      <button class="btn btn-primary" style="flex:1;" onclick="saveBudget()">💾 保存</button>
+      <button class="btn" style="background:#f0f0f0;" onclick="closeModal()">取消</button>
+    </div>
+  `);
+}
+function saveBudget(){
+  const budgets = {};
+  EXPENSE_CATS.forEach(c=>{
+    const v = document.getElementById('bud_'+c).value.trim();
+    if(v) budgets[c] = parseFloat(v);
+  });
+  setDB('budget_'+nowMonth(), budgets);
+  closeModal();
+  toast('预算已保存 💾');
+  renderContent();
+}
+
+// 消费复盘
+function editReview(){
+  const summary = getDB(`review_${nowMonth()}`, '');
+  openModal(`
+    <div class="modal-title">✍️ 编辑月度总结<button class="close" onclick="closeModal()">✕</button></div>
+    <textarea class="textarea" id="modalInput" style="min-height:120px;" placeholder="写下你的消费反思与下月计划...">${escapeHtml(summary)}</textarea>
+    <div style="display:flex;gap:8px;margin-top:12px;">
+      <button class="btn btn-primary" style="flex:1;" onclick="saveReview()">💾 保存</button>
+      <button class="btn" style="background:#f0f0f0;" onclick="closeModal()">取消</button>
+    </div>
+  `);
+}
+function saveReview(){
+  setDB(`review_${nowMonth()}`, document.getElementById('modalInput').value.trim());
+  closeModal();
+  toast('已保存 💾');
+  renderContent();
+}
+
+// 经期
+function togglePeriod(dateStr){
+  const days = getDB('period_days', {});
+  if(days[dateStr]){ delete days[dateStr]; }
+  else{ days[dateStr] = true; }
+  setDB('period_days', days);
+  renderContent();
+}
+function calPrev(){
+  calDate.setMonth(calDate.getMonth()-1);
+  renderContent();
+}
+function calNext(){
+  calDate.setMonth(calDate.getMonth()+1);
+  renderContent();
+}
+function setFeeling(field, val){
+  const key = `period_feeling_${today()}`;
+  const data = getDB(key, {});
+  data[field] = val;
+  setDB(key, data);
+  renderContent();
+}
+
+// 随笔
+function addEssay(){
+  openModal(`
+    <div class="modal-title">✍️ 写随笔<button class="close" onclick="closeModal()">✕</button></div>
+    <textarea class="textarea" id="modalInput" style="min-height:100px;" placeholder="记录你的碎碎念、日常感悟..."></textarea>
+    <div style="display:flex;gap:8px;margin-top:12px;">
+      <button class="btn btn-primary" style="flex:1;" onclick="saveEssayAdd()">➕ 发布</button>
+      <button class="btn" style="background:#f0f0f0;" onclick="closeModal()">取消</button>
+    </div>
+  `);
+}
+function saveEssayAdd(){
+  const val = document.getElementById('modalInput').value.trim();
+  if(!val){ toast('请输入内容'); return; }
+  const list = getDB('essay_list', []);
+  list.push({text:val, date:todayCN()});
+  setDB('essay_list', list);
+  closeModal();
+  toast('已发布 ✍️');
+  renderContent();
+}
+function editEssay(i){
+  const list = getDB('essay_list', []);
+  openModal(`
+    <div class="modal-title">✏️ 编辑随笔<button class="close" onclick="closeModal()">✕</button></div>
+    <textarea class="textarea" id="modalInput" style="min-height:100px;">${escapeHtml(list[i].text)}</textarea>
+    <div style="display:flex;gap:8px;margin-top:12px;">
+      <button class="btn btn-primary" style="flex:1;" onclick="saveEssayEdit(${i})">💾 保存</button>
+      <button class="btn" style="background:#f0f0f0;" onclick="closeModal()">取消</button>
+    </div>
+  `);
+}
+function saveEssayEdit(i){
+  const val = document.getElementById('modalInput').value.trim();
+  if(!val){ toast('请输入内容'); return; }
+  const list = getDB('essay_list', []);
+  list[i].text = val;
+  setDB('essay_list', list);
+  closeModal();
+  toast('已更新 💾');
+  renderContent();
+}
+function delEssay(i){
+  const list = getDB('essay_list', []);
+  list.splice(i,1);
+  setDB('essay_list', list);
+  toast('已删除 🗑');
+  renderContent();
+}
+
+// 情绪
+function addMood(){
+  const moods = ['😊','😄','🥰','😌','😐','😟','😢','😡','😭','🤒'];
+  openModal(`
+    <div class="modal-title">💭 记录心情<button class="close" onclick="closeModal()">✕</button></div>
+    <div style="font-size:13px;margin-bottom:6px;">选择今天的心情：</div>
+    <div class="mood-row" id="moodPicker">
+      ${moods.map(m=>`<div class="mood-btn" onclick="pickMood('${m}',this)">${m}</div>`).join('')}
+    </div>
+    <input type="hidden" id="moodVal">
+    <textarea class="textarea" id="modalInput" style="min-height:80px;margin-top:8px;" placeholder="写下今天的心情日记...（可选）"></textarea>
+    <div style="display:flex;gap:8px;margin-top:12px;">
+      <button class="btn btn-primary" style="flex:1;" onclick="saveMoodAdd()">➕ 保存</button>
+      <button class="btn" style="background:#f0f0f0;" onclick="closeModal()">取消</button>
+    </div>
+  `);
+}
+function pickMood(m, el){
+  document.getElementById('moodVal').value = m;
+  document.querySelectorAll('#moodPicker .mood-btn').forEach(b=>b.classList.remove('selected'));
+  el.classList.add('selected');
+}
+function saveMoodAdd(){
+  const mood = document.getElementById('moodVal').value;
+  if(!mood){ toast('请选择心情'); return; }
+  const list = getDB('mood_list', []);
+  list.push({mood, text:document.getElementById('modalInput').value.trim(), date:todayCN()});
+  setDB('mood_list', list);
+  closeModal();
+  toast('心情已记录 💭');
+  renderContent();
+}
+function editMood(i){
+  const list = getDB('mood_list', []);
+  openModal(`
+    <div class="modal-title">✏️ 编辑心情<button class="close" onclick="closeModal()">✕</button></div>
+    <div style="font-size:13px;margin-bottom:6px;">心情：${list[i].mood}</div>
+    <textarea class="textarea" id="modalInput" style="min-height:80px;">${escapeHtml(list[i].text)}</textarea>
+    <div style="display:flex;gap:8px;margin-top:12px;">
+      <button class="btn btn-primary" style="flex:1;" onclick="saveMoodEdit(${i})">💾 保存</button>
+      <button class="btn" style="background:#f0f0f0;" onclick="closeModal()">取消</button>
+    </div>
+  `);
+}
+function saveMoodEdit(i){
+  const list = getDB('mood_list', []);
+  list[i].text = document.getElementById('modalInput').value.trim();
+  setDB('mood_list', list);
+  closeModal();
+  toast('已更新 💾');
+  renderContent();
+}
+function delMood(i){
+  const list = getDB('mood_list', []);
+  list.splice(i,1);
+  setDB('mood_list', list);
+  toast('已删除 🗑');
+  renderContent();
+}
+
+// 愿望
+function addWish(){
+  openModal(`
+    <div class="modal-title">🌟 添加愿望<button class="close" onclick="closeModal()">✕</button></div>
+    <input class="input" id="modalInput" placeholder="写下你的心愿...">
+    <div style="font-size:13px;margin:8px 0 6px;">分类：</div>
+    <div class="mood-row">
+      <div class="mood-btn selected" onclick="pickWishType('short',this)">短期</div>
+      <div class="mood-btn" onclick="pickWishType('long',this)">长期</div>
+    </div>
+    <input type="hidden" id="wishType" value="short">
+    <div style="display:flex;gap:8px;margin-top:12px;">
+      <button class="btn btn-primary" style="flex:1;" onclick="saveWishAdd()">➕ 添加</button>
+      <button class="btn" style="background:#f0f0f0;" onclick="closeModal()">取消</button>
+    </div>
+  `);
+}
+function pickWishType(t, el){
+  document.getElementById('wishType').value = t;
+  el.parentElement.querySelectorAll('.mood-btn').forEach(b=>b.classList.remove('selected'));
+  el.classList.add('selected');
+}
+function saveWishAdd(){
+  const val = document.getElementById('modalInput').value.trim();
+  if(!val){ toast('请输入心愿'); return; }
+  const list = getDB('wish_list', []);
+  list.push({text:val, type:document.getElementById('wishType').value, done:false});
+  setDB('wish_list', list);
+  closeModal();
+  toast('愿望已添加 🌟');
+  renderContent();
+}
+function toggleWish(i){
+  const list = getDB('wish_list', []);
+  list[i].done = !list[i].done;
+  setDB('wish_list', list);
+  renderContent();
+}
+function editWish(i){
+  const list = getDB('wish_list', []);
+  openModal(`
+    <div class="modal-title">✏️ 编辑愿望<button class="close" onclick="closeModal()">✕</button></div>
+    <input class="input" id="modalInput" value="${escapeHtml(list[i].text)}">
+    <div style="font-size:13px;margin:8px 0 6px;">分类：</div>
+    <div class="mood-row">
+      <div class="mood-btn ${list[i].type==='short'?'selected':''}" onclick="pickWishType('short',this)">短期</div>
+      <div class="mood-btn ${list[i].type==='long'?'selected':''}" onclick="pickWishType('long',this)">长期</div>
+    </div>
+    <input type="hidden" id="wishType" value="${list[i].type}">
+    <div style="display:flex;gap:8px;margin-top:12px;">
+      <button class="btn btn-primary" style="flex:1;" onclick="saveWishEdit(${i})">💾 保存</button>
+      <button class="btn" style="background:#f0f0f0;" onclick="closeModal()">取消</button>
+    </div>
+  `);
+}
+function saveWishEdit(i){
+  const list = getDB('wish_list', []);
+  list[i].text = document.getElementById('modalInput').value.trim();
+  list[i].type = document.getElementById('wishType').value;
+  setDB('wish_list', list);
+  closeModal();
+  toast('已更新 💾');
+  renderContent();
+}
+function delWish(i){
+  const list = getDB('wish_list', []);
+  list.splice(i,1);
+  setDB('wish_list', list);
+  toast('已删除 🗑');
+  renderContent();
+}
+
+// 灵感
+function addInspire(){
+  const tags = ['💭想法','✍️文案','🎨创意','📌素材'];
+  openModal(`
+    <div class="modal-title">💡 记录灵感<button class="close" onclick="closeModal()">✕</button></div>
+    <div style="font-size:13px;margin-bottom:6px;">类型：</div>
+    <div class="mood-row" id="tagPicker">
+      ${tags.map((t,idx)=>`<div class="mood-btn ${idx===0?'selected':''}" onclick="pickInspireTag(${idx},this)">${t}</div>`).join('')}
+    </div>
+    <input type="hidden" id="inspireTag" value="0">
+    <textarea class="textarea" id="modalInput" style="min-height:80px;margin-top:8px;" placeholder="记录你的灵感..."></textarea>
+    <div style="display:flex;gap:8px;margin-top:12px;">
+      <button class="btn btn-primary" style="flex:1;" onclick="saveInspireAdd()">➕ 保存</button>
+      <button class="btn" style="background:#f0f0f0;" onclick="closeModal()">取消</button>
+    </div>
+  `);
+}
+function pickInspireTag(idx, el){
+  document.getElementById('inspireTag').value = idx;
+  el.parentElement.querySelectorAll('.mood-btn').forEach(b=>b.classList.remove('selected'));
+  el.classList.add('selected');
+}
+function saveInspireAdd(){
+  const val = document.getElementById('modalInput').value.trim();
+  if(!val){ toast('请输入内容'); return; }
+  const list = getDB('inspire_list', []);
+  list.push({text:val, tag:parseInt(document.getElementById('inspireTag').value), date:todayCN()});
+  setDB('inspire_list', list);
+  closeModal();
+  toast('灵感已收集 💡');
+  renderContent();
+}
+function editInspire(i){
+  const list = getDB('inspire_list', []);
+  const tags = ['💭想法','✍️文案','🎨创意','📌素材'];
+  openModal(`
+    <div class="modal-title">✏️ 编辑灵感<button class="close" onclick="closeModal()">✕</button></div>
+    <div style="font-size:13px;margin-bottom:6px;">类型：</div>
+    <div class="mood-row" id="tagPicker">
+      ${tags.map((t,idx)=>`<div class="mood-btn ${list[i].tag===idx?'selected':''}" onclick="pickInspireTag(${idx},this)">${t}</div>`).join('')}
+    </div>
+    <input type="hidden" id="inspireTag" value="${list[i].tag}">
+    <textarea class="textarea" id="modalInput" style="min-height:80px;margin-top:8px;">${escapeHtml(list[i].text)}</textarea>
+    <div style="display:flex;gap:8px;margin-top:12px;">
+      <button class="btn btn-primary" style="flex:1;" onclick="saveInspireEdit(${i})">💾 保存</button>
+      <button class="btn" style="background:#f0f0f0;" onclick="closeModal()">取消</button>
+    </div>
+  `);
+}
+function saveInspireEdit(i){
+  const list = getDB('inspire_list', []);
+  list[i].text = document.getElementById('modalInput').value.trim();
+  list[i].tag = parseInt(document.getElementById('inspireTag').value);
+  setDB('inspire_list', list);
+  closeModal();
+  toast('已更新 💾');
+  renderContent();
+}
+function delInspire(i){
+  const list = getDB('inspire_list', []);
+  list.splice(i,1);
+  setDB('inspire_list', list);
+  toast('已删除 🗑');
+  renderContent();
+}
+
+/* ---------- 抖音热点操作函数 ---------- */
+// 爆款视频
+function addHotVideo(){
+  openModal(`
+    <div class="modal-title">➕ 添加爆款视频<button class="close" onclick="closeModal()">✕</button></div>
+    <input class="input" id="dyvTitle" placeholder="视频标题">
+    <div style="display:flex;gap:8px;margin-top:8px;">
+      <input class="input" id="dyvCat" placeholder="分类（如 美食、舞蹈）">
+      <input class="input" id="dyvDuration" placeholder="时长（如 01:30）">
+    </div>
+    <input class="input" id="dyvHot" placeholder="热度（如 980w）" style="margin-top:8px;">
+    <div style="display:flex;gap:8px;margin-top:12px;">
+      <button class="btn btn-primary" style="flex:1;" onclick="saveHotVideo()">➕ 添加</button>
+      <button class="btn" style="background:#f0f0f0;" onclick="closeModal()">取消</button>
+    </div>
+  `);
+}
+function saveHotVideo(){
+  const title = document.getElementById('dyvTitle').value.trim();
+  if(!title){ toast('请输入标题'); return; }
+  const list = getDB('dy_videos', []);
+  list.push({
+    title,
+    cat: document.getElementById('dyvCat').value.trim() || '其他',
+    duration: document.getElementById('dyvDuration').value.trim() || '00:00',
+    hot: document.getElementById('dyvHot').value.trim() || '0w'
+  });
+  setDB('dy_videos', list);
+  closeModal();
+  toast('已添加 ➕');
+  renderContent();
+}
+function delHotVideo(i){
+  const list = getDB('dy_videos', []);
+  list.splice(i,1);
+  setDB('dy_videos', list);
+  toast('已删除 🗑');
+  renderContent();
+}
+
+// 热门话题
+function addDyTopic(){
+  openModal(`
+    <div class="modal-title">➕ 添加热门话题<button class="close" onclick="closeModal()">✕</button></div>
+    <input class="input" id="dytTopic" placeholder="话题（如 #夏日穿搭）">
+    <input class="input" id="dytHot" placeholder="热度（如 980w）" style="margin-top:8px;">
+    <div style="display:flex;gap:8px;margin-top:12px;">
+      <button class="btn btn-primary" style="flex:1;" onclick="saveDyTopic()">➕ 添加</button>
+      <button class="btn" style="background:#f0f0f0;" onclick="closeModal()">取消</button>
+    </div>
+  `);
+}
+function saveDyTopic(){
+  const topic = document.getElementById('dytTopic').value.trim();
+  if(!topic){ toast('请输入话题'); return; }
+  const list = getDB('dy_topics', []);
+  list.push({
+    topic,
+    hot: document.getElementById('dytHot').value.trim() || '0w'
+  });
+  setDB('dy_topics', list);
+  closeModal();
+  toast('已添加 ➕');
+  renderContent();
+}
+function delDyTopic(i){
+  const list = getDB('dy_topics', []);
+  list.splice(i,1);
+  setDB('dy_topics', list);
+  toast('已删除 🗑');
+  renderContent();
+}
+
+/* ============================================================
+   初始化
+============================================================ */
+renderAll();
+</script>
+</body>
+</html>
