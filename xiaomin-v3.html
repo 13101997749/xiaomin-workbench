@@ -681,6 +681,62 @@ ul{list-style:none;}
   display:flex;align-items:center;justify-content:center;
   font-size:14px;font-weight:700;color:var(--title-red);
 }
+
+/* ========== 平板适配（竖屏） ========== */
+@media (min-width:768px) and (max-width:899px){
+  .app{max-width:680px;}
+  .page-title{font-size:23px;}
+  .tab{font-size:14px;padding:8px 18px;}
+  .card-title{font-size:16px;}
+  .chk-text,.list-item-text{font-size:14px;}
+  .modal{max-width:520px;}
+}
+
+/* ========== 平板适配（横屏） ========== */
+@media (min-width:900px){
+  /* 容器放宽，居中显示 */
+  .app{max-width:1100px;}
+
+  /* 侧栏加宽，更好点击 */
+  .sidebar{width:230px;}
+  .avatar{width:70px;height:70px;font-size:34px;}
+  .nickname{font-size:14px;}
+  .nav-item{font-size:15px;padding:14px 18px;}
+  .nav-icon{font-size:20px;}
+
+  /* 头部放大 */
+  .main-header{padding:20px 24px 10px;}
+  .page-title{font-size:26px;}
+  .page-subtitle{font-size:13px;}
+
+  /* 标签放大 */
+  .tabs-wrap{padding:0 20px 10px;}
+  .tab{font-size:14px;padding:9px 20px;}
+
+  /* 内容区双列瀑布流 */
+  .content{
+    padding:8px 20px 40px;
+    columns:2;
+    column-gap:14px;
+  }
+  .date-display,.empty-state{column-span:all;font-size:13px;}
+  .card,.checkin-card{break-inside:avoid;}
+  .card{padding:18px;}
+
+  /* 字号整体放大，阅读更舒适 */
+  .card-title{font-size:16px;}
+  .chk-text,.list-item-text{font-size:14px;}
+  .stat-row{font-size:14px;}
+  .input,.textarea,select.input{font-size:14px;}
+
+  /* 弹窗居中显示 */
+  .modal-mask{align-items:center;}
+  .modal{
+    max-width:560px;
+    border-radius:20px;
+    animation:none;
+  }
+}
 </style>
 </head>
 <body>
